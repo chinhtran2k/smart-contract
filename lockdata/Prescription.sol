@@ -75,39 +75,39 @@ contract Prescription is ERC721Base, IPrescription {
         );
 
         uint256 newPrescriptionId = super.mint(uri);
-        _questionHash[newQuestionId] = hashValue;
-        _questionHistory[newQuestionId].push(newQuestionId);
-        _isQuestionHistory[newQuestionId] = true;
+        _PrescriptionHash[newPrescriptionId] = hashValue;
+        _PrescriptionHistory[newPrescriptionId].push(newPrescriptionId);
+        _isPrescriptionHistory[newPrescriptionId] = true;
 
-        _questionHistory[questionId].push(newQuestionId);
+        _PrescriptionHistory[PrescriptionId].push(newPrescriptionId);
     }
 
-    function getQuestionHistory(uint256 questionId)
+    function getPrescriptionHistory(uint256 PrescriptionId)
         public
         view
         returns (uint256[] memory)
     {
-        return _questionHistory[questionId];
+        return _PrescriptionHistory[PrescriptionId];
     }
 
-    function checkDataIntegrity(uint256 questionId, bytes32 hashValue)
+    function checkDataIntegrity(uint256 PrescriptionId, bytes32 hashValue)
         public
         view
         returns (bool)
     {
-        uint256 lastQuestionId = _questionHistory[questionId][
-            _questionHistory[questionId].length - 1
+        uint256 lastPrescriptionId = _PrescriptionHistory[PrescriptionId][
+            _PrescriptionHistory[PrescriptionId].length - 1
         ];
 
-        return _questionHash[lastQuestionId] == hashValue;
+        return _PrescriptionHash[lastPrescriptionId] == hashValue;
     }
 
-    function setLockQuestion(
-        uint256[] memory questionIds,
+    function setLockPrescription(
+        uint256[] memory PrescriptionIds,
         address senderAddress
-    ) external override _validQuestionList(questionIds, senderAddress) {
-        for (uint256 i = 0; i < questionIds.length; i++) {
-            _isQuestionLocked[questionIds[i]] = true;
+    ) external override _validPrescriptionList(PrescriptionIds, senderAddress) {
+        for (uint256 i = 0; i < PrescriptionIds.length; i++) {
+            _isPrescriptionLocked[PrescriptionIds[i]] = true;
         }
     }
 
