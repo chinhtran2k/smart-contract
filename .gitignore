@@ -12,3 +12,4 @@ artifacts
 */artifacts
 .deps
 expContract
+flatten/*.sol

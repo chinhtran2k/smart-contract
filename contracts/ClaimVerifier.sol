@@ -11,9 +11,6 @@ contract ClaimVerifier {
 
   ClaimHolder public trustedClaimHolder;
 
-//   function ClaimVerifier(address _trustedClaimHolder) public {
-//     trustedClaimHolder = ClaimHolder(_trustedClaimHolder);
-//   }
   constructor(address _trustedClaimHolder) {
     trustedClaimHolder = ClaimHolder(_trustedClaimHolder);
   }
@@ -63,7 +60,7 @@ contract ClaimVerifier {
 
   function getRecoveredAddress(bytes memory sig, bytes32 dataHash)
       public
-      view
+      pure
       returns (address addr)
   {
       bytes32 ra;

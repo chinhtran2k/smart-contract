@@ -1,18 +1,35 @@
 import { ethers } from "hardhat";
+const fs = require("fs");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const ClaimHolderContract = await ethers.getContractFactory("ClaimHolder");
+  const ClaimVerifierContract = await ethers.getContractFactory("ClaimVerifier");
+  // console.log("Deploying ClaimHolder...", ClaimHolderContract);
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  const ClaimHolder = await ClaimHolderContract.deploy();
+  const ClaimVerifier = await ClaimVerifierContract.deploy(ClaimHolder.address);
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  console.log(`ClaimHolder deployed to: ${ClaimHolder.address}`);
+  console.log(`ClaimVerifier deployed to: ${ClaimVerifier.address}`);
 
-  await lock.deployed();
-
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  // create config file
+  fs.writeFileSync(
+    "./config/config.json",
+    JSON.stringify({
+      ClaimHolder: {
+        address: ClaimHolder.address,
+        abi: require("../artifacts/contracts/ClaimHolder.sol/ClaimHolder.json").abi,
+        contractName: require("../artifacts/contracts/ClaimHolder.sol/ClaimHolder.json")
+          .contractName,
+      },
+      ClaimVerifier: {
+        address: ClaimVerifier.address,
+        abi: require("../artifacts/contracts/ClaimVerifier.sol/ClaimVerifier.json").abi,
+        contractName: require("../artifacts/contracts/ClaimVerifier.sol/ClaimVerifier.json")
+          .contractName,
+      },
+    })
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere

@@ -52,7 +52,7 @@ contract Identity is ClaimHolder {
         }
     }
 
-    function getBytes(bytes memory _str, uint256 _offset, uint256 _length) public returns (bytes memory ) {
+    function getBytes(bytes memory _str, uint256 _offset, uint256 _length) public pure returns (bytes memory ) {
         bytes memory sig = new bytes(_length);
         uint256 j = 0;
         for (uint256 k = _offset; k< _offset + _length; k++) {
@@ -62,7 +62,7 @@ contract Identity is ClaimHolder {
         return sig;
     }
 
-    function getString(string memory _str, uint256 _offset, uint256 _length) public returns (string memory) {
+    function getString(string memory _str, uint256 _offset, uint256 _length) public pure returns (string memory) {
         bytes memory strBytes = bytes(_str);
         bytes memory sig = new bytes(_length);
         uint256 j = 0;

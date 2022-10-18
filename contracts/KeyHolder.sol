@@ -162,7 +162,7 @@ contract KeyHolder is ERC725 {
         return isThere;
     }
 
-    function addrToKey(address addr) public view returns (bytes32) {
+    function addrToKey(address addr) public pure returns (bytes32) {
         bytes32 _tempKey = keccak256(abi.encodePacked(addr));
         return _tempKey;
     }
