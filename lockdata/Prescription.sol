@@ -5,10 +5,13 @@ import "../utils/ERC721Base.sol";
 import "../interface/IPrescription.sol";
 
 contract Prescription is ERC721Base, IPrescription {
-  mapping(uint256 => uint256[]) _PrescriptionHistory;
-  mapping(uint256 => byte32) private _PrescriptionHash;
+  mapping(uint256 => uint256[]) private _PrescriptionHistory;
+  mapping(uint256 => bytes32) private _PrescriptionHash;
   mapping(uint256 => bool) private _isPrescriptionHistory;
   mapping(uint256 => bool) private _isPrescriptionLocked;
+  mapping(uint256 => mapping(address => bool))  private _isDisclosable;
+
+  address private healthRecordContract;
 
   modifier _validPrescriptionList(
         uint256[] memory PrescriptionIds,
@@ -31,6 +34,10 @@ contract Prescription is ERC721Base, IPrescription {
         _;
     }
 
+    constructor(address _authAddress)
+        ERC721Base("Prescription", "PS", _authAddress)
+    {
+    }
   
     function mint(
         bytes32 hashValue,
@@ -44,8 +51,6 @@ contract Prescription is ERC721Base, IPrescription {
         uint256 tokenId = super.mint(uri);
         _PrescriptionHash[tokenId] = hashValue;
         _PrescriptionHistory[tokenId].push(tokenId);
-        // IPCO(pcoAddress).awardSubject(msg.sender, LevelLock.Question);
-
         _isPrescriptionHistory[tokenId] = false;
 
         return tokenId;
@@ -109,6 +114,14 @@ contract Prescription is ERC721Base, IPrescription {
         for (uint256 i = 0; i < PrescriptionIds.length; i++) {
             _isPrescriptionLocked[PrescriptionIds[i]] = true;
         }
+    }
+
+    function setHealthRecordAddress(address _address) public {
+        healthRecordContract = _address;
+    }
+
+    function discloseApproval(uint256 prescriptionId, address _address) public {
+        _isDisclosable[prescriptionId][_address] = true;
     }
 
 }

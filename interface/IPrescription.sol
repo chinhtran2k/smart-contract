@@ -6,4 +6,8 @@ interface IPrescription {
         uint256[] memory PrescriptionIds,
         address senderAddress
     ) external;
+
+    function discloseApproval(
+        uint256 prescriptionId, address _address
+    ) external;
 }

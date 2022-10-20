@@ -16,7 +16,7 @@ contract ERC721Base is
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor(
+    constructor( 
         string memory tokenName,
         string memory tokenSymbol,
         address _authenticator

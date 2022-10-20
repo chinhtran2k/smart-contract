@@ -1,0 +1,104 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "checkAuth",
+				"outputs": [
+					{
+						"internalType": "enum AuthType",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					},
+					{
+						"internalType": "enum AuthType",
+						"name": "authType",
+						"type": "uint8"
+					}
+				],
+				"name": "createDID",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"utils/Authenticator.sol": "Authenticator"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"enum/AuthType.sol": {
+			"keccak256": "0xe2dc9e5c2e68ff878d910b9b8bbcefce2227d727cd35a80a62bc151464b3cae5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://49132785b682565b4eefb6fde281b8dc1776781eeb52a823092754960584abd5",
+				"dweb:/ipfs/QmVCvx7teP9pjaveQmJ29LQ5oXdHKxoSd6JviakUJSitUU"
+			]
+		},
+		"interface/IAuthenticator.sol": {
+			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://542f1b1b4894bb4e021e526174c493f6ed4c15e4d3e99a5a4b104ddf5a5fb455",
+				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
+			]
+		},
+		"utils/Authenticator.sol": {
+			"keccak256": "0x6d4c848bb9d2efaa65d3732064fdadc21340089d0aad8165e99b6f5b056b55f3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://42a654efa50cb6067bb2022a563683ec17bf68ac416371243d34d4978f7fbdf2",
+				"dweb:/ipfs/QmbhPdiLf2gSx9R3Q3RUtMCTeK9mC8Azgjj5mFwWm2BLzM"
+			]
+		}
+	},
+	"version": 1
+}

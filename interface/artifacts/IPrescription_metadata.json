@@ -1,0 +1,64 @@
+{
+	"compiler": {
+		"version": "0.8.1+commit.df193b15"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "PrescriptionIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address",
+						"name": "senderAddress",
+						"type": "address"
+					}
+				],
+				"name": "setLockPrescription",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"interface/IPrescription.sol": "IPrescription"
+		},
+		"evmVersion": "istanbul",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"interface/IPrescription.sol": {
+			"keccak256": "0x518c7cf2a9d8701b8b25d4b27441f0f34ccd01c281edf4e8582f6693faee5950",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0dda062ef2f8f40243b26a2cf800e3ea9f9e060d61cdd0951f787faa7504e03e",
+				"dweb:/ipfs/QmRZ3MEU9auHVdoMUEDY8PmRWPN8V5JL1jhxR5NTxs9NsY"
+			]
+		}
+	},
+	"version": 1
+}

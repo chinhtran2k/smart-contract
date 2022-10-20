@@ -59,7 +59,6 @@ contract AuthenticatorHelper {
         _;
     }
 
-
     modifier onlyActor() {
         require(
             _IAuth.checkAuth(msg.sender) == AuthType.IV,
