@@ -58,22 +58,23 @@ const verifyRequest = async (
   });
 };
 
-const flattenContract = async (contractPath: any) => {
+const flattenContract = async (contractPath:string) => {
   return new Promise((resolve, reject) => {
     exec(
-      `${__dirname}/../node_modules/.bin/hardhat flatten ${__dirname}/../${contractPath} > ${__dirname}/../flatten/flated.sol`,
-      (error: any, stdout: any, stderr: any) => {
+      `${__dirname}/../node_modules/.bin/hardhat flatten ${__dirname}/../${contractPath} > ${__dirname}/../flatten/flatten.sol`,
+      (error:any, stdout:any, stderr:any) => {
         console.log("Verify contract", contractPath);
-        const str = fs.readFileSync(__dirname + "/../flatten/flated.sol").toString();
+        const str = fs.readFileSync(__dirname + "/../flatten/flatten.sol").toString();
         const removeSPDX = str
           .split("// SPDX-License-Identifier: MIT")
           .join("")
           .split("pragma solidity ^0.8.0;")
+          .join("")
+          .split("pragma solidity ^0.8.1;")
           .join("");
         const idxStart = removeSPDX.indexOf(
           "// Sources flattened with hardhat"
         );
-        
         const processedStr = `// SPDX-License-Identifier: MIT\npragma solidity ^0.8.0;\n${removeSPDX.substring(
           idxStart,
           removeSPDX.length
