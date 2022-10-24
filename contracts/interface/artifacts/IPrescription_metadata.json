@@ -1,10 +1,28 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
 		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "prescriptionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "discloseApproval",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
 			{
 				"inputs": [
 					{
@@ -37,9 +55,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"interface/IPrescription.sol": "IPrescription"
+			"contracts/interface/IPrescription.sol": "IPrescription"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -51,12 +69,12 @@
 		"remappings": []
 	},
 	"sources": {
-		"interface/IPrescription.sol": {
-			"keccak256": "0x518c7cf2a9d8701b8b25d4b27441f0f34ccd01c281edf4e8582f6693faee5950",
+		"contracts/interface/IPrescription.sol": {
+			"keccak256": "0x955995d7d9a276cf985c59fa7c27cd0dafe42251413c55bc23bbbded90a675a9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0dda062ef2f8f40243b26a2cf800e3ea9f9e060d61cdd0951f787faa7504e03e",
-				"dweb:/ipfs/QmRZ3MEU9auHVdoMUEDY8PmRWPN8V5JL1jhxR5NTxs9NsY"
+				"bzz-raw://a190c6b75c4645fe63db6c08da00888e1334da5a7c885221dd8e5fb7c3d21f5d",
+				"dweb:/ipfs/QmZ3fnCsXawQ5LbYJqQiWsYjfCZcMYX14tmhBT86G65Ay1"
 			]
 		}
 	},

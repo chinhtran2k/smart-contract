@@ -1,0 +1,351 @@
+{
+	"id": "d69443d6898eb7fef58f83de796ddd0c",
+	"_format": "hh-sol-build-info-1",
+	"solcVersion": "0.8.7",
+	"solcLongVersion": "0.8.7+commit.e28d00a7",
+	"input": {
+		"language": "Solidity",
+		"sources": {
+			"contracts/interface/IPrescription.sol": {
+				"content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.0;\r\n\r\ninterface IPrescription {\r\n    function setLockPrescription(\r\n        uint256[] memory PrescriptionIds,\r\n        address senderAddress\r\n    ) external;\r\n\r\n    function discloseApproval(\r\n        uint256 prescriptionId, address _address\r\n    ) external;\r\n}\r\n"
+			}
+		},
+		"settings": {
+			"optimizer": {
+				"enabled": false,
+				"runs": 200
+			},
+			"outputSelection": {
+				"*": {
+					"": [
+						"ast"
+					],
+					"*": [
+						"abi",
+						"metadata",
+						"devdoc",
+						"userdoc",
+						"storageLayout",
+						"evm.legacyAssembly",
+						"evm.bytecode",
+						"evm.deployedBytecode",
+						"evm.methodIdentifiers",
+						"evm.gasEstimates",
+						"evm.assembly"
+					]
+				}
+			}
+		}
+	},
+	"output": {
+		"contracts": {
+			"contracts/interface/IPrescription.sol": {
+				"IPrescription": {
+					"abi": [
+						{
+							"inputs": [
+								{
+									"internalType": "uint256",
+									"name": "prescriptionId",
+									"type": "uint256"
+								},
+								{
+									"internalType": "address",
+									"name": "_address",
+									"type": "address"
+								}
+							],
+							"name": "discloseApproval",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						},
+						{
+							"inputs": [
+								{
+									"internalType": "uint256[]",
+									"name": "PrescriptionIds",
+									"type": "uint256[]"
+								},
+								{
+									"internalType": "address",
+									"name": "senderAddress",
+									"type": "address"
+								}
+							],
+							"name": "setLockPrescription",
+							"outputs": [],
+							"stateMutability": "nonpayable",
+							"type": "function"
+						}
+					],
+					"devdoc": {
+						"kind": "dev",
+						"methods": {},
+						"version": 1
+					},
+					"evm": {
+						"assembly": "",
+						"bytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"deployedBytecode": {
+							"functionDebugData": {},
+							"generatedSources": [],
+							"immutableReferences": {},
+							"linkReferences": {},
+							"object": "",
+							"opcodes": "",
+							"sourceMap": ""
+						},
+						"gasEstimates": null,
+						"legacyAssembly": null,
+						"methodIdentifiers": {
+							"discloseApproval(uint256,address)": "18eb210d",
+							"setLockPrescription(uint256[],address)": "847e5630"
+						}
+					},
+					"metadata": "{\"compiler\":{\"version\":\"0.8.7+commit.e28d00a7\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"prescriptionId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"discloseApproval\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"PrescriptionIds\",\"type\":\"uint256[]\"},{\"internalType\":\"address\",\"name\":\"senderAddress\",\"type\":\"address\"}],\"name\":\"setLockPrescription\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/interface/IPrescription.sol\":\"IPrescription\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/interface/IPrescription.sol\":{\"keccak256\":\"0x955995d7d9a276cf985c59fa7c27cd0dafe42251413c55bc23bbbded90a675a9\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a190c6b75c4645fe63db6c08da00888e1334da5a7c885221dd8e5fb7c3d21f5d\",\"dweb:/ipfs/QmZ3fnCsXawQ5LbYJqQiWsYjfCZcMYX14tmhBT86G65Ay1\"]}},\"version\":1}",
+					"storageLayout": {
+						"storage": [],
+						"types": null
+					},
+					"userdoc": {
+						"kind": "user",
+						"methods": {},
+						"version": 1
+					}
+				}
+			}
+		},
+		"sources": {
+			"contracts/interface/IPrescription.sol": {
+				"ast": {
+					"absolutePath": "contracts/interface/IPrescription.sol",
+					"exportedSymbols": {
+						"IPrescription": [
+							17
+						]
+					},
+					"id": 18,
+					"license": "MIT",
+					"nodeType": "SourceUnit",
+					"nodes": [
+						{
+							"id": 1,
+							"literals": [
+								"solidity",
+								"^",
+								"0.8",
+								".0"
+							],
+							"nodeType": "PragmaDirective",
+							"src": "33:23:0"
+						},
+						{
+							"abstract": false,
+							"baseContracts": [],
+							"contractDependencies": [],
+							"contractKind": "interface",
+							"fullyImplemented": false,
+							"id": 17,
+							"linearizedBaseContracts": [
+								17
+							],
+							"name": "IPrescription",
+							"nameLocation": "70:13:0",
+							"nodeType": "ContractDefinition",
+							"nodes": [
+								{
+									"functionSelector": "847e5630",
+									"id": 9,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "setLockPrescription",
+									"nameLocation": "100:19:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 7,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 4,
+												"mutability": "mutable",
+												"name": "PrescriptionIds",
+												"nameLocation": "147:15:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 9,
+												"src": "130:32:0",
+												"stateVariable": false,
+												"storageLocation": "memory",
+												"typeDescriptions": {
+													"typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+													"typeString": "uint256[]"
+												},
+												"typeName": {
+													"baseType": {
+														"id": 2,
+														"name": "uint256",
+														"nodeType": "ElementaryTypeName",
+														"src": "130:7:0",
+														"typeDescriptions": {
+															"typeIdentifier": "t_uint256",
+															"typeString": "uint256"
+														}
+													},
+													"id": 3,
+													"nodeType": "ArrayTypeName",
+													"src": "130:9:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+														"typeString": "uint256[]"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 6,
+												"mutability": "mutable",
+												"name": "senderAddress",
+												"nameLocation": "181:13:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 9,
+												"src": "173:21:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 5,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "173:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "119:82:0"
+									},
+									"returnParameters": {
+										"id": 8,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "210:0:0"
+									},
+									"scope": 17,
+									"src": "91:120:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								},
+								{
+									"functionSelector": "18eb210d",
+									"id": 16,
+									"implemented": false,
+									"kind": "function",
+									"modifiers": [],
+									"name": "discloseApproval",
+									"nameLocation": "228:16:0",
+									"nodeType": "FunctionDefinition",
+									"parameters": {
+										"id": 14,
+										"nodeType": "ParameterList",
+										"parameters": [
+											{
+												"constant": false,
+												"id": 11,
+												"mutability": "mutable",
+												"name": "prescriptionId",
+												"nameLocation": "263:14:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "255:22:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_uint256",
+													"typeString": "uint256"
+												},
+												"typeName": {
+													"id": 10,
+													"name": "uint256",
+													"nodeType": "ElementaryTypeName",
+													"src": "255:7:0",
+													"typeDescriptions": {
+														"typeIdentifier": "t_uint256",
+														"typeString": "uint256"
+													}
+												},
+												"visibility": "internal"
+											},
+											{
+												"constant": false,
+												"id": 13,
+												"mutability": "mutable",
+												"name": "_address",
+												"nameLocation": "287:8:0",
+												"nodeType": "VariableDeclaration",
+												"scope": 16,
+												"src": "279:16:0",
+												"stateVariable": false,
+												"storageLocation": "default",
+												"typeDescriptions": {
+													"typeIdentifier": "t_address",
+													"typeString": "address"
+												},
+												"typeName": {
+													"id": 12,
+													"name": "address",
+													"nodeType": "ElementaryTypeName",
+													"src": "279:7:0",
+													"stateMutability": "nonpayable",
+													"typeDescriptions": {
+														"typeIdentifier": "t_address",
+														"typeString": "address"
+													}
+												},
+												"visibility": "internal"
+											}
+										],
+										"src": "244:58:0"
+									},
+									"returnParameters": {
+										"id": 15,
+										"nodeType": "ParameterList",
+										"parameters": [],
+										"src": "311:0:0"
+									},
+									"scope": 17,
+									"src": "219:93:0",
+									"stateMutability": "nonpayable",
+									"virtual": false,
+									"visibility": "external"
+								}
+							],
+							"scope": 18,
+							"src": "60:255:0",
+							"usedErrors": []
+						}
+					],
+					"src": "33:284:0"
+				},
+				"id": 0
+			}
+		}
+	}
+}

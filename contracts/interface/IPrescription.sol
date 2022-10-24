@@ -10,4 +10,8 @@ interface IPrescription {
     function discloseApproval(
         uint256 prescriptionId, address _address
     ) external;
+
+    function setHealthRecordAddress(address _address) external ;
+    function getHealthRecordAddress() external view returns(address);
+    function getDiscloseApproval (uint256 prescriptionId, address _address) external view returns(bool);
 }

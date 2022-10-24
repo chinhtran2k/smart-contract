@@ -28,24 +28,6 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_address",
-						"type": "address"
-					},
-					{
-						"internalType": "enum AuthType",
-						"name": "authType",
-						"type": "uint8"
-					}
-				],
-				"name": "createDID",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -61,7 +43,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"utils/Authenticator.sol": "Authenticator"
+			"contracts/utils/Authenticator.sol": "Authenticator"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -75,15 +57,15 @@
 		"remappings": []
 	},
 	"sources": {
-		"enum/AuthType.sol": {
-			"keccak256": "0xe2dc9e5c2e68ff878d910b9b8bbcefce2227d727cd35a80a62bc151464b3cae5",
+		"contracts/enum/AuthType.sol": {
+			"keccak256": "0xe6b39937eacf8a8783d108110d985e2c8d1c1119b3853bb3e15a3d816b07a84e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://49132785b682565b4eefb6fde281b8dc1776781eeb52a823092754960584abd5",
-				"dweb:/ipfs/QmVCvx7teP9pjaveQmJ29LQ5oXdHKxoSd6JviakUJSitUU"
+				"bzz-raw://7ec5bfca7081b4840151f12da4795556cf77efe7c166a915ea90d604d8d1caea",
+				"dweb:/ipfs/QmTtstiSYd8sc4D8iv6maUZLdvf1RgUtJhxMABqKAmrpms"
 			]
 		},
-		"interface/IAuthenticator.sol": {
+		"contracts/interface/IAuthenticator.sol": {
 			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
 			"license": "MIT",
 			"urls": [
@@ -91,12 +73,12 @@
 				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
 			]
 		},
-		"utils/Authenticator.sol": {
-			"keccak256": "0x6d4c848bb9d2efaa65d3732064fdadc21340089d0aad8165e99b6f5b056b55f3",
+		"contracts/utils/Authenticator.sol": {
+			"keccak256": "0xf24f8525ef805ec8cc64661d78721a3d127f549c46b25f87e7b4daa21e1dba92",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://42a654efa50cb6067bb2022a563683ec17bf68ac416371243d34d4978f7fbdf2",
-				"dweb:/ipfs/QmbhPdiLf2gSx9R3Q3RUtMCTeK9mC8Azgjj5mFwWm2BLzM"
+				"bzz-raw://76159ffbbec1cbef81f0b0af8a0a9b0a6f71399cd74651638abb83f783c4ce78",
+				"dweb:/ipfs/QmY7nHcJAsEuwrpLXn2qvYhkFG5Pj7QuUZpbvtrzjdfSPH"
 			]
 		}
 	},

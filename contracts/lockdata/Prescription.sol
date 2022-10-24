@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
+ 
 import "../utils/ERC721Base.sol";
 import "../interface/IPrescription.sol";
 
-contract Prescription is ERC721Base, IPrescription {
+ contract Prescription is ERC721Base, IPrescription {
   mapping(uint256 => uint256[]) private _PrescriptionHistory;
   mapping(uint256 => bytes32) private _PrescriptionHash;
   mapping(uint256 => bool) private _isPrescriptionHistory;
   mapping(uint256 => bool) private _isPrescriptionLocked;
   mapping(uint256 => mapping(address => bool))  private _isDisclosable;
 
-  address private healthRecordContract;
+  address private healthRecordContractAddress;
 
   modifier _validPrescriptionList(
         uint256[] memory PrescriptionIds,
@@ -36,14 +36,13 @@ contract Prescription is ERC721Base, IPrescription {
 
     constructor(address _authAddress)
         ERC721Base("Prescription", "PS", _authAddress)
-    {
-    }
+    {}
   
     function mint(
         bytes32 hashValue,
         string memory uri,
         string memory data
-    ) public onlyClinic returns (uint256) {
+    ) public returns (uint256) {
         require(
             keccak256(abi.encodePacked(data)) == hashValue,
             "Data Integrity fail"
@@ -61,7 +60,7 @@ contract Prescription is ERC721Base, IPrescription {
         bytes32 hashValue,
         string memory uri,
         string memory data
-    ) public onlyClinic {
+    ) public {
         require(
             !_isPrescriptionHistory[PrescriptionId],
             "Cannot update Prescription History"
@@ -116,12 +115,25 @@ contract Prescription is ERC721Base, IPrescription {
         }
     }
 
-    function setHealthRecordAddress(address _address) public {
-        healthRecordContract = _address;
+    function setHealthRecordAddress(address _address) external override onlyHealthRecordAddress {
+        healthRecordContractAddress = _address;
     }
 
-    function discloseApproval(uint256 prescriptionId, address _address) public {
+    function getHealthRecordAddress() external view returns(address){
+        return healthRecordContractAddress;
+    }
+
+    function discloseApproval(uint256 prescriptionId, address _address) external override onlyHealthRecordAddress{
         _isDisclosable[prescriptionId][_address] = true;
+    }
+
+    function getDiscloseApproval(uint256 prescriptionId, address _address) external view override returns(bool){
+        return _isDisclosable[prescriptionId][_address];
+    }
+
+    modifier onlyHealthRecordAddress(){
+        require(msg.sender == healthRecordContractAddress, "Only this healthRecordAddress can do this");
+        _;
     }
 
 }

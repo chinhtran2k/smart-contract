@@ -1,6 +1,6 @@
 {
 	"compiler": {
-		"version": "0.8.1+commit.df193b15"
+		"version": "0.8.7+commit.e28d00a7"
 	},
 	"language": "Solidity",
 	"output": {
@@ -169,6 +169,24 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "prescriptionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "discloseApproval",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -397,6 +415,19 @@
 					}
 				],
 				"name": "setApprovalForAll",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setHealthRecordAddress",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -656,9 +687,9 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"lockdata/Prescription.sol": "Prescription"
+			"contracts/lockdata/Prescription.sol": "Prescription"
 		},
-		"evmVersion": "istanbul",
+		"evmVersion": "london",
 		"libraries": {},
 		"metadata": {
 			"bytecodeHash": "ipfs"
@@ -782,15 +813,15 @@
 				"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
 			]
 		},
-		"enum/AuthType.sol": {
-			"keccak256": "0xe2dc9e5c2e68ff878d910b9b8bbcefce2227d727cd35a80a62bc151464b3cae5",
+		"contracts/enum/AuthType.sol": {
+			"keccak256": "0xe6b39937eacf8a8783d108110d985e2c8d1c1119b3853bb3e15a3d816b07a84e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://49132785b682565b4eefb6fde281b8dc1776781eeb52a823092754960584abd5",
-				"dweb:/ipfs/QmVCvx7teP9pjaveQmJ29LQ5oXdHKxoSd6JviakUJSitUU"
+				"bzz-raw://7ec5bfca7081b4840151f12da4795556cf77efe7c166a915ea90d604d8d1caea",
+				"dweb:/ipfs/QmTtstiSYd8sc4D8iv6maUZLdvf1RgUtJhxMABqKAmrpms"
 			]
 		},
-		"interface/IAuthenticator.sol": {
+		"contracts/interface/IAuthenticator.sol": {
 			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
 			"license": "MIT",
 			"urls": [
@@ -798,36 +829,36 @@
 				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
 			]
 		},
-		"interface/IPrescription.sol": {
-			"keccak256": "0x518c7cf2a9d8701b8b25d4b27441f0f34ccd01c281edf4e8582f6693faee5950",
+		"contracts/interface/IPrescription.sol": {
+			"keccak256": "0x955995d7d9a276cf985c59fa7c27cd0dafe42251413c55bc23bbbded90a675a9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://0dda062ef2f8f40243b26a2cf800e3ea9f9e060d61cdd0951f787faa7504e03e",
-				"dweb:/ipfs/QmRZ3MEU9auHVdoMUEDY8PmRWPN8V5JL1jhxR5NTxs9NsY"
+				"bzz-raw://a190c6b75c4645fe63db6c08da00888e1334da5a7c885221dd8e5fb7c3d21f5d",
+				"dweb:/ipfs/QmZ3fnCsXawQ5LbYJqQiWsYjfCZcMYX14tmhBT86G65Ay1"
 			]
 		},
-		"lockdata/Prescription.sol": {
-			"keccak256": "0x1458070bcd62649ed468b3e499351930a06f2f7aaeb6d574f843d085f604a771",
+		"contracts/lockdata/Prescription.sol": {
+			"keccak256": "0x808168f89161fa450f582cb9a14606caf4b2ce5b653efb576645b3e6a3db27df",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b7ce5e0cb9caf4ce91753d6fa3f5db3e58b73165a76eb39fa8ff5385052a5de5",
-				"dweb:/ipfs/QmX5Mk9vhbcFmjwZknJmTxk4LmiwG6thqDcoSQEkyhcUaZ"
+				"bzz-raw://656fffbc9186946a72a2f3f9d80ba295a5c9d12f3d06acb05422f9bc6046acda",
+				"dweb:/ipfs/QmQqMvUkJ51q2ut5L2D695v1R9fbUD8T9ghu1ZvgRAcdVe"
 			]
 		},
-		"utils/Authenticator.sol": {
-			"keccak256": "0x216c4a5b8782a8ed3e49b6dcd27a26a91e0e9fe39db70c7f660b1765837f8c1f",
+		"contracts/utils/Authenticator.sol": {
+			"keccak256": "0xf24f8525ef805ec8cc64661d78721a3d127f549c46b25f87e7b4daa21e1dba92",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a78fcec2819a50218708dbb97afdd9c3aeda59166de26e1b976da08ea226acac",
-				"dweb:/ipfs/QmRqh8RaHLw3NQai6KEKT2AWL2TxJaD9rJfsfmsoieJzGs"
+				"bzz-raw://76159ffbbec1cbef81f0b0af8a0a9b0a6f71399cd74651638abb83f783c4ce78",
+				"dweb:/ipfs/QmY7nHcJAsEuwrpLXn2qvYhkFG5Pj7QuUZpbvtrzjdfSPH"
 			]
 		},
-		"utils/ERC721Base.sol": {
-			"keccak256": "0x1a0a575ac328fb5871cb7483f2d11bfaf78974e09d9576118ce6111c3668b689",
+		"contracts/utils/ERC721Base.sol": {
+			"keccak256": "0x94a0d3841c2e257bffa5ee05374bc70753961e6bd6e8e12e32f599c6271b2395",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ff3d262eb4d3abc822caa4131bcd5353719cfd10a71b2c20e4e098b0a0d2e96a",
-				"dweb:/ipfs/QmbAepxkWgbH6SsJKGQeG9zLeKPTMEmbs3EVZuoQZVD2Jc"
+				"bzz-raw://c47b659b3564f5c5e5bbfa00713c90e674d5fb6652b4d69c6d94aff872fc9138",
+				"dweb:/ipfs/QmR5HZVHoWtW9ak9qy8VAxpmcy1QTBUYF2ZYS7BmzBpQhq"
 			]
 		}
 	},

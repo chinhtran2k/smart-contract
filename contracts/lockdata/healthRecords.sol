@@ -7,16 +7,16 @@ import "./Prescription.sol";
 
 contract healthRecords is ERC721Base{
   mapping(uint256 => bytes32) private _healthRecordsHash;
-  mapping(uint256 => bytes32) private _PrescriptionOfRecords;
+  mapping(uint256 => uint256[]) private _PrescriptionOfRecords;
+  Prescription private _prescription;
 
-
-  constructor(address _healthRecordContract)
-    ERC721Base("Health Record", "HR", _healthRecordContract)
+  constructor(address prescription, address authenticatior)
+    ERC721Base("Health Record", "HR", authenticatior)
   {
-    _healthRecordContract = _healthRecordContract ;
+    _prescription = Prescription(prescription);
   }
  
-  function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public onlyClinic returns(uint256){
+  function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
       require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
       uint256 tokenId = super.mint(uri);
       _healthRecordsHash[tokenId] = hashValue;
@@ -24,19 +24,19 @@ contract healthRecords is ERC721Base{
     return tokenId;
   }
 
-  
-
-  function approve(address _authAddress, uint256 tokenId) public virtual override {
+  function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
     address owner = ERC721.ownerOf(tokenId);
     require(_authAddress != owner, "ERC721: approval to current owner");
 
-    require(
-        _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
-        "ERC721: approve caller is not token owner or approved for all"
-    );
+    // require(
+    //     _msgSender() == owner || isApprovedForAll(owner, _msgSender()),
+    //     "ERC721: approve caller is not token owner or approved for all"
+    // );
 
-    discloseApproval(tokenId, _authAddress);
+    _prescription.discloseApproval(tokenId, _authAddress);
   } 
+
+
 
   function checkDataIntegrity(uint256 healthRecordId, bytes32 hashValue)
         public
