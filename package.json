@@ -1,21 +1,12 @@
 {
-  "scripts": {
-    "pco": "hardhat run --network hpa22023 ./scripts/pco.js",
-    "compile": "truffle compile",
-    "deploy": "yarn compile && hardhat run --network hpa22023 ./scripts/deploy.js",
-    "set-auth": "hardhat run --network hpa22023 ./scripts/setAuth.js",
-    "verify": "node ./scripts/verify.js"
-  },
+  "name": "Contracts HPA",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@git.vmo.dev:c12/hpa22136-hpa-blockchain/hpa3-blockchain.git",
+  "author": "Nguyễn Danh Hoàng <hoangnd@vmodev.com>",
+  "license": "MIT",
   "dependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.6",
-    "@nomiclabs/hardhat-etherscan": "^3.0.3",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "@openzeppelin/contracts": "^4.6.0",
-    "@truffle/hdwallet-provider": "^2.0.8",
-    "chai": "^4.3.6",
-    "ethereum-waffle": "^3.4.4",
-    "ethers": "^5.6.6",
-    "hardhat": "^2.9.5",
-    "truffle": "^5.5.14"
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "@openzeppelin/contracts": "^4.7.3"
   }
 }
