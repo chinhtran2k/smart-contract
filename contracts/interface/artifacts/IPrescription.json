@@ -50,6 +50,9 @@
 		"gasEstimates": null,
 		"methodIdentifiers": {
 			"discloseApproval(uint256,address)": "18eb210d",
+			"getDiscloseApproval(uint256,address)": "fb3a7b98",
+			"getHealthRecordAddress()": "09eca274",
+			"setHealthRecordAddress(address)": "29dd8af0",
 			"setLockPrescription(uint256[],address)": "847e5630"
 		}
 	},
@@ -68,6 +71,56 @@
 				}
 			],
 			"name": "discloseApproval",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "prescriptionId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "address",
+					"name": "_address",
+					"type": "address"
+				}
+			],
+			"name": "getDiscloseApproval",
+			"outputs": [
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [],
+			"name": "getHealthRecordAddress",
+			"outputs": [
+				{
+					"internalType": "address",
+					"name": "",
+					"type": "address"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_address",
+					"type": "address"
+				}
+			],
+			"name": "setHealthRecordAddress",
 			"outputs": [],
 			"stateMutability": "nonpayable",
 			"type": "function"

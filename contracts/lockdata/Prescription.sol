@@ -117,9 +117,9 @@ import "../interface/IPrescription.sol";
 
     function setHealthRecordAddress(address _address) external override onlyHealthRecordAddress {
         healthRecordContractAddress = _address;
-    }
+    } 
 
-    function getHealthRecordAddress() external view returns(address){
+    function getHealthRecordAddress() external view override returns(address){
         return healthRecordContractAddress;
     }
 

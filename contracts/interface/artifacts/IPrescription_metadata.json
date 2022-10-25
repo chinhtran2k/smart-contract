@@ -26,6 +26,56 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "prescriptionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "getDiscloseApproval",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getHealthRecordAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_address",
+						"type": "address"
+					}
+				],
+				"name": "setHealthRecordAddress",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "uint256[]",
 						"name": "PrescriptionIds",
 						"type": "uint256[]"
@@ -70,11 +120,11 @@
 	},
 	"sources": {
 		"contracts/interface/IPrescription.sol": {
-			"keccak256": "0x955995d7d9a276cf985c59fa7c27cd0dafe42251413c55bc23bbbded90a675a9",
+			"keccak256": "0xd197048028d4cade174be78657a75c4a8f7fa3a6c92b09e1ab78879d7668ba99",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a190c6b75c4645fe63db6c08da00888e1334da5a7c885221dd8e5fb7c3d21f5d",
-				"dweb:/ipfs/QmZ3fnCsXawQ5LbYJqQiWsYjfCZcMYX14tmhBT86G65Ay1"
+				"bzz-raw://837cb9de17572321a46f97689cd8903989e2633869f806f782ef5b95ae679539",
+				"dweb:/ipfs/QmQhK372AoUZb9D4u9BXy2r8dPJm5SrkMxpU21Kw3JesPS"
 			]
 		}
 	},
