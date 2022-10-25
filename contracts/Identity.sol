@@ -35,7 +35,7 @@ contract Identity is ClaimHolder {
                 getBytes(_data, doffset, dataSizes[i]),
                 getString(_uri, uoffset, uriSizes[i])
             );
-
+            claimsByType[_claimType[i]].push(claimId);
             offset += _sigSizes[i];
             uoffset += uriSizes[i];
             doffset += dataSizes[i];
