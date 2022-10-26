@@ -34,6 +34,7 @@ export interface HealthRecordsInterface extends utils.Interface {
     "checkDataIntegrity(uint256,bytes32)": FunctionFragment;
     "discloseApproval(address,uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getHashValueFromPrescription(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(bytes32,string,string,uint256[])": FunctionFragment;
     "name()": FunctionFragment;
@@ -61,6 +62,7 @@ export interface HealthRecordsInterface extends utils.Interface {
       | "checkDataIntegrity"
       | "discloseApproval"
       | "getApproved"
+      | "getHashValueFromPrescription"
       | "isApprovedForAll"
       | "mint"
       | "name"
@@ -99,6 +101,10 @@ export interface HealthRecordsInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getApproved",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getHashValueFromPrescription",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -195,6 +201,10 @@ export interface HealthRecordsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getHashValueFromPrescription",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -365,6 +375,11 @@ export interface HealthRecords extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    getHashValueFromPrescription(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -485,6 +500,11 @@ export interface HealthRecords extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getHashValueFromPrescription(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   isApprovedForAll(
     owner: PromiseOrValue<string>,
     operator: PromiseOrValue<string>,
@@ -601,6 +621,11 @@ export interface HealthRecords extends BaseContract {
     ): Promise<void>;
 
     getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getHashValueFromPrescription(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -768,6 +793,11 @@ export interface HealthRecords extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getHashValueFromPrescription(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: PromiseOrValue<string>,
       operator: PromiseOrValue<string>,
@@ -885,6 +915,11 @@ export interface HealthRecords extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getApproved(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getHashValueFromPrescription(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

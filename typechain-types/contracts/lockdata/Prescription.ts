@@ -29,12 +29,14 @@ import type {
 
 export interface PrescriptionInterface extends utils.Interface {
   functions: {
+    "_PrescriptionHash(uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "checkDataIntegrity(uint256,bytes32)": FunctionFragment;
     "discloseApproval(uint256,address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getDiscloseApproval(uint256,address)": FunctionFragment;
+    "getHashValue(uint256)": FunctionFragment;
     "getHealthRecordAddress()": FunctionFragment;
     "getPrescriptionHistory(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
@@ -62,12 +64,14 @@ export interface PrescriptionInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "_PrescriptionHash"
       | "approve"
       | "balanceOf"
       | "checkDataIntegrity"
       | "discloseApproval"
       | "getApproved"
       | "getDiscloseApproval"
+      | "getHashValue"
       | "getHealthRecordAddress"
       | "getPrescriptionHistory"
       | "isApprovedForAll"
@@ -94,6 +98,10 @@ export interface PrescriptionInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "_PrescriptionHash",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
@@ -116,6 +124,10 @@ export interface PrescriptionInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getDiscloseApproval",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getHashValue",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getHealthRecordAddress",
@@ -223,6 +235,10 @@ export interface PrescriptionInterface extends utils.Interface {
     ]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "_PrescriptionHash",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
@@ -239,6 +255,10 @@ export interface PrescriptionInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getDiscloseApproval",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getHashValue",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -401,6 +421,11 @@ export interface Prescription extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    _PrescriptionHash(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -434,6 +459,11 @@ export interface Prescription extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     getHealthRecordAddress(overrides?: CallOverrides): Promise<[string]>;
 
@@ -552,6 +582,11 @@ export interface Prescription extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  _PrescriptionHash(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   approve(
     to: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
@@ -585,6 +620,11 @@ export interface Prescription extends BaseContract {
     _address: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  getHashValue(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -703,6 +743,11 @@ export interface Prescription extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    _PrescriptionHash(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -736,6 +781,11 @@ export interface Prescription extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -897,6 +947,11 @@ export interface Prescription extends BaseContract {
   };
 
   estimateGas: {
+    _PrescriptionHash(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -928,6 +983,11 @@ export interface Prescription extends BaseContract {
     getDiscloseApproval(
       prescriptionId: PromiseOrValue<BigNumberish>,
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1049,6 +1109,11 @@ export interface Prescription extends BaseContract {
   };
 
   populateTransaction: {
+    _PrescriptionHash(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1080,6 +1145,11 @@ export interface Prescription extends BaseContract {
     getDiscloseApproval(
       prescriptionId: PromiseOrValue<BigNumberish>,
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

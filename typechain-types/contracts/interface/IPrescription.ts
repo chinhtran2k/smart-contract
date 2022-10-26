@@ -27,6 +27,7 @@ export interface IPrescriptionInterface extends utils.Interface {
   functions: {
     "discloseApproval(uint256,address)": FunctionFragment;
     "getDiscloseApproval(uint256,address)": FunctionFragment;
+    "getHashValue(uint256)": FunctionFragment;
     "getHealthRecordAddress()": FunctionFragment;
     "setHealthRecordAddress(address)": FunctionFragment;
     "setLockPrescription(uint256[],address)": FunctionFragment;
@@ -36,6 +37,7 @@ export interface IPrescriptionInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "discloseApproval"
       | "getDiscloseApproval"
+      | "getHashValue"
       | "getHealthRecordAddress"
       | "setHealthRecordAddress"
       | "setLockPrescription"
@@ -48,6 +50,10 @@ export interface IPrescriptionInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getDiscloseApproval",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getHashValue",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "getHealthRecordAddress",
@@ -68,6 +74,10 @@ export interface IPrescriptionInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getDiscloseApproval",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getHashValue",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -125,6 +135,11 @@ export interface IPrescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     getHealthRecordAddress(overrides?: CallOverrides): Promise<[string]>;
 
     setHealthRecordAddress(
@@ -151,6 +166,11 @@ export interface IPrescription extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  getHashValue(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
 
   setHealthRecordAddress(
@@ -176,6 +196,11 @@ export interface IPrescription extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
 
@@ -206,6 +231,11 @@ export interface IPrescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getHealthRecordAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     setHealthRecordAddress(
@@ -230,6 +260,11 @@ export interface IPrescription extends BaseContract {
     getDiscloseApproval(
       prescriptionId: PromiseOrValue<BigNumberish>,
       _address: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getHashValue(
+      tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
