@@ -3,12 +3,14 @@ pragma solidity ^0.8.0;
 import "../interface/IAuthenticator.sol";
 
 contract Authenticator is IAuthenticator {
-    mapping(address => bool) private _subject;
-    mapping(address => bool) private _administrator;
-    mapping(address => bool) private _actor;
+    // mapping(address => bool) private _subject;
+    // mapping(address => bool) private _administrator;
+    // mapping(address => bool) private _actor;
+    mapping(address => bool) private _healthRecord;
 
     constructor() {
-        _administrator[msg.sender] = true;
+        // _administrator[msg.sender] = true;
+        _healthRecord[msg.sender] = true;
     }
 
     // function createDID(address _address, AuthType authType) external {
@@ -36,11 +38,13 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         // require(_address != address(0), "Address zero is not allowed");
+        // if(_healthRecord[_address]) return AuthType.HR;
         // if (_subject[_address]) return AuthType.SB;
         // else if (_administrator[_address]) return AuthType.AD;
         // else if (_actor[_address]) return AuthType.IV;
         // else return AuthType.NONE;
     }
+
 }
 
 contract AuthenticatorHelper {

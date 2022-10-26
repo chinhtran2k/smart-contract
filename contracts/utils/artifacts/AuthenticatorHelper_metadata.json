@@ -45,11 +45,11 @@
 	},
 	"sources": {
 		"contracts/enum/AuthType.sol": {
-			"keccak256": "0xe6b39937eacf8a8783d108110d985e2c8d1c1119b3853bb3e15a3d816b07a84e",
+			"keccak256": "0x1d306485d04b46f6211ff1ae31c74288dac1575221fb826d423da7832617ac1f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7ec5bfca7081b4840151f12da4795556cf77efe7c166a915ea90d604d8d1caea",
-				"dweb:/ipfs/QmTtstiSYd8sc4D8iv6maUZLdvf1RgUtJhxMABqKAmrpms"
+				"bzz-raw://2cf0839f69f3d716a841f1a9c0b3f3813b407e865bb712b881e1e1859809c214",
+				"dweb:/ipfs/QmZxWZgrczu3ukQdcLyfiWUTVpD5oAZDJfPYi2a2Xz7yff"
 			]
 		},
 		"contracts/interface/IAuthenticator.sol": {
@@ -61,11 +61,11 @@
 			]
 		},
 		"contracts/utils/Authenticator.sol": {
-			"keccak256": "0xf24f8525ef805ec8cc64661d78721a3d127f549c46b25f87e7b4daa21e1dba92",
+			"keccak256": "0xcd5cd801b5642d949547603894f69dec80d22ccd0949e0658c67d3f483cd6799",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://76159ffbbec1cbef81f0b0af8a0a9b0a6f71399cd74651638abb83f783c4ce78",
-				"dweb:/ipfs/QmY7nHcJAsEuwrpLXn2qvYhkFG5Pj7QuUZpbvtrzjdfSPH"
+				"bzz-raw://093ebdd548b146f526133a02c2fddc8b23e3e856fbde628dd8ee844131cf2187",
+				"dweb:/ipfs/QmX5YSibtwqsh63Ey6YHue3TYZyKqgQ9382MHD1gN3W2UX"
 			]
 		}
 	},

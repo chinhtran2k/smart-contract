@@ -3,17 +3,21 @@ pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
 import "./Prescription.sol";
+import "../interface/IPrescription.sol";
 
 
 contract healthRecords is ERC721Base{
   mapping(uint256 => bytes32) private _healthRecordsHash;
   mapping(uint256 => uint256[]) private _PrescriptionOfRecords;
+  address private prescriptionAddress;
   Prescription private _prescription;
+  mapping(uint256 => bytes32) private _PrescriptionHash;
 
-  constructor(address prescription, address authenticatior)
-    ERC721Base("Health Record", "HR", authenticatior)
+  constructor(address _prescriptionAddress, address _authAddress)
+    ERC721Base("Health Record", "HR", _authAddress)
   {
-    _prescription = Prescription(prescription);
+    // _prescription = Prescription(prescription);
+    prescriptionAddress = _prescriptionAddress;
   }
  
   function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
@@ -23,6 +27,8 @@ contract healthRecords is ERC721Base{
       _PrescriptionOfRecords[tokenId] = listId;
     return tokenId;
   }
+
+  // function hashVerify
 
   function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
     address owner = ERC721.ownerOf(tokenId);
@@ -48,5 +54,9 @@ contract healthRecords is ERC721Base{
             _PrescriptionOfRecords[healthRecordId]
         );
     }
+  function getHashValueFromPrescription(uint256 tokenId) public view returns(bytes32){
+      return IPrescription(prescriptionAddress).getHashValue(tokenId);
+
+  }
 }
 

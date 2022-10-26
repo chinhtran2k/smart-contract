@@ -6,12 +6,13 @@ import "../interface/IPrescription.sol";
 
  contract Prescription is ERC721Base, IPrescription {
   mapping(uint256 => uint256[]) private _PrescriptionHistory;
-  mapping(uint256 => bytes32) private _PrescriptionHash;
+  mapping(uint256 => bytes32) public _PrescriptionHash;
   mapping(uint256 => bool) private _isPrescriptionHistory;
   mapping(uint256 => bool) private _isPrescriptionLocked;
   mapping(uint256 => mapping(address => bool))  private _isDisclosable;
 
   address private healthRecordContractAddress;
+  
 
   modifier _validPrescriptionList(
         uint256[] memory PrescriptionIds,
@@ -135,5 +136,7 @@ import "../interface/IPrescription.sol";
         require(msg.sender == healthRecordContractAddress, "Only this healthRecordAddress can do this");
         _;
     }
-
+    function getHashValue(uint256 tokenId) external view override returns(bytes32){
+        return _PrescriptionHash[tokenId]; 
+    }
 }
