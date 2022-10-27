@@ -10,7 +10,7 @@ contract healthRecords is ERC721Base{
   mapping(uint256 => bytes32) private _healthRecordsHash;
   mapping(uint256 => uint256[]) private _PrescriptionOfRecords;
   address private prescriptionAddress;
-  Prescription private _prescription;
+  // Prescription private _prescription;
   mapping(uint256 => bytes32) private _PrescriptionHash;
 
   constructor(address _prescriptionAddress, address _authAddress)
@@ -39,7 +39,8 @@ contract healthRecords is ERC721Base{
     //     "ERC721: approve caller is not token owner or approved for all"
     // );
 
-    _prescription.discloseApproval(tokenId, _authAddress);
+    // _prescription.discloseApproval(tokenId, _authAddress);
+    IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
   } 
 
 
