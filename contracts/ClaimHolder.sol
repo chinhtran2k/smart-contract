@@ -9,6 +9,11 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     mapping (bytes32 => Claim) claims;
     mapping (uint256 => bytes32[]) claimsByType;
+    address public owner;
+
+    constructor() {
+        owner = msg.sender;
+    }
 
     function addClaim(
         uint256 _claimType,

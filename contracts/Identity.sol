@@ -17,7 +17,8 @@ contract Identity is ClaimHolder {
         uint256[] memory _sigSizes,
         uint256[] memory dataSizes,
         uint256[] memory uriSizes
-    ) {
+    ) ClaimHolder() {
+
         bytes32 claimId;
         uint offset = 0;
         uint uoffset = 0;

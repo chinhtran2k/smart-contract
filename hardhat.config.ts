@@ -7,7 +7,7 @@ const config: HardhatUserConfig = {
   solidity: "0.8.7",
   networks: {
     test: {
-      url: `http://192.168.2.33:8545/`,
+      url: `http://10.1.4.148:8545/`,
       accounts: [`${PRIVATE_KEY}`],
     },
   },
