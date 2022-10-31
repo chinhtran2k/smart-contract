@@ -19,15 +19,23 @@ async function main() {
       ClaimHolder: {
         address: ClaimHolder.address,
         abi: require("../artifacts/contracts/ClaimHolder.sol/ClaimHolder.json").abi,
+        bytecode: require("../artifacts/contracts/ClaimHolder.sol/ClaimHolder.json").bytecode,
         contractName: require("../artifacts/contracts/ClaimHolder.sol/ClaimHolder.json")
           .contractName,
       },
       ClaimVerifier: {
         address: ClaimVerifier.address,
         abi: require("../artifacts/contracts/ClaimVerifier.sol/ClaimVerifier.json").abi,
+        bytecode: require("../artifacts/contracts/ClaimVerifier.sol/ClaimVerifier.json").bytecode,
         contractName: require("../artifacts/contracts/ClaimVerifier.sol/ClaimVerifier.json")
           .contractName,
       },
+      Identity: {
+        address: "",
+        abi: require("../artifacts/contracts/Identity.sol/Identity.json").abi,
+        bytecode: require("../artifacts/contracts/Identity.sol/Identity.json").bytecode,
+        contractName: require("../artifacts/contracts/Identity.sol/Identity.json").contractName,
+      }
     })
   );
 }
