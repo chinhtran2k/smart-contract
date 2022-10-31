@@ -25,6 +25,7 @@ contract ProxyContract {
     }
 
     function awardToken() external  {
+        require(userAddress != address(this), "Cannot award yourself");
         token.transferFrom(ownerAddress, userAddress, awardUserValue);
     }
 }
