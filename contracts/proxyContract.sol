@@ -8,6 +8,7 @@ contract ProxyContract {
     PCO public token;
     ClaimHolder public identity;
     uint256 private awardUserValue;
+    address public userAddress;
     address private ownerAddress;
     constructor(address _pcoAddress, address _ownerAddress, address _identity) {
         token = PCO(_pcoAddress);
@@ -19,14 +20,11 @@ contract ProxyContract {
         awardUserValue = _value;
     }
 
-    // function setOwner() public view returns(address){
-    //     identity.owner();
-    // }
-
-    function setOwner(ClaimHolder inden) public view returns(address){
-        inden.owner();
+    function setOwner() public returns(address){
+        userAddress = identity.owner();
     }
+
     function awardToken() external  {
-        token.transferFrom(ownerAddress, identity.owner(), awardUserValue);
+        token.transferFrom(ownerAddress, userAddress, awardUserValue);
     }
 }
