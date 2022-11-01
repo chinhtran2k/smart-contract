@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
  
 import "../utils/ERC721Base.sol";
+import "../utils/Authenticator.sol";
 import "../interface/IPrescription.sol";
 
  contract Prescription is ERC721Base, IPrescription {
@@ -43,7 +44,7 @@ import "../interface/IPrescription.sol";
         bytes32 hashValue,
         string memory uri,
         string memory data
-    ) public returns (uint256) {
+    ) public onlyHealthRecord returns (uint256) {
         require(
             keccak256(abi.encodePacked(data)) == hashValue,
             "Data Integrity fail"
@@ -61,7 +62,7 @@ import "../interface/IPrescription.sol";
         bytes32 hashValue,
         string memory uri,
         string memory data
-    ) public {
+    ) public onlyHealthRecord {
         require(
             !_isPrescriptionHistory[PrescriptionId],
             "Cannot update Prescription History"
@@ -116,26 +117,27 @@ import "../interface/IPrescription.sol";
         }
     }
 
-    function setHealthRecordAddress(address _address) external override onlyHealthRecordAddress {
-        healthRecordContractAddress = _address;
-    } 
+    // function setAccessHRAddress(address _address) external override onlyHealthRecord {
+    //     healthRecordContractAddress = _address;
+    // } 
 
-    function getHealthRecordAddress() external view override returns(address){
-        return healthRecordContractAddress;
-    }
+    // function getAccessHRAddress() external view override returns(address){
+    //     return healthRecordContractAddress;
+    // } 
 
-    function discloseApproval(uint256 prescriptionId, address _address) external override onlyHealthRecordAddress{
+    function discloseApproval(uint256 prescriptionId, address _address) external override onlyHealthRecord{
         _isDisclosable[prescriptionId][_address] = true;
     }
 
-    function getDiscloseApproval(uint256 prescriptionId, address _address) external view override returns(bool){
+    function getDiscloseApproval(uint256 prescriptionId, address _address) external view override  onlyHealthRecord returns(bool){
         return _isDisclosable[prescriptionId][_address];
     }
 
-    modifier onlyHealthRecordAddress(){
-        require(msg.sender == healthRecordContractAddress, "Only this healthRecordAddress can do this");
-        _;
-    }
+    // modifier onlyHealthRecordAddress(){
+    //     require(msg.sender == healthRecordContractAddress, "Only this healthRecordAddress can do this");
+    //     _;
+    // }
+
     function getHashValue(uint256 tokenId) external view override returns(bytes32){
         return _PrescriptionHash[tokenId]; 
     }

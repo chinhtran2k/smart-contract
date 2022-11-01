@@ -4,8 +4,11 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
+  ContractTransaction,
+  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -23,16 +26,24 @@ import type {
 export interface AuthenticatorInterface extends utils.Interface {
   functions: {
     "checkAuth(address)": FunctionFragment;
+    "createDID(address,uint8)": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "checkAuth"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "checkAuth" | "createDID"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "checkAuth",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "createDID",
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
+  ): string;
 
   decodeFunctionResult(functionFragment: "checkAuth", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "createDID", data: BytesLike): Result;
 
   events: {};
 }
@@ -68,6 +79,12 @@ export interface Authenticator extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[number]>;
+
+    createDID(
+      _address: PromiseOrValue<string>,
+      authType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   checkAuth(
@@ -75,11 +92,23 @@ export interface Authenticator extends BaseContract {
     overrides?: CallOverrides
   ): Promise<number>;
 
+  createDID(
+    _address: PromiseOrValue<string>,
+    authType: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
     checkAuth(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<number>;
+
+    createDID(
+      _address: PromiseOrValue<string>,
+      authType: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {};
@@ -89,12 +118,24 @@ export interface Authenticator extends BaseContract {
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    createDID(
+      _address: PromiseOrValue<string>,
+      authType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     checkAuth(
       _address: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    createDID(
+      _address: PromiseOrValue<string>,
+      authType: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

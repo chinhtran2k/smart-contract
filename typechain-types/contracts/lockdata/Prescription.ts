@@ -37,7 +37,6 @@ export interface PrescriptionInterface extends utils.Interface {
     "getApproved(uint256)": FunctionFragment;
     "getDiscloseApproval(uint256,address)": FunctionFragment;
     "getHashValue(uint256)": FunctionFragment;
-    "getHealthRecordAddress()": FunctionFragment;
     "getPrescriptionHistory(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(bytes32,string,string)": FunctionFragment;
@@ -49,7 +48,6 @@ export interface PrescriptionInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setHealthRecordAddress(address)": FunctionFragment;
     "setLockPrescription(uint256[],address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -72,7 +70,6 @@ export interface PrescriptionInterface extends utils.Interface {
       | "getApproved"
       | "getDiscloseApproval"
       | "getHashValue"
-      | "getHealthRecordAddress"
       | "getPrescriptionHistory"
       | "isApprovedForAll"
       | "mint"
@@ -84,7 +81,6 @@ export interface PrescriptionInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
-      | "setHealthRecordAddress"
       | "setLockPrescription"
       | "supportsInterface"
       | "symbol"
@@ -128,10 +124,6 @@ export interface PrescriptionInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getHashValue",
     values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getHealthRecordAddress",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getPrescriptionHistory",
@@ -183,10 +175,6 @@ export interface PrescriptionInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setHealthRecordAddress",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setLockPrescription",
@@ -262,10 +250,6 @@ export interface PrescriptionInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getHealthRecordAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getPrescriptionHistory",
     data: BytesLike
   ): Result;
@@ -292,10 +276,6 @@ export interface PrescriptionInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setHealthRecordAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -465,8 +445,6 @@ export interface Prescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<[string]>;
-
     getPrescriptionHistory(
       PrescriptionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -522,11 +500,6 @@ export interface Prescription extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -626,8 +599,6 @@ export interface Prescription extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
-
   getPrescriptionHistory(
     PrescriptionId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -683,11 +654,6 @@ export interface Prescription extends BaseContract {
   setApprovalForAll(
     operator: PromiseOrValue<string>,
     approved: PromiseOrValue<boolean>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setHealthRecordAddress(
-    _address: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -787,8 +753,6 @@ export interface Prescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
-
     getPrescriptionHistory(
       PrescriptionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -842,11 +806,6 @@ export interface Prescription extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -991,8 +950,6 @@ export interface Prescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPrescriptionHistory(
       PrescriptionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1048,11 +1005,6 @@ export interface Prescription extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1153,10 +1105,6 @@ export interface Prescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getHealthRecordAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getPrescriptionHistory(
       PrescriptionId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -1212,11 +1160,6 @@ export interface Prescription extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

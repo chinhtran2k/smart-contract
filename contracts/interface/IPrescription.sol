@@ -11,8 +11,8 @@ interface IPrescription {
         uint256 prescriptionId, address _address
     ) external;
 
-    function setHealthRecordAddress(address _address) external ;
-    function getHealthRecordAddress() external view returns(address);
+    // function setAccessHRAddress(address _address) external ;
+    // function getAccessHRAddress() external view returns(address);
     function getDiscloseApproval (uint256 prescriptionId, address _address) external view returns(bool);
     function getHashValue(uint256 tokenId) external view returns(bytes32);
     // function getListId() external view returns(uint256[] memory);

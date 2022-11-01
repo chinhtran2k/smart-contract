@@ -25,10 +25,11 @@ contract healthRecords is ERC721Base{
       uint256 tokenId = super.mint(uri);
       _healthRecordsHash[tokenId] = hashValue;
       _PrescriptionOfRecords[tokenId] = listId;
+      IPrescription(prescriptionAddress).setLockPrescription(listId, msg.sender);
     return tokenId;
   }
 
-  // function hashVerify
+  // function hashVerify(bytes32 hashValue, )
 
   function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
     address owner = ERC721.ownerOf(tokenId);
@@ -40,7 +41,7 @@ contract healthRecords is ERC721Base{
     // );
 
     // _prescription.discloseApproval(tokenId, _authAddress);
-    IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
+    // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
   } 
 
 

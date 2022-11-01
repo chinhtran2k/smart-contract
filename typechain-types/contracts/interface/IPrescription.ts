@@ -28,8 +28,6 @@ export interface IPrescriptionInterface extends utils.Interface {
     "discloseApproval(uint256,address)": FunctionFragment;
     "getDiscloseApproval(uint256,address)": FunctionFragment;
     "getHashValue(uint256)": FunctionFragment;
-    "getHealthRecordAddress()": FunctionFragment;
-    "setHealthRecordAddress(address)": FunctionFragment;
     "setLockPrescription(uint256[],address)": FunctionFragment;
   };
 
@@ -38,8 +36,6 @@ export interface IPrescriptionInterface extends utils.Interface {
       | "discloseApproval"
       | "getDiscloseApproval"
       | "getHashValue"
-      | "getHealthRecordAddress"
-      | "setHealthRecordAddress"
       | "setLockPrescription"
   ): FunctionFragment;
 
@@ -56,14 +52,6 @@ export interface IPrescriptionInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getHealthRecordAddress",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setHealthRecordAddress",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setLockPrescription",
     values: [PromiseOrValue<BigNumberish>[], PromiseOrValue<string>]
   ): string;
@@ -78,14 +66,6 @@ export interface IPrescriptionInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getHashValue",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getHealthRecordAddress",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setHealthRecordAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -140,13 +120,6 @@ export interface IPrescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<[string]>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     setLockPrescription(
       PrescriptionIds: PromiseOrValue<BigNumberish>[],
       senderAddress: PromiseOrValue<string>,
@@ -171,13 +144,6 @@ export interface IPrescription extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
-
-  setHealthRecordAddress(
-    _address: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   setLockPrescription(
     PrescriptionIds: PromiseOrValue<BigNumberish>[],
     senderAddress: PromiseOrValue<string>,
@@ -201,13 +167,6 @@ export interface IPrescription extends BaseContract {
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
-
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<string>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     setLockPrescription(
       PrescriptionIds: PromiseOrValue<BigNumberish>[],
@@ -236,13 +195,6 @@ export interface IPrescription extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getHealthRecordAddress(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     setLockPrescription(
       PrescriptionIds: PromiseOrValue<BigNumberish>[],
       senderAddress: PromiseOrValue<string>,
@@ -266,15 +218,6 @@ export interface IPrescription extends BaseContract {
     getHashValue(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getHealthRecordAddress(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    setHealthRecordAddress(
-      _address: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setLockPrescription(
