@@ -3,27 +3,27 @@ pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
 import "./DDR.sol";
-import "../interface/IDDR.sol";
+import "../interface/IPatients.sol";
 
 
 contract Pharmacy is ERC721Base{
   mapping(uint256 => bytes32) private _PharmacyHash;
-  mapping(uint256 => uint256[]) private _DDROfPatients;
-  address private DDRAddress;
-  mapping(uint256 => bytes32) private _DDRHash;
+  mapping(uint256 => uint256[]) private _PatientsOfPharmacy;
+  address private PatientsAddress;
+  mapping(uint256 => bytes32) private _PatientsHash;
 
-  constructor(address _DDRAddress, address _authAddress)
-    ERC721Base("Patients", "PT", _authAddress)
+  constructor(address _PatientsAddress, address _authAddress)
+    ERC721Base("Pharmacy", "PM", _authAddress)
   {
-    DDRAddress = _DDRAddress;
+    PatientsAddress = _PatientsAddress;
   }
   
   function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
       require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
       uint256 tokenId = super.mint(uri);
       _PharmacyHash[tokenId] = hashValue;
-      _DDROfPatients[tokenId] = listId;
-      IDDR(DDRAddress).setLockDDR(listId, msg.sender);
+      _PatientsOfPharmacy[tokenId] = listId;
+      // IPatients(PatientsAddress).setLockPatients(listId, msg.sender);
     return tokenId;
   }
 
@@ -35,7 +35,6 @@ contract Pharmacy is ERC721Base{
     // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
   } 
 
-
   function checkDataIntegrity(uint256 PharmacyId, bytes32 hashValue)
         public
         view
@@ -43,11 +42,11 @@ contract Pharmacy is ERC721Base{
     {
         return (
             _PharmacyHash[PharmacyId] == hashValue,
-            _DDROfPatients[PharmacyId]
+            _PatientsOfPharmacy[PharmacyId]
         );
     }
-  function getHashValueFromDDR(uint256 tokenId) public view returns(bytes32){
-      return IDDR(DDRAddress).getHashValue(tokenId);
+  function getHashValueFromPatients(uint256 tokenId) public view returns(bytes32){
+      return IPatients(PatientsAddress).getHashValue(tokenId);
 
   }
 }
