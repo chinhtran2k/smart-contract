@@ -57,13 +57,29 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IAuthenticator__factory>;
     getContractFactory(
+      name: "IDDR",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IDDR__factory>;
+    getContractFactory(
       name: "IPrescription",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IPrescription__factory>;
     getContractFactory(
+      name: "DDR",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.DDR__factory>;
+    getContractFactory(
       name: "HealthRecords",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.HealthRecords__factory>;
+    getContractFactory(
+      name: "Patients",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Patients__factory>;
+    getContractFactory(
+      name: "Pharmacy",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.Pharmacy__factory>;
     getContractFactory(
       name: "Prescription",
       signerOrOptions?: ethers.Signer | FactoryOptions
@@ -137,15 +153,35 @@ declare module "hardhat/types/runtime" {
       signer?: ethers.Signer
     ): Promise<Contracts.IAuthenticator>;
     getContractAt(
+      name: "IDDR",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IDDR>;
+    getContractAt(
       name: "IPrescription",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IPrescription>;
     getContractAt(
+      name: "DDR",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.DDR>;
+    getContractAt(
       name: "HealthRecords",
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.HealthRecords>;
+    getContractAt(
+      name: "Patients",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Patients>;
+    getContractAt(
+      name: "Pharmacy",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.Pharmacy>;
     getContractAt(
       name: "Prescription",
       address: string,

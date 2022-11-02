@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export { IAuthenticator__factory } from "./IAuthenticator__factory";
+export { IDDR__factory } from "./IDDR__factory";
 export { IPrescription__factory } from "./IPrescription__factory";

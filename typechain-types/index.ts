@@ -28,10 +28,18 @@ export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
 export type { IAuthenticator } from "./contracts/interface/IAuthenticator";
 export { IAuthenticator__factory } from "./factories/contracts/interface/IAuthenticator__factory";
+export type { IDDR } from "./contracts/interface/IDDR";
+export { IDDR__factory } from "./factories/contracts/interface/IDDR__factory";
 export type { IPrescription } from "./contracts/interface/IPrescription";
 export { IPrescription__factory } from "./factories/contracts/interface/IPrescription__factory";
+export type { DDR } from "./contracts/lockdata/DDR";
+export { DDR__factory } from "./factories/contracts/lockdata/DDR__factory";
 export type { HealthRecords } from "./contracts/lockdata/HealthRecords";
 export { HealthRecords__factory } from "./factories/contracts/lockdata/HealthRecords__factory";
+export type { Patients } from "./contracts/lockdata/Patients";
+export { Patients__factory } from "./factories/contracts/lockdata/Patients__factory";
+export type { Pharmacy } from "./contracts/lockdata/Pharmacy";
+export { Pharmacy__factory } from "./factories/contracts/lockdata/Pharmacy__factory";
 export type { Prescription } from "./contracts/lockdata/Prescription";
 export { Prescription__factory } from "./factories/contracts/lockdata/Prescription__factory";
 export type { Authenticator } from "./contracts/utils/Authenticator.sol/Authenticator";

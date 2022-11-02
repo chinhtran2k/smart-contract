@@ -4,5 +4,6 @@ pragma solidity ^0.8.0;
 enum AuthType {
     NONE,
     CL,
-    HR
+    HR,
+    PT
 }

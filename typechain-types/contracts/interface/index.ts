@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { IAuthenticator } from "./IAuthenticator";
+export type { IDDR } from "./IDDR";
 export type { IPrescription } from "./IPrescription";
