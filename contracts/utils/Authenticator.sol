@@ -6,28 +6,30 @@ contract Authenticator is IAuthenticator {
     // mapping(address => bool) private _subject;
     // mapping(address => bool) private _administrator;
     // mapping(address => bool) private _actor;
-    mapping(address => bool) private _healthRecord;
+    mapping(address => bool) private _patients;
 
     constructor() {
         // _administrator[msg.sender] = true;
-        _healthRecord[msg.sender] = true;
+        _patients[msg.sender] = true;
     }
 
     function createDID(address _address, AuthType authType) external {
         require(_address != address(0), "Address zero is not allowed");
         require(
-            _healthRecord[msg.sender] == true,
+            _patients[msg.sender] == true,
             "Address is not healthRecord"
         );
+        // if checkClaim(address A, 1) => patient
+        // else if checkClaim(address A, 2) => Pharmacy
         // if (_subject[_address] && authType != AuthType.SB)
         //     _subject[_address] = false;
-        if (_healthRecord[_address] && authType != AuthType.HR)
-            _healthRecord[_address] = false;
+        if (_patients[_address] && authType != AuthType.PT)
+            _patients[_address] = false;
         // if (_actor[_address] && authType != AuthType.IV)
         //     _actor[_address] = false;
 
         // if (authType == AuthType.SB) _subject[_address] = true;
-        else if (authType == AuthType.HR) _healthRecord[_address] = true;
+        else if (authType == AuthType.PT) _patients[_address] = true;
         // else if (authType == AuthType.IV) _actor[_address] = true;
     }
 
@@ -38,7 +40,7 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if(_healthRecord[_address]) return AuthType.HR;
+        if(_patients[_address]) return AuthType.PT;
         // if (_subject[_address]) return AuthType.SB;
         // else if (_administrator[_address]) return AuthType.AD;
         // else if (_actor[_address]) return AuthType.IV;
@@ -63,10 +65,10 @@ contract AuthenticatorHelper {
     //     _;
     // }
 
-    modifier onlyHealthRecord() {
+    modifier onlyPatients() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.HR,
-            "Only health_record can call this function"
+            _IAuth.checkAuth(msg.sender) == AuthType.PT,
+            "Only patients can call this function"
         );
         _;
     }
