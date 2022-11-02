@@ -4,10 +4,15 @@ pragma solidity ^0.8.0;
 import "../utils/ERC721Base.sol";
 import "./DDR.sol";
 import "../interface/IDDR.sol";
+import "../interface/IPatients.sol";
 
 
-contract Patients is ERC721Base{
+
+contract Patients is ERC721Base, IPatients{
   mapping(uint256 => bytes32) private _PatientsHash;
+  mapping(uint256 => uint256[]) _patientsHistory;
+  mapping(uint256 => bool) private _isPatientsHistory;
+  mapping(uint256 => bool) private _isPatientsLocked;
   mapping(uint256 => uint256[]) private _DDROfPatients;
   address private DDRAddress;
   // Prescription private _prescription;
@@ -31,15 +36,20 @@ contract Patients is ERC721Base{
 
   // function hashVerify(bytes32 hashValue, )
 
-  function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
-    address owner = ERC721.ownerOf(tokenId);
-    require(_authAddress != owner, "ERC721: approval to current owner");
-    // _prescription.discloseApproval(tokenId, _authAddress);
-    // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
-  } 
+  // function discloseApproval(address _authAddress, uint256 tokenId) external override {
+  //   address owner = ERC721.ownerOf(tokenId);
+  //   require(_authAddress != owner, "ERC721: approval to current owner");
+  //   // _prescription.discloseApproval(tokenId, _authAddress);
+  //   // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
+  // } 
 
+  // function setLockPatients(uint256[] memory PatientsIds, address senderAddress) external override _validDDRList(DDRIds, senderAddress) {
+  //       for (uint256 i = 0; i < DDRIds.length; i++) {
+  //           _isDDRLocked[DDRIds[i]] = true;
+  //       }
+  //   }
 
-
+  
   function checkDataIntegrity(uint256 PatientsId, bytes32 hashValue)
         public
         view
@@ -52,7 +62,10 @@ contract Patients is ERC721Base{
     }
   function getHashValueFromDDR(uint256 tokenId) public view returns(bytes32){
       return IDDR(DDRAddress).getHashValue(tokenId);
-
   }
+
+  function getHashValue(uint256 tokenId) external view override returns(bytes32){
+        return _PatientsHash[tokenId]; 
+    }
 }
 
