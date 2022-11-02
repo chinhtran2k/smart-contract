@@ -184,24 +184,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "_authAddress",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					}
-				],
-				"name": "discloseApproval",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "tokenId",
 						"type": "uint256"
@@ -213,6 +195,25 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "getHashValue",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
 					}
 				],
 				"stateMutability": "view",
@@ -793,20 +794,28 @@
 				"dweb:/ipfs/QmeYJMUi4vxYazjczUtKJzQ5QPu1eLEqf43PeMSvoymEDK"
 			]
 		},
-		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0xfffba0ec6942582a41c1e094245b75eec4d71d75587e930e8cbf7c1cd92c4c78",
+		"contracts/interface/IPatients.sol": {
+			"keccak256": "0x933c1490de80bcc2eb28c77332b094735f18b1cdbfb08120a1d183db495cbd8d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c28bde9ba56862a2e75e19008ba085e5ff213f10485256d917165af497fdf3d8",
-				"dweb:/ipfs/QmYm4naL5AtgxjBFyGaCPuXDsQBjwY8RyCLcARyFMQVsUe"
+				"bzz-raw://a277e6bbff8ff59669cf1da065b78aa4f68bd56df0246f1c0fe5005a035af896",
+				"dweb:/ipfs/QmSYwJ2WQ4qbTZnH3yeePxCv3WciQLHYPrEp67eroyWeJn"
+			]
+		},
+		"contracts/lockdata/DDR.sol": {
+			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
+				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
 			]
 		},
 		"contracts/lockdata/Patients.sol": {
-			"keccak256": "0xcc5d02f4e5f572bc17c9744483912482199dce7eebe6f804e3d91b3a05676243",
+			"keccak256": "0xbb5b624b42af8f62f53523198a404b6d2f3528c13ee29d1b95447127b81a4a6f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://691b3e7ff86537aeff1c9415f06ab3f04126b84a384ca171b451e16be6cd4781",
-				"dweb:/ipfs/QmVjji3JEgwnZo4zEr4oGiPUkfuDMspW58xHw59y5ncfAH"
+				"bzz-raw://8dda6fae0db15f23f0ca25851f241e2c19b9fab506bb2c1fe516d29acf33c9ca",
+				"dweb:/ipfs/QmRuohV7Vom9YfrM3T7uhWdMdhGx6qvdhKo1Qst3phVHgk"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {

@@ -9,7 +9,7 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "_DDRAddress",
+						"name": "_PatientsAddress",
 						"type": "address"
 					},
 					{
@@ -226,7 +226,7 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getHashValueFromDDR",
+				"name": "getHashValueFromPatients",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -793,20 +793,28 @@
 				"dweb:/ipfs/QmeYJMUi4vxYazjczUtKJzQ5QPu1eLEqf43PeMSvoymEDK"
 			]
 		},
-		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0xfffba0ec6942582a41c1e094245b75eec4d71d75587e930e8cbf7c1cd92c4c78",
+		"contracts/interface/IPatients.sol": {
+			"keccak256": "0x933c1490de80bcc2eb28c77332b094735f18b1cdbfb08120a1d183db495cbd8d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c28bde9ba56862a2e75e19008ba085e5ff213f10485256d917165af497fdf3d8",
-				"dweb:/ipfs/QmYm4naL5AtgxjBFyGaCPuXDsQBjwY8RyCLcARyFMQVsUe"
+				"bzz-raw://a277e6bbff8ff59669cf1da065b78aa4f68bd56df0246f1c0fe5005a035af896",
+				"dweb:/ipfs/QmSYwJ2WQ4qbTZnH3yeePxCv3WciQLHYPrEp67eroyWeJn"
+			]
+		},
+		"contracts/lockdata/DDR.sol": {
+			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
+				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
 			]
 		},
 		"contracts/lockdata/Pharmacy.sol": {
-			"keccak256": "0x24b525c564d6aab05d531caae3ab1034972473cd9c59635d860b490ec5ee200c",
+			"keccak256": "0xaf9d48dbbbc2d4742aac03e4cf61607eb524566a4cb96241ca9e1d5b37d936dc",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://cfe9c2d138e88a306c87e42f3b4c290c287f39630f140c2c5aa4053b2dd61c23",
-				"dweb:/ipfs/QmTLFvv4jsDJcskCTwTXVLuUposETBvxAvgRC7qneh4P1x"
+				"bzz-raw://4c4c95802924fd553701b244827d5432bba00bf86fc510bcf3a22c2a0f5fb30f",
+				"dweb:/ipfs/QmcKKEGC74JSyAXL7nP6yzzfQkSo9Mo5CBQjzS19BkuNhb"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {

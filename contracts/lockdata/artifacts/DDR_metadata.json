@@ -930,11 +930,11 @@
 			]
 		},
 		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0xfffba0ec6942582a41c1e094245b75eec4d71d75587e930e8cbf7c1cd92c4c78",
+			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c28bde9ba56862a2e75e19008ba085e5ff213f10485256d917165af497fdf3d8",
-				"dweb:/ipfs/QmYm4naL5AtgxjBFyGaCPuXDsQBjwY8RyCLcARyFMQVsUe"
+				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
+				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {
