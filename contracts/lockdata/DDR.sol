@@ -5,6 +5,7 @@ import "../utils/ERC721Base.sol";
 import "../utils/Authenticator.sol";
 import "../interface/IDDR.sol";
 
+
  contract DDR is ERC721Base, IDDR{
   mapping(uint256 => uint256[]) private _DDRHistory;
   mapping(uint256 => bytes32) public _DDRHash;
