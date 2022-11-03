@@ -18,6 +18,24 @@ contract Patients is ERC721Base, IPatients{
   // Prescription private _prescription;
   mapping(uint256 => bytes32) private _DDRHash;
 
+  modifier _validPatientsList(
+    uint256[] memory PatientsIds, 
+    address senderAddress
+  ){
+    for(uint256 i =0; i < PatientsIds.length; i++){
+      require(!_isPatientsLocked[PatientsIds[i]],
+      "Patient is already locked"
+    );
+    require(ownerOf(PatientsIds[i]) == senderAddress,
+      "Not owner of Patient"
+    );
+    require(!_isPatientsHistory[PatientsIds[i]],
+      "Cannot lock Patient History"
+    );
+    }
+    _;
+  }
+
   constructor(address _DDRAddress, address _authAddress)
     ERC721Base("Patients", "PT", _authAddress)
   {
@@ -43,11 +61,11 @@ contract Patients is ERC721Base, IPatients{
   //   // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
   // } 
 
-  // function setLockPatients(uint256[] memory PatientsIds, address senderAddress) external override _validDDRList(DDRIds, senderAddress) {
-  //       for (uint256 i = 0; i < DDRIds.length; i++) {
-  //           _isDDRLocked[DDRIds[i]] = true;
-  //       }
-  //   }
+  function setLockPatients(uint256[] memory PatientsIds, address senderAddress) external override _validPatientsList(PatientsIds, senderAddress) {
+        for (uint256 i = 0; i < PatientsIds.length; i++) {
+            _isPatientsLocked[PatientsIds[i]] = true;
+        }
+    }
 
   
   function checkDataIntegrity(uint256 PatientsId, bytes32 hashValue)
