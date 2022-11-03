@@ -643,7 +643,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/lockdata/healthRecords.sol": "healthRecords"
+			"hpa3-blockchain/contracts/lockdata/healthRecords.sol": "healthRecords"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -769,15 +769,15 @@
 				"dweb:/ipfs/QmP7C3CHdY9urF4dEMb9wmsp1wMxHF6nhA2yQE5SKiPAdy"
 			]
 		},
-		"contracts/enum/AuthType.sol": {
-			"keccak256": "0x1d306485d04b46f6211ff1ae31c74288dac1575221fb826d423da7832617ac1f",
+		"hpa3-blockchain/contracts/enum/AuthType.sol": {
+			"keccak256": "0x518d825345f90399ab74db90f460dc7bc680f64ed0e79e593486ef2aa595c8c2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2cf0839f69f3d716a841f1a9c0b3f3813b407e865bb712b881e1e1859809c214",
-				"dweb:/ipfs/QmZxWZgrczu3ukQdcLyfiWUTVpD5oAZDJfPYi2a2Xz7yff"
+				"bzz-raw://644637baa53885d90c55d2764422f15396fba01ca182c56373fa7e4ccb3724f6",
+				"dweb:/ipfs/QmPYKZNFv4youMC49qBgnf5k6nDBQaaobzqvDDkKBkJL35"
 			]
 		},
-		"contracts/interface/IAuthenticator.sol": {
+		"hpa3-blockchain/contracts/interface/IAuthenticator.sol": {
 			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
 			"license": "MIT",
 			"urls": [
@@ -785,31 +785,31 @@
 				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
 			]
 		},
-		"contracts/interface/IPrescription.sol": {
-			"keccak256": "0x8671a3c018ed597cfcf71971cd780dee223bbba57cbcd8ee313db8c3ca6454a1",
+		"hpa3-blockchain/contracts/interface/IPrescription.sol": {
+			"keccak256": "0x7ed03847837c2f7b87799c96a62511c3baa30a1a86f0590cc6683fdff3c24ced",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://81469d7128459b47e04062eee571a2c75dcc5ea3e9ca04a797b6590d72299064",
-				"dweb:/ipfs/QmNZ29obQBeb5XxNEe95uGPMHVyoRPf288pvXiCTTchw9u"
+				"bzz-raw://1061ad9f259897e970bbf8bd028592cd9e8ae2a8df9221322ca22ff1137b72df",
+				"dweb:/ipfs/QmYKYkyj9TGsDFqG6EsYad72sDKKrKUVeJZAxz9C5kaxLz"
 			]
 		},
-		"contracts/lockdata/Prescription.sol": {
-			"keccak256": "0xd073a41d80a18474f5d9d3d7f5bd0d20a230e929a903fb074c6a8c3beafc28f4",
+		"hpa3-blockchain/contracts/lockdata/Prescription.sol": {
+			"keccak256": "0x1f3bb735e6622abae48889367a8a85f4da725ed48f3f74d8075b5f05ca4745e2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://dfbdb364d6208106c0800feec5517c9c67fdfee5bdc9823ec20e8c75afac271a",
-				"dweb:/ipfs/QmUoN2yaGXYyHL6AnVZBoSRaJEtcbpjigN8rzARydPhtnj"
+				"bzz-raw://cb39c06cd1b8dd158f010604bfc35875b678d13b2f1cc997ec2b1e9eb691c2f7",
+				"dweb:/ipfs/Qmakgwow3bykjCukve3saRYAGnBFNQYLiCEGCn5pE2fxJw"
 			]
 		},
-		"contracts/lockdata/healthRecords.sol": {
-			"keccak256": "0x973d126d530fba3589a37adfcc66055d30a28b71546fff3423f1b29e2480a70b",
+		"hpa3-blockchain/contracts/lockdata/healthRecords.sol": {
+			"keccak256": "0xe409f42540b8593f257f13df71709379da51765facfa6340c05290e8e5f0d706",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://eb4922dd445688b2c7c369e2ea2d9578c27bf7b31943fe4ca073c8b12247bb12",
-				"dweb:/ipfs/QmfKegbPF5LxzTNrUrst4Pzv5fPzxG5ZkLW5f7hyoZrY4u"
+				"bzz-raw://0ecfb76198154a23df86d9bab906bf853215f526c33226ba569af1a2a6e6250d",
+				"dweb:/ipfs/QmUXeR8WBDeisDWfsPMSQv8tc7cjxdBFzcDvFCbBMSjeaW"
 			]
 		},
-		"contracts/utils/Authenticator.sol": {
+		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
 			"keccak256": "0xeb3ddc08b5ed556475db00652a8acc4e89e49d15e060555c19bb81ad5aec1b78",
 			"license": "MIT",
 			"urls": [
@@ -817,7 +817,7 @@
 				"dweb:/ipfs/QmcX86hAB2b472Wgw4NowGDsFnZLHdc1y755sGGMRc3dUv"
 			]
 		},
-		"contracts/utils/ERC721Base.sol": {
+		"hpa3-blockchain/contracts/utils/ERC721Base.sol": {
 			"keccak256": "0x94a0d3841c2e257bffa5ee05374bc70753961e6bd6e8e12e32f599c6271b2395",
 			"license": "MIT",
 			"urls": [

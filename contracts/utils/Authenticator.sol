@@ -1,34 +1,34 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "../interface/IAuthenticator.sol";
+import "../../../hpa3-blockchain-did/contracts/ClaimVerifier.sol";
+import "../../../hpa3-blockchain-did/contracts/ClaimHolder.sol";
 
 contract Authenticator is IAuthenticator {
-    // mapping(address => bool) private _subject;
-    // mapping(address => bool) private _administrator;
-    // mapping(address => bool) private _actor;
-    mapping(address => bool) private _healthRecord;
+    mapping(address => bool) private _pharmacy;
+    mapping(address => bool) private _patient;
+    mapping(address => bool) private _clinic;
+    ClaimVerifier private _checkClaim;
 
-    constructor() {
-        // _administrator[msg.sender] = true;
-        _healthRecord[msg.sender] = true;
+    constructor(address claimVerifier) {
+        _pharmacy[msg.sender] = true;
+        _patient[msg.sender] = true;
+        _clinic[msg.sender] = true;
+        _checkClaim = ClaimVerifier(claimVerifier);
     }
 
-    function createDID(address _address, AuthType authType) external {
-        require(_address != address(0), "Address zero is not allowed");
-        require(
-            _healthRecord[msg.sender] == true,
-            "Address is not healthRecord"
-        );
-        // if (_subject[_address] && authType != AuthType.SB)
-        //     _subject[_address] = false;
-        if (_healthRecord[_address] && authType != AuthType.HR)
-            _healthRecord[_address] = false;
-        // if (_actor[_address] && authType != AuthType.IV)
-        //     _actor[_address] = false;
-
-        // if (authType == AuthType.SB) _subject[_address] = true;
-        else if (authType == AuthType.HR) _healthRecord[_address] = true;
-        // else if (authType == AuthType.IV) _actor[_address] = true;
+    function createDID(ClaimHolder _address) external {
+        require(address(_address) != address(0), "Address zero is not allowed");
+        require(_pharmacy[msg.sender] == true, "Address is not pharmacy");
+        require(_patient[msg.sender] == true, "Address is not patient");
+        require(_clinic[msg.sender] == true, "Address is not clinic");
+        if (_checkClaim.checkClaim(_address, 1)) {
+            _patient[address(_address)] = true;
+        } else if (_checkClaim.checkClaim(_address, 2)) {
+            _pharmacy[address(_address)] = true;
+        } else if (_checkClaim.checkClaim(_address, 3)) {
+            _clinic[address(_address)] = true;
+        }
     }
 
     function checkAuth(address _address)
@@ -38,13 +38,11 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if(_healthRecord[_address]) return AuthType.HR;
-        // if (_subject[_address]) return AuthType.SB;
-        // else if (_administrator[_address]) return AuthType.AD;
-        // else if (_actor[_address]) return AuthType.IV;
+        if (_patient[_address]) return AuthType.PT;
+        else if (_pharmacy[_address]) return AuthType.PM;
+        else if (_clinic[_address]) return AuthType.CN;
         else return AuthType.NONE;
     }
-
 }
 
 contract AuthenticatorHelper {
@@ -55,20 +53,26 @@ contract AuthenticatorHelper {
         _IAuth = IAuthenticator(_authenticator);
     }
 
-    // modifier onlyClinic() {
-    //     require(
-    //         _IAuth.checkAuth(msg.sender) == AuthType.CL,
-    //         "Only actor_clinic can call this function"
-    //     );
-    //     _;
-    // }
-
-    modifier onlyHealthRecord() {
+    modifier onlyPharmacy() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.HR,
-            "Only health_record can call this function"
+            _IAuth.checkAuth(msg.sender) == AuthType.PM,
+            "Only pharmacy can call this function"
         );
         _;
     }
 
+    modifier onlyPatient() {
+        require(
+            _IAuth.checkAuth(msg.sender) == AuthType.PT,
+            "Only patient can call this function"
+        );
+        _;
+    }
+
+    modifier onlyClinic() {
+        require(
+            _IAuth.checkAuth(msg.sender) == AuthType.CN,
+            "Only clinic can call this function"
+        );
+        _;
 }
