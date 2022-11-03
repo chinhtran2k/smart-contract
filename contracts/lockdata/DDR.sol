@@ -7,6 +7,8 @@ import "../interface/IDDR.sol";
 
 
  contract DDR is ERC721Base, IDDR{
+  event UpdateDDR(uint256 _Id, bytes32 _hashValue, string _uri);
+  event SetLockDDR(uint256[] _listIds, address _address);
   mapping(uint256 => uint256[]) private _DDRHistory;
   mapping(uint256 => bytes32) public _DDRHash;
   mapping(uint256 => bool) private _isDDRHistory;
@@ -94,6 +96,7 @@ import "../interface/IDDR.sol";
         _isDDRHistory[newDDRId] = true;
 
         _DDRHistory[DDRId].push(newDDRId);
+        emit UpdateDDR(DDRId, hashValue, uri);
     }
 
     function getDDRHistory(uint256 DDRId)
@@ -123,6 +126,7 @@ import "../interface/IDDR.sol";
         for (uint256 i = 0; i < DDRIds.length; i++) {
             _isDDRLocked[DDRIds[i]] = true;
         }
+        emit SetLockDDR(DDRIds, senderAddress);
     }
 
     // function setAccessHRAddress(address _address) external override onlyHealthRecord {
