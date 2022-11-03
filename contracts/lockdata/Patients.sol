@@ -9,6 +9,7 @@ import "../interface/IPatients.sol";
 
 
 contract Patients is ERC721Base, IPatients{
+  event SetLockPatients(uint256[] _listIds, address _address);
   mapping(uint256 => bytes32) private _PatientsHash;
   mapping(uint256 => uint256[]) _patientsHistory;
   mapping(uint256 => bool) private _isPatientsHistory;
@@ -63,6 +64,7 @@ contract Patients is ERC721Base, IPatients{
         for (uint256 i = 0; i < PatientsIds.length; i++) {
             _isPatientsLocked[PatientsIds[i]] = true;
         }
+        emit SetLockPatients(PatientsIds, senderAddress);
     }
 
   
