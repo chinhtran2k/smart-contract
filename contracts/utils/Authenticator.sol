@@ -8,6 +8,7 @@ contract Authenticator is IAuthenticator {
     // mapping(address => bool) private _actor;
     mapping(address => bool) private _patients;
     mapping(address => bool) private _clinic;
+    mapping(address => bool) private _pharmacy;
 
     constructor() {
         // _administrator[msg.sender] = true;
@@ -20,12 +21,16 @@ contract Authenticator is IAuthenticator {
             _patients[msg.sender] == true,
             "Address is not Patients"
         );
-        if (_patients[_address] && authType != AuthType.Patients)
+        if (_patients[_address] && authType != AuthType.PATIENTS)
             _patients[_address] = false;
-        if (_clinic[_address] && authType != AuthType.Clinic)
+        if (_clinic[_address] && authType != AuthType.CLINIC)
             _clinic[_address] = false;
-        else if (authType == AuthType.Patients) _patients[_address] = true;
-        else if (authType == AuthType.Clinic) _clinic[_address] = true;
+        if (_patients[_address] && authType != AuthType.PHARMACY)
+            _pharmacy[_address] = false;
+        else if (authType == AuthType.PATIENTS) _patients[_address] = true;
+        else if (authType == AuthType.CLINIC) _clinic[_address] = true;
+        else if (authType == AuthType.PHARMACY) _pharmacy[_address] = true;
+
     }
 
     function checkAuth(address _address)
@@ -35,8 +40,9 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if(_patients[_address]) return AuthType.Patients;
-        if(_clinic[_address]) return AuthType.Clinic;
+        if(_patients[_address]) return AuthType.PATIENTS;
+        if(_clinic[_address]) return AuthType.CLINIC;
+        if(_pharmacy[_address]) return AuthType.PHARMACY;
         else return AuthType.NONE;
     }
 
@@ -52,18 +58,25 @@ contract AuthenticatorHelper {
 
     modifier onlyClinic() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.Clinic,
-            "Only actor_clinic can call this function"
+            _IAuth.checkAuth(msg.sender) == AuthType.CLINIC,
+            "Only Clinic can call this function"
         );
         _;
     }
 
     modifier onlyPatients() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PT,
+            _IAuth.checkAuth(msg.sender) == AuthType.PATIENTS,
             "Only patients can call this function"
         );
         _;
     }
 
+    modifier onlyPharmacy() {
+        require(
+            _IAuth.checkAuth(msg.sender) == AuthType.PHARMACY,
+            "Only Pharmacy can call this function"
+        );
+        _;
+    }
 }
