@@ -18,20 +18,18 @@ contract Pharmacy is ERC721Base{
     PatientsAddress = _PatientsAddress;
   }
   
-  function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
-      require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
+  function mint(bytes32 hashValue, string memory uri, uint256[] memory listId) public returns(uint256){
+      // require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
       uint256 tokenId = super.mint(uri);
       _PharmacyHash[tokenId] = hashValue;
       _PatientsOfPharmacy[tokenId] = listId;
-      // IPatients(PatientsAddress).setLockPatients(listId, msg.sender);
+      IPatients(PatientsAddress).setLockPatients(listId, msg.sender);
     return tokenId;
   }
 
   function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
     address owner = ERC721.ownerOf(tokenId);
     require(_authAddress != owner, "ERC721: approval to current owner");
-
-    // _prescription.discloseApproval(tokenId, _authAddress);
     // IPrescription(prescriptionAddress).discloseApproval(tokenId, _authAddress);
   } 
 
@@ -45,6 +43,7 @@ contract Pharmacy is ERC721Base{
             _PatientsOfPharmacy[PharmacyId]
         );
     }
+    
   function getHashValueFromPatients(uint256 tokenId) public view returns(bytes32){
       return IPatients(PatientsAddress).getHashValue(tokenId);
 

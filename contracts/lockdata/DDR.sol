@@ -46,31 +46,30 @@ import "../interface/IDDR.sol";
     function mint(
         // address _patientsAddress,
         bytes32 hashValue,
-        string memory uri,
-        string memory data,
-        address addressPT
+        string memory uri
+        // string memory data
     ) public onlyPatients returns (uint256) {
-        require(
-            keccak256(abi.encodePacked(data)) == hashValue,
-            "Data Integrity fail"
-        );
+        // require(
+        //     keccak256(abi.encodePacked(data)) == hashValue,
+        //     "Data Integrity fail"
+        // );
         uint256 tokenId = super.mint(uri);
         _DDRHash[tokenId] = hashValue;
         _DDRHistory[tokenId].push(tokenId);
         _isDDRHistory[tokenId] = false;
-        _patientAddress[tokenId] = addressPT;
+        // _patientAddress[tokenId] = addressPT;
         return tokenId;
     }
 
-    function getAddress(uint256 tokenId)public view returns(address){
-        return _patientAddress[tokenId];
-    }
+    // function getAddress(uint256 tokenId)public view returns(address){
+    //     return _patientAddress[tokenId];
+    // }
 
     function updateDDR(
         uint256 DDRId,
         bytes32 hashValue,
-        string memory uri,
-        string memory data
+        string memory uri
+        // string memory data
     ) public onlyPatients {
         require(
             !_isDDRHistory[DDRId],
@@ -84,10 +83,10 @@ import "../interface/IDDR.sol";
             "Not the owner of the DDR"
         );
 
-        require(
-            keccak256(abi.encodePacked(data)) == hashValue,
-            "Data integrity failure"
-        );
+        // require(
+        //     keccak256(abi.encodePacked(data)) == hashValue,
+        //     "Data integrity failure"
+        // );
 
         uint256 newDDRId = super.mint(uri);
         _DDRHash[newDDRId] = hashValue;

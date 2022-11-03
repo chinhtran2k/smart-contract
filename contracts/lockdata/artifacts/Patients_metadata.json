@@ -438,6 +438,24 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256[]",
+						"name": "PatientsIds",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "address",
+						"name": "senderAddress",
+						"type": "address"
+					}
+				],
+				"name": "setLockPatients",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes4",
 						"name": "interfaceId",
 						"type": "bytes4"
@@ -795,27 +813,27 @@
 			]
 		},
 		"contracts/interface/IPatients.sol": {
-			"keccak256": "0x933c1490de80bcc2eb28c77332b094735f18b1cdbfb08120a1d183db495cbd8d",
+			"keccak256": "0xe016f28d4aa98b1b22bfebeb6db2de4abb4d1ed73285e8188bd044f173cceae0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a277e6bbff8ff59669cf1da065b78aa4f68bd56df0246f1c0fe5005a035af896",
-				"dweb:/ipfs/QmSYwJ2WQ4qbTZnH3yeePxCv3WciQLHYPrEp67eroyWeJn"
+				"bzz-raw://7c9e33b07b94f84ff71321ab39f1b056a0faf592e9560ff312feb5c693e0c411",
+				"dweb:/ipfs/QmYr5Vy3d4KNwkYx8LrjcmQF5AP4uzNmZPBmjr9FhkTAZ3"
 			]
 		},
 		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
+			"keccak256": "0x61567e5870ce6fec2d90d0c9b4cab3e2e5e9421c26328638a62236f89bbe73f8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
-				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
+				"bzz-raw://dab5a46e9fc814172303ec9d6640ec76e3cc804edcf83f2158818a11450dcd56",
+				"dweb:/ipfs/QmdMG7o1622sUFxAPrGLD8ZYKJfYS2rq4XWts7RpgR7T6X"
 			]
 		},
 		"contracts/lockdata/Patients.sol": {
-			"keccak256": "0xbb5b624b42af8f62f53523198a404b6d2f3528c13ee29d1b95447127b81a4a6f",
+			"keccak256": "0x86659b51915e0351fed28143113324b02f56d4819f4707e5a6f79d05b1704446",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8dda6fae0db15f23f0ca25851f241e2c19b9fab506bb2c1fe516d29acf33c9ca",
-				"dweb:/ipfs/QmRuohV7Vom9YfrM3T7uhWdMdhGx6qvdhKo1Qst3phVHgk"
+				"bzz-raw://f381bd2c3aac1f347cfff4fb807aed6fce67d8288fbedca1f5da6d3c1ebf5871",
+				"dweb:/ipfs/QmbT3JGcuwhzc5Qrhb9XSiDcosrJJswA4RefRs8njF1RzU"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {

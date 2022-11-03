@@ -43,16 +43,14 @@ contract Patients is ERC721Base, IPatients{
     DDRAddress = _DDRAddress;
   }
 
-  function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
-      require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
+  function mint(bytes32 hashValue, string memory uri, uint256[] memory listId) public returns(uint256){
+      // require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
       uint256 tokenId = super.mint(uri);
       _PatientsHash[tokenId] = hashValue;
       _DDROfPatients[tokenId] = listId;
       IDDR(DDRAddress).setLockDDR(listId, msg.sender);
     return tokenId;
   }
-
-  // function hashVerify(bytes32 hashValue, )
 
   // function discloseApproval(address _authAddress, uint256 tokenId) external override {
   //   address owner = ERC721.ownerOf(tokenId);

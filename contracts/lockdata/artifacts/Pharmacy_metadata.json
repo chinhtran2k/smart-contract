@@ -794,27 +794,27 @@
 			]
 		},
 		"contracts/interface/IPatients.sol": {
-			"keccak256": "0x933c1490de80bcc2eb28c77332b094735f18b1cdbfb08120a1d183db495cbd8d",
+			"keccak256": "0xe016f28d4aa98b1b22bfebeb6db2de4abb4d1ed73285e8188bd044f173cceae0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://a277e6bbff8ff59669cf1da065b78aa4f68bd56df0246f1c0fe5005a035af896",
-				"dweb:/ipfs/QmSYwJ2WQ4qbTZnH3yeePxCv3WciQLHYPrEp67eroyWeJn"
+				"bzz-raw://7c9e33b07b94f84ff71321ab39f1b056a0faf592e9560ff312feb5c693e0c411",
+				"dweb:/ipfs/QmYr5Vy3d4KNwkYx8LrjcmQF5AP4uzNmZPBmjr9FhkTAZ3"
 			]
 		},
 		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
+			"keccak256": "0x61567e5870ce6fec2d90d0c9b4cab3e2e5e9421c26328638a62236f89bbe73f8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
-				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
+				"bzz-raw://dab5a46e9fc814172303ec9d6640ec76e3cc804edcf83f2158818a11450dcd56",
+				"dweb:/ipfs/QmdMG7o1622sUFxAPrGLD8ZYKJfYS2rq4XWts7RpgR7T6X"
 			]
 		},
 		"contracts/lockdata/Pharmacy.sol": {
-			"keccak256": "0xaf9d48dbbbc2d4742aac03e4cf61607eb524566a4cb96241ca9e1d5b37d936dc",
+			"keccak256": "0x61149a71831c3a1902a090e062fd130de946a8d0911bcb6e7e0e52b4c3907159",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://4c4c95802924fd553701b244827d5432bba00bf86fc510bcf3a22c2a0f5fb30f",
-				"dweb:/ipfs/QmcKKEGC74JSyAXL7nP6yzzfQkSo9Mo5CBQjzS19BkuNhb"
+				"bzz-raw://12a18412e78e29a82e77d5f421f9a6a6f643693fe5643561c6212e1e22467093",
+				"dweb:/ipfs/QmRZ8Z11DK2da2BfmX7bGTgFVmA1575D6vku4FNTnyXPiz"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {

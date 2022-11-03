@@ -2,10 +2,10 @@
 pragma solidity ^0.8.0;
 
 interface IPatients {
-    // function setLockPatients(
-    //     uint256[] memory PatientsIds,
-    //     address senderAddress
-    // ) external;
+    function setLockPatients(
+        uint256[] memory PatientsIds,
+        address senderAddress
+    ) external;
 
     // function discloseApproval(
     //     uint256 prescriptionId, address _address

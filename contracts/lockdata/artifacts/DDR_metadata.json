@@ -235,25 +235,6 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
-					}
-				],
 				"name": "getApproved",
 				"outputs": [
 					{
@@ -367,11 +348,6 @@
 						"internalType": "string",
 						"name": "data",
 						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "addressPT",
-						"type": "address"
 					}
 				],
 				"name": "mint",
@@ -930,11 +906,11 @@
 			]
 		},
 		"contracts/lockdata/DDR.sol": {
-			"keccak256": "0x0dbc93d3c21b95a2f10847d37c8b794e2d0ffedcc05e348022e3f7af4ccd3945",
+			"keccak256": "0x61567e5870ce6fec2d90d0c9b4cab3e2e5e9421c26328638a62236f89bbe73f8",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://1f19bed5a3fb3c0b56fa8e7693e7b1395714a361ac92c07617aaae353fb68a87",
-				"dweb:/ipfs/QmZE7ZqZGmG57boCaaEfihu87m8yAGSAYr9Dw4rGTfShiW"
+				"bzz-raw://dab5a46e9fc814172303ec9d6640ec76e3cc804edcf83f2158818a11450dcd56",
+				"dweb:/ipfs/QmdMG7o1622sUFxAPrGLD8ZYKJfYS2rq4XWts7RpgR7T6X"
 			]
 		},
 		"contracts/utils/Authenticator.sol": {
