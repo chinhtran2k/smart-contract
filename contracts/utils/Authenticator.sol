@@ -17,7 +17,7 @@ contract Authenticator is IAuthenticator {
         _checkClaim = ClaimVerifier(claimVerifier);
     }
 
-    function createDID(ClaimHolder _address) external {
+    function checkDID(ClaimHolder _address) external {
         require(address(_address) != address(0), "Address zero is not allowed");
         require(_pharmacy[msg.sender] == true, "Address is not pharmacy");
         require(_patient[msg.sender] == true, "Address is not patient");
