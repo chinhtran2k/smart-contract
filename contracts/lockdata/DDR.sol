@@ -8,31 +8,24 @@ import "../interface/IDDR.sol";
  contract DDR is ERC721Base, IDDR {
   mapping(uint256 => uint256[]) private _ddrHistory;
   mapping(uint256 => bytes32) public _ddrHash;
-  mapping(uint256 => bool) private _isDDRHistory;
   mapping(uint256 => bool) private _isDDRLocked;
   mapping(uint256 => mapping(address => bool))  private _isDisclosable;
   mapping(address => bytes32) private _DDRPatient;
-  address private phamacyContractAddress;
   bytes32 private _hashValue;
+  mapping(uint256 => address) private _owner;
 
-  modifier _valiDDRList(
-        uint256[] memory ddrIds,
+    modifier _valiDDRList(
+        uint256 ddrId,
         address senderAddress
     ) {
-        for (uint256 i = 0; i < ddrIds.length; i++) {
             require(
-                !_isDDRLocked[ddrIds[i]],
+                !_isDDRLocked[ddrId],
                 "ddr is already locked"
             );
             require(
-                ownerOf(ddrIds[i]) == senderAddress,
+                ownerOf(ddrId) == senderAddress,
                 "Not owner of ddr"
             );
-            require(
-                !_isDDRHistory[ddrIds[i]],
-                "Cannot lock ddr History"
-            );
-        }
         _;
     }
 
@@ -43,51 +36,17 @@ import "../interface/IDDR.sol";
     function mint(
         bytes32 hashValue,
         string memory uri,
-        string memory data,
         address identity
-    ) public onlyPharmacy returns (uint256) {
-        require(
-            keccak256(abi.encodePacked(data)) == hashValue,
-            "Data Integrity fail"
-        );
+    ) public returns (uint256) {
         _hashValue = keccak256(abi.encodePacked(_hashValue , hashValue));
         uint256 tokenId = super.mint(uri);
         _ddrHash[tokenId] = _hashValue;
         _ddrHistory[tokenId].push(tokenId);
         _DDRPatient[identity] = _hashValue;
-        _isDDRHistory[tokenId] = false;
+        _isDDRLocked[tokenId -1] = true;
+        _owner[tokenId] = identity;
+
         return tokenId;
-    }
-
-    function updatePrescription(
-        uint256 ddrId,
-        bytes32 hashValue,
-        string memory uri,
-        string memory data
-    ) public onlyPharmacy {
-        require(
-            !_isDDRHistory[ddrId],
-            "Cannot update Prescription History"
-        );
-
-        require(!_isDDRLocked[ddrId], "Prescription is locked");
-
-        require(
-            ownerOf(ddrId) == _msgSender(),
-            "Not the owner of the Prescription"
-        );
-
-        require(
-            keccak256(abi.encodePacked(data)) == hashValue,
-            "Data integrity failure"
-        );
-
-        uint256 newddrId = super.mint(uri);
-        _ddrHash[newddrId] = hashValue;
-        _ddrHistory[newddrId].push(newddrId);
-        _isDDRHistory[newddrId] = true;
-
-        _ddrHistory[ddrId].push(newddrId);
     }
 
     function getDDRHistory(uint256 ddrId)
@@ -102,6 +61,12 @@ import "../interface/IDDR.sol";
         return _DDRPatient[_identity];
     }
 
+    function ownerOf(uint256 tokenId) public view virtual override returns (address) {
+        address owner = _owner[tokenId];
+        require(owner != address(0), "ERC721: invalid token ID");
+        return owner;
+    }
+
     function checkDataIntegrity(uint256 ddrId, bytes32 hashValue)
         public
         view
@@ -114,20 +79,16 @@ import "../interface/IDDR.sol";
         return _ddrHash[lastddrId] == hashValue;
     }
 
-    function setLockDDR(
-        uint256[] memory ddrIds,
-        address senderAddress
-    ) external override _valiDDRList(ddrIds, senderAddress) {
-        for (uint256 i = 0; i < ddrIds.length; i++) {
-            _isDDRLocked[ddrIds[i]] = true;
-        }
+    function statusLockDDR(uint256 tokenId) public view returns(bool){
+        return _isDDRLocked[tokenId];
     }
 
-    function discloseApproval(uint256 ddrId, address _address) external override onlyPharmacy{
+    function discloseApproval(uint256 ddrId, address _address) external override onlyPatient{
+        //only patient
         _isDisclosable[ddrId][_address] = true;
     }
 
-    function getDiscloseApproval(uint256 ddrId, address _address) external view override  onlyPharmacy returns(bool){
+    function getDiscloseApproval(uint256 ddrId, address _address) external view override  onlyPatient returns(bool){
         return _isDisclosable[ddrId][_address];
     }
 

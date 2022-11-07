@@ -38,9 +38,9 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if (_patient[_address]) return AuthType.PT;
-        else if (_pharmacy[_address]) return AuthType.PM;
-        else if (_clinic[_address]) return AuthType.CN;
+        if (_patient[_address]) return AuthType.PATIENT;
+        else if (_pharmacy[_address]) return AuthType.PHARMACY;
+        else if (_clinic[_address]) return AuthType.CLINIC;
         else return AuthType.NONE;
     }
 }
@@ -55,7 +55,7 @@ contract AuthenticatorHelper {
 
     modifier onlyPharmacy() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PM,
+            _IAuth.checkAuth(msg.sender) == AuthType.PHARMACY,
             "Only pharmacy can call this function"
         );
         _;
@@ -63,7 +63,7 @@ contract AuthenticatorHelper {
 
     modifier onlyPatient() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PT,
+            _IAuth.checkAuth(msg.sender) == AuthType.PATIENT,
             "Only patient can call this function"
         );
         _;
@@ -71,8 +71,9 @@ contract AuthenticatorHelper {
 
     modifier onlyClinic() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.CN,
+            _IAuth.checkAuth(msg.sender) == AuthType.CLINIC,
             "Only clinic can call this function"
         );
         _;
+}
 }

@@ -6,14 +6,13 @@ import "./DDR.sol";
 import "../interface/IDDR.sol";
 
 
-contract Patient is ERC721Base{
+contract Clinic is ERC721Base{
   mapping(uint256 => bytes32) private _pharmacyHash;
   mapping(uint256 => uint256[]) private _ddrOfRecords;
-  // Prescription private _prescription;
   mapping(uint256 => bytes32) private _ddrHash;
-  mapping(uint256 => address) private _Patient;
+  mapping(uint256 => address) private _Clinic;
   DDR public _DDR;
-  constructor(address _prescriptionAddress, address _authAddress)
+  constructor(address _ddrAddress, address _authAddress)
     ERC721Base("Health Record", "HR", _authAddress)
   {
     _DDR = DDR(_prescriptionAddress);
@@ -22,12 +21,12 @@ contract Patient is ERC721Base{
   function mint(bytes32 hashValue, string memory uri, address _identity) public returns(uint256){
       uint256 tokenId = super.mint(uri);
       _pharmacyHash[tokenId] = hashValue;
-      _Patient[tokenId] = _identity;
+      _Clinic[tokenId] = _identity;
     return tokenId;
   }
 
   function getAddress(uint256 tokenId) public view returns (address){
-    return _Patient[tokenId];
+    return _Clinic[tokenId];
   }
 
   function getDDRofPatient(address _identity) public view returns(bytes32){

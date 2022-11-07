@@ -8,9 +8,10 @@ import "../interface/IDDR.sol";
 
 contract Pharmacy is ERC721Base{
   mapping(uint256 => bytes32) private _pharmacyHash;
-  mapping(uint256 => uint256[]) private _ddrOfPharmacy;
+  // mapping(uint256 => uint256[]) private _ddrOfPharmacy;
   address private ddrAddress;
   mapping(uint256 => bytes32) private _ddrHash;
+  mapping(uint256 => address) private _pharmacy;
 
   constructor(address _ddrAddress, address _authAddress)
     ERC721Base("Health Record", "HR", _authAddress)
@@ -18,34 +19,28 @@ contract Pharmacy is ERC721Base{
     ddrAddress = _ddrAddress;
   }
  
-  function mint(bytes32 hashValue, string memory uri, string memory data, uint256[] memory listId) public returns(uint256){
-      require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
+  function mint(bytes32 hashValue, string memory uri, address pharmacyAddress) public returns(uint256){
       uint256 tokenId = super.mint(uri);
       _pharmacyHash[tokenId] = hashValue;
-      _ddrOfPharmacy[tokenId] = listId;
-      IDDR(ddrAddress).setLockDDR(listId, msg.sender);
+      _pharmacy[tokenId] = pharmacyAddress;
+
     return tokenId;
   }
 
   function discloseApproval(address _authAddress, uint256 tokenId) public virtual {
     address owner = ERC721.ownerOf(tokenId);
     require(_authAddress != owner, "ERC721: approval to current owner");
-
   } 
-
-
 
   function checkDataIntegrity(uint256 healthRecordId, bytes32 hashValue)
         public
         view
-        returns (bool, uint256[] memory)
+        returns (bool)
     {
-        return (
-            _pharmacyHash[healthRecordId] == hashValue,
-            _ddrOfPharmacy[healthRecordId]
-        );
+            return _pharmacyHash[healthRecordId] == hashValue;
+            // _ddrOfPharmacy[healthRecordId]
     }
-  function getHashValueFromPrescription(uint256 tokenId) public view returns(bytes32){
+  function getHashValueFromDDR(uint256 tokenId) public view returns(bytes32){
       return IDDR(ddrAddress).getHashValue(tokenId);
 
   }
