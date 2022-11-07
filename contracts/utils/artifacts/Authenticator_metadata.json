@@ -43,7 +43,7 @@
 						"type": "address"
 					}
 				],
-				"name": "createDID",
+				"name": "checkDID",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -133,11 +133,11 @@
 			]
 		},
 		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
-			"keccak256": "0xc667a85c2a3d06e92596cae335041ae52cdfff409c68dd4dd8d26c836ffeed77",
+			"keccak256": "0x947127b26b52716dfa18d445b694f930b4900b38e74b1e7df06af872fddde67f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09e5f768c3089bb15ea8762c52e07c7a57071bc7a494152ee4bfb576c5feffce",
-				"dweb:/ipfs/QmbmZTeL9ZyJtEPsRgag77Ri8LXoMDPK4t2svAcG8K1CVF"
+				"bzz-raw://ef291f794f03231154952199f82bf60f41a970977f0d1ef2e632e8ab621ef1c4",
+				"dweb:/ipfs/QmNbtmTvB28KvQW7WVTXL9VMShfXZQwmbwND4SpkQCsNeG"
 			]
 		}
 	},

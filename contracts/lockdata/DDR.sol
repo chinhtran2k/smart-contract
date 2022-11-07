@@ -30,7 +30,7 @@ import "../interface/IDDR.sol";
     }
 
     constructor(address _authAddress)
-        ERC721Base("Prescription", "PS", _authAddress)
+        ERC721Base("ddr", "DDR", _authAddress)
     {}
   
     function mint(
@@ -57,7 +57,7 @@ import "../interface/IDDR.sol";
         return _ddrHistory[ddrId];
     }
 
-    function getDDRofPatient (address _identity) public view returns(bytes32){
+    function getDDRofPatient(address _identity) public view returns(bytes32){
         return _DDRPatient[_identity];
     }
 
@@ -67,24 +67,11 @@ import "../interface/IDDR.sol";
         return owner;
     }
 
-    function checkDataIntegrity(uint256 ddrId, bytes32 hashValue)
-        public
-        view
-        returns (bool)
-    {
-        uint256 lastddrId = _ddrHistory[ddrId][
-            _ddrHistory[ddrId].length - 1
-        ];
-
-        return _ddrHash[lastddrId] == hashValue;
-    }
-
     function statusLockDDR(uint256 tokenId) public view returns(bool){
         return _isDDRLocked[tokenId];
     }
 
     function discloseApproval(uint256 ddrId, address _address) external override onlyPatient{
-        //only patient
         _isDisclosable[ddrId][_address] = true;
     }
 

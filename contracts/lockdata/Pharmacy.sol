@@ -32,14 +32,6 @@ contract Pharmacy is ERC721Base{
     require(_authAddress != owner, "ERC721: approval to current owner");
   } 
 
-  function checkDataIntegrity(uint256 healthRecordId, bytes32 hashValue)
-        public
-        view
-        returns (bool)
-    {
-            return _pharmacyHash[healthRecordId] == hashValue;
-            // _ddrOfPharmacy[healthRecordId]
-    }
   function getHashValueFromDDR(uint256 tokenId) public view returns(bytes32){
       return IDDR(ddrAddress).getHashValue(tokenId);
 
