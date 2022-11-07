@@ -14,11 +14,7 @@ import "../interface/IDDR.sol";
   mapping(uint256 => bool) private _isDDRHistory;
   mapping(uint256 => bool) private _isDDRLocked;
   mapping(uint256 => mapping(address => bool))  private _isDisclosable;
-  mapping(uint256 => address) public _patientAddress;
-//   mapping(uint256 => address) public _patientsAddress;
-
-//   address private healthRecordContractAddress;
-  
+  mapping(uint256 => address) public _patientAddress;  
 
   modifier _validDDRList(
         uint256[] memory DDRIds,
@@ -46,20 +42,13 @@ import "../interface/IDDR.sol";
     {}
   
     function mint(
-        // address _patientsAddress,
         bytes32 hashValue,
         string memory uri
-        // string memory data
     ) public onlyPatients returns (uint256) {
-        // require(
-        //     keccak256(abi.encodePacked(data)) == hashValue,
-        //     "Data Integrity fail"
-        // );
         uint256 tokenId = super.mint(uri);
         _DDRHash[tokenId] = hashValue;
         _DDRHistory[tokenId].push(tokenId);
         _isDDRHistory[tokenId] = false;
-        // _patientAddress[tokenId] = addressPT;
         return tokenId;
     }
 
@@ -84,17 +73,10 @@ import "../interface/IDDR.sol";
             ownerOf(DDRId) == _msgSender(),
             "Not the owner of the DDR"
         );
-
-        // require(
-        //     keccak256(abi.encodePacked(data)) == hashValue,
-        //     "Data integrity failure"
-        // );
-
         uint256 newDDRId = super.mint(uri);
         _DDRHash[newDDRId] = hashValue;
         _DDRHistory[newDDRId].push(newDDRId);
         _isDDRHistory[newDDRId] = true;
-
         _DDRHistory[DDRId].push(newDDRId);
         emit UpdateDDR(DDRId, hashValue, uri);
     }
@@ -132,6 +114,7 @@ import "../interface/IDDR.sol";
     // function setAccessHRAddress(address _address) external override onlyHealthRecord {
     //     healthRecordContractAddress = _address;
     // } 
+    
 
     // function getAccessHRAddress() external view override returns(address){
     //     return healthRecordContractAddress;

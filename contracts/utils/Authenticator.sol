@@ -3,15 +3,11 @@ pragma solidity ^0.8.0;
 import "../interface/IAuthenticator.sol";
 
 contract Authenticator is IAuthenticator {
-    // mapping(address => bool) private _subject;
-    // mapping(address => bool) private _administrator;
-    // mapping(address => bool) private _actor;
     mapping(address => bool) private _patients;
     mapping(address => bool) private _clinic;
     mapping(address => bool) private _pharmacy;
 
     constructor() {
-        // _administrator[msg.sender] = true;
         _patients[msg.sender] = true;
     }
 
@@ -21,13 +17,13 @@ contract Authenticator is IAuthenticator {
             _patients[msg.sender] == true,
             "Address is not Patients"
         );
-        if (_patients[_address] && authType != AuthType.PATIENTS)
+        if (_patients[_address] && authType != AuthType.PATIENT)
             _patients[_address] = false;
         if (_clinic[_address] && authType != AuthType.CLINIC)
             _clinic[_address] = false;
         if (_patients[_address] && authType != AuthType.PHARMACY)
             _pharmacy[_address] = false;
-        else if (authType == AuthType.PATIENTS) _patients[_address] = true;
+        else if (authType == AuthType.PATIENT) _patients[_address] = true;
         else if (authType == AuthType.CLINIC) _clinic[_address] = true;
         else if (authType == AuthType.PHARMACY) _pharmacy[_address] = true;
 
@@ -40,7 +36,7 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if(_patients[_address]) return AuthType.PATIENTS;
+        if(_patients[_address]) return AuthType.PATIENT;
         if(_clinic[_address]) return AuthType.CLINIC;
         if(_pharmacy[_address]) return AuthType.PHARMACY;
         else return AuthType.NONE;
@@ -66,7 +62,7 @@ contract AuthenticatorHelper {
 
     modifier onlyPatients() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PATIENTS,
+            _IAuth.checkAuth(msg.sender) == AuthType.PATIENT,
             "Only patients can call this function"
         );
         _;

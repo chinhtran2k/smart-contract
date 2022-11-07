@@ -45,7 +45,6 @@ contract Patients is ERC721Base, IPatients{
   }
 
   function mint(bytes32 hashValue, string memory uri, uint256[] memory listId) public returns(uint256){
-      // require(keccak256(abi.encodePacked(data)) == hashValue, "Data Integrity fail");
       uint256 tokenId = super.mint(uri);
       _PatientsHash[tokenId] = hashValue;
       _DDROfPatients[tokenId] = listId;
@@ -84,6 +83,6 @@ contract Patients is ERC721Base, IPatients{
 
   function getHashValue(uint256 tokenId) external view override returns(bytes32){
         return _PatientsHash[tokenId]; 
-    }
+  }
 }
 
