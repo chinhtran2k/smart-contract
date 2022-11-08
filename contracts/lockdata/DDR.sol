@@ -12,7 +12,6 @@ contract DDR is ERC721Base, IDDR {
     mapping(address => bytes32) private _DDRPatient;
     mapping(uint256 => address) private _Patient;
     bytes32 private _hashValue;
-    mapping(uint256 => address) private _owner;
 
     modifier _valiDDRList(uint256 ddrId, address senderAddress) {
         require(!_isDDRLocked[ddrId], "ddr is already locked");
@@ -39,7 +38,6 @@ contract DDR is ERC721Base, IDDR {
         _ddrHash[tokenId] = _hashValue;
         _DDRPatient[identity] = _hashValue;
         _isDDRLocked[tokenId - 1] = true;
-        _owner[tokenId] = identity;
 
         return tokenId;
     }
@@ -57,23 +55,23 @@ contract DDR is ERC721Base, IDDR {
         return _ddrHash[tokenId];
     }
 
-    function ownerOf(uint256 tokenId)
-        public
-        view
-        virtual
-        override
-        returns (address)
-    {
-        address owner = _owner[tokenId];
-        require(owner != address(0), "ERC721: invalid token ID");
-        return owner;
-    }
+    // function ownerOf(uint256 tokenId)
+    //     public
+    //     view
+    //     virtual
+    //     override
+    //     returns (address)
+    // {
+    //     address owner = _owner[tokenId];
+    //     require(owner != address(0), "ERC721: invalid token ID");
+    //     return owner;
+    // }
 
     function statusLockDDR(uint256 tokenId) public view returns (bool) {
         return _isDDRLocked[tokenId];
     }
 
-    function discloseApproval(uint256 ddrId, address _address)
+    function shareApproval(uint256 ddrId, address _address)
         external
         override
         onlyPatient
@@ -82,7 +80,7 @@ contract DDR is ERC721Base, IDDR {
         emit approval(_address, ddrId);
     }
 
-    function getDiscloseApproval(uint256 ddrId, address _address)
+    function getShareApproval(uint256 ddrId, address _address)
         external
         view
         override

@@ -51,7 +51,7 @@ contract Patient is ERC721Base, IPatient {
         address _clinicAddress
     ) external override onlyClinic {
         require(
-            _DDR.getDiscloseApproval(_ddrId, _Patient[tokenId]),
+            _DDR.getShareApproval(_ddrId, _Patient[tokenId]),
             "Patient have not approval"
         );
         _isConsentDDR[_ddrId][_clinicAddress] = true;
