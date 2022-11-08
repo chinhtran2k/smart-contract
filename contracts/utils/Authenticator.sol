@@ -10,11 +10,11 @@ contract Authenticator is IAuthenticator {
     mapping(address => bool) private _clinic;
     ClaimVerifier private _checkClaim;
 
-    constructor(address claimVerifier) {
+    constructor() {
         _pharmacy[msg.sender] = true;
         _patient[msg.sender] = true;
         _clinic[msg.sender] = true;
-        _checkClaim = ClaimVerifier(claimVerifier);
+        // _checkClaim = ClaimVerifier(claimVerifier);
     }
 
     function checkDID(ClaimHolder _address) external {

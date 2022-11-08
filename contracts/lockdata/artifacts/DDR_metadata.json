@@ -111,6 +111,25 @@
 				"type": "event"
 			},
 			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "spender",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "tokenId",
+						"type": "uint256"
+					}
+				],
+				"name": "approval",
+				"type": "event"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -868,27 +887,27 @@
 			]
 		},
 		"hpa3-blockchain/contracts/interface/IDDR.sol": {
-			"keccak256": "0x0e144b210e3afd453b0252e7f32d63c116196e25a5642de589292eeac4be4161",
+			"keccak256": "0xb4c3462d0159662e60df516c43fb9d18595b84a67449ff0b4fa483eaaa823044",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://43b7a7623760620843272e20e40dfcff4b4a9742e3cf4b55575e7baf37867aef",
-				"dweb:/ipfs/QmRczdcjQ63MEHAi4s53kwESkkpuwczcqaXhHA7hMhDYPr"
+				"bzz-raw://9435e0741a06db218a2e9e3dc5eea1d455ef6b4a335fa3919abf64ee1f340c86",
+				"dweb:/ipfs/QmeajCFUYGQr1AUNAratCPKosRjQvWNRvXvuNgnXZtBuqB"
 			]
 		},
 		"hpa3-blockchain/contracts/lockdata/DDR.sol": {
-			"keccak256": "0xba5748b81afdac28a3974799a28efb6dd5964a10ef8ff62ed5e13a40ea8d786d",
+			"keccak256": "0x65b79b0fcd41a87d81ab22c4ef44d99c59e77bfd6851851860d1f937b0586275",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fb331fbf3892a20ab7e589692c93f3910f7a2f93ffbf32e240645c5c6bd30b2d",
-				"dweb:/ipfs/QmXH8ULscV61u8Xpp4eCst2c9yz8pifo4E1NesWzhNk3do"
+				"bzz-raw://ef9a5382f7c6a994c69ef564814370d2182da5899323f3af3f933f5e25ecb837",
+				"dweb:/ipfs/QmXj9waoXT94jXKUpNu9VKbixNSG9od3ZgQpS7JrtRW9VY"
 			]
 		},
 		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
-			"keccak256": "0x947127b26b52716dfa18d445b694f930b4900b38e74b1e7df06af872fddde67f",
+			"keccak256": "0xc2aa4ca6c372e0e8341beca6695a3652c56292e29455f27f22c2ebac32727fad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ef291f794f03231154952199f82bf60f41a970977f0d1ef2e632e8ab621ef1c4",
-				"dweb:/ipfs/QmNbtmTvB28KvQW7WVTXL9VMShfXZQwmbwND4SpkQCsNeG"
+				"bzz-raw://48f9e0901a0e4d825a44683afe365b68d1a31c011bec649d1c2f52c704e4c53c",
+				"dweb:/ipfs/QmWAYF1j5yiGtcxwWVd4WsMM4V9SSMPqu7GiwTAUtX9MLG"
 			]
 		},
 		"hpa3-blockchain/contracts/utils/ERC721Base.sol": {

@@ -6,13 +6,7 @@
 	"output": {
 		"abi": [
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "claimVerifier",
-						"type": "address"
-					}
-				],
+				"inputs": [],
 				"stateMutability": "nonpayable",
 				"type": "constructor"
 			},
@@ -133,11 +127,11 @@
 			]
 		},
 		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
-			"keccak256": "0x947127b26b52716dfa18d445b694f930b4900b38e74b1e7df06af872fddde67f",
+			"keccak256": "0xc2aa4ca6c372e0e8341beca6695a3652c56292e29455f27f22c2ebac32727fad",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ef291f794f03231154952199f82bf60f41a970977f0d1ef2e632e8ab621ef1c4",
-				"dweb:/ipfs/QmNbtmTvB28KvQW7WVTXL9VMShfXZQwmbwND4SpkQCsNeG"
+				"bzz-raw://48f9e0901a0e4d825a44683afe365b68d1a31c011bec649d1c2f52c704e4c53c",
+				"dweb:/ipfs/QmWAYF1j5yiGtcxwWVd4WsMM4V9SSMPqu7GiwTAUtX9MLG"
 			]
 		}
 	},

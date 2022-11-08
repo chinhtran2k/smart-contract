@@ -79,6 +79,7 @@ contract DDR is ERC721Base, IDDR {
         onlyPatient
     {
         _isDisclosable[ddrId][_address] = true;
+        emit approval(_address, ddrId);
     }
 
     function getDiscloseApproval(uint256 ddrId, address _address)
