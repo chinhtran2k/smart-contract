@@ -2,11 +2,6 @@
 pragma solidity ^0.8.0;
 
 interface IDDR {
-    // function setLockDDR(
-    //     uint256[] memory DDRIds,
-    //     address senderAddress
-    // ) external;
-
     function discloseApproval(
         uint256 DDRId, address _address
     ) external;
