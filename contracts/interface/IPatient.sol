@@ -6,5 +6,5 @@ interface IPatient {
     function consentDDRforClinic(
         uint256 DDRId, address identity, address _address
     ) external;
-    function getconsentDDR(uint256 DDRId, address _address) external view returns(bool);
+    function getConsentDDR(uint256 DDRId, address _address) external view returns(bool);
 }

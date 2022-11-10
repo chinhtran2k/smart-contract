@@ -276,11 +276,6 @@
 						"internalType": "string",
 						"name": "uri",
 						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "identity",
-						"type": "address"
 					}
 				],
 				"name": "mint",
@@ -849,11 +844,11 @@
 			]
 		},
 		"hpa3-blockchain/contracts/lockdata/Pharmacy.sol": {
-			"keccak256": "0x495e7b78fd58b630c774b4c83e7869b96d9fbcfa368e50f68c961a020d4df182",
+			"keccak256": "0x0d3b0fe73db05300bcdcc40d60609cc14b572b843a6165e7aeafb9f42cfddf2a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c2bb092f3cc5ae0918f640259f3c83c5f04fa5217c87fce959840e5b580b0b12",
-				"dweb:/ipfs/QmX7urCDvHLjvBCcBdV5DuEL11MdeG5G6ZNjb2nMhdG5Nn"
+				"bzz-raw://12bdc3d2c922b9211eacbe8028ae96d522898b23427ac9f33c3d1c43298aae3d",
+				"dweb:/ipfs/QmfFy4nzZxeLfwUnz1sJNPFwtFNsrPGyZoy2bdzaHZ8cFJ"
 			]
 		},
 		"hpa3-blockchain/contracts/utils/Authenticator.sol": {

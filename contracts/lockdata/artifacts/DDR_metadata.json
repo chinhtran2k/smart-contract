@@ -866,11 +866,11 @@
 			]
 		},
 		"hpa3-blockchain/contracts/lockdata/DDR.sol": {
-			"keccak256": "0x0780e8fed09194fef1541bc09f3d0d06d848fae6d3534826c3298d52a14b89f5",
+			"keccak256": "0xc767062168db55e0f99353f7d23823909ac80d57a4cea6d575593cd9443dc55c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f03e253f8b23d2fb31ac64568cb4d84eef8074a0b7d792881e41c1829e83277a",
-				"dweb:/ipfs/QmRqmUyuNC7nLYEZ8nuH1S6DyAgkwiBRKGYQ6tWsggykpJ"
+				"bzz-raw://c5dc309cb64767551b7cac731159d2913d2f1a4b3f2ef793bf7d7d1c113abf8e",
+				"dweb:/ipfs/QmdLtZZnKNyTj3tXsWVKzP26Wmp49x6J5VEoM5MoNs58nr"
 			]
 		},
 		"hpa3-blockchain/contracts/utils/Authenticator.sol": {

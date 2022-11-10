@@ -86,7 +86,6 @@ contract DDR is ERC721Base, IDDR {
         external
         view
         override
-        onlyPatient
         returns (bool)
     {
         return _isDisclosable[ddrTokenId][identity];

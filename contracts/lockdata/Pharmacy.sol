@@ -19,10 +19,10 @@ contract Pharmacy is ERC721Base {
     _DDR = DDR(_ddrAddress);
     }
 
-    function mint(address pharmacyAddress, string memory uri, address identity) public onlyPharmacy returns(uint256){
+    function mint(address pharmacyAddress, string memory uri) public onlyPharmacy returns(uint256){
       uint256 tokenId = super.mint(uri);
       _hashValue = _DDR._ddrHashPharmacy(pharmacyAddress);
-      _pharmacyHashValue[identity] = _hashValue;
+      _pharmacyHashValue[pharmacyAddress] = _hashValue;
       _pharmacyHash[tokenId] = _hashValue;
       _pharmacy[tokenId] = pharmacyAddress;
 

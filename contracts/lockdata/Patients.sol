@@ -53,7 +53,7 @@ contract Patient is ERC721Base, IPatient {
         emit approval(clinicAddress, ddrTokenId);
     }
 
-    function getconsentDDR(uint256 ddrTokenId, address clinicAddress)
+    function getConsentDDR(uint256 ddrTokenId, address clinicAddress)
         external
         view
         override
