@@ -6,41 +6,38 @@ import "./DDR.sol";
 import "../interface/IDDR.sol";
 
 contract Pharmacy is ERC721Base {
+    mapping(address => bytes32) private _pharmacyHashValue;
     mapping(uint256 => bytes32) private _pharmacyHash;
-    address private ddrAddress;
     mapping(uint256 => bytes32) private _ddrHash;
     mapping(uint256 => address) private _pharmacy;
+    bytes32 private _hashValue;
+    DDR public _DDR;
 
     constructor(address _ddrAddress, address _authAddress)
         ERC721Base("Pharmacy", "PM", _authAddress)
     {
-        ddrAddress = _ddrAddress;
+    _DDR = DDR(_ddrAddress);
     }
 
-    function mint(
-        bytes32 hashValue,
-        string memory uri,
-        address pharmacyAddress
-    ) public returns (uint256) {
-        uint256 tokenId = super.mint(uri);
-        _pharmacyHash[tokenId] = hashValue;
-        _pharmacy[tokenId] = pharmacyAddress;
-        return tokenId;
+    function mint(address pharmacyAddress, string memory uri, address identity) public onlyPharmacy returns(uint256){
+      uint256 tokenId = super.mint(uri);
+      _hashValue = _DDR._ddrHashPharmacy(pharmacyAddress);
+      _pharmacyHashValue[identity] = _hashValue;
+      _pharmacyHash[tokenId] = _hashValue;
+      _pharmacy[tokenId] = pharmacyAddress;
+
+    return tokenId;
+     }
+
+    function getAddressPharmacy(uint256 tokenId) public view returns (address) {
+        return _pharmacy[tokenId];
     }
 
-    function getHashValuePharmacy(uint256 tokenId)
-        public
-        view
-        returns (bytes32)
-    {
-        return _pharmacyHash[tokenId];
+    function getHashPharmacy(uint256 tokenId) public view returns(bytes32){
+      return _pharmacyHash[tokenId];
     }
 
-    function getHashValueFromDDR(uint256 tokenId)
-        public
-        view
-        returns (bytes32)
-    {
-        return IDDR(ddrAddress).getHashValue(tokenId);
+    function getHashValuePharmacy(address pharmacy) public view returns(bytes32){
+      return _pharmacyHashValue[pharmacy];
     }
 }

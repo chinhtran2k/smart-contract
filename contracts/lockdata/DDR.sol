@@ -6,12 +6,15 @@ import "../utils/Authenticator.sol";
 import "../interface/IDDR.sol";
 
 contract DDR is ERC721Base, IDDR {
-    mapping(uint256 => bytes32) public _ddrHash;
+    mapping(address => bytes32) public _ddrHashPatient;
+    mapping(address => bytes32) public _ddrHashPharmacy;
     mapping(uint256 => bool) private _isDDRLocked;
     mapping(uint256 => mapping(address => bool)) private _isDisclosable;
-    mapping(address => bytes32) private _DDRPatient;
-    mapping(uint256 => address) private _Patient;
-    bytes32 private _hashValue;
+    mapping(uint256 => address) private _patient;
+    mapping(address => bytes32[]) private _listDDRHashValueOfPatient;
+    mapping(address => bytes32[]) private _listDDRHashValueOfPharmacy;
+    bytes32 private _hashValuePatient;
+    bytes32 private _hashValuePharmacy;
 
     modifier _valiDDRList(uint256 ddrId, address senderAddress) {
         require(!_isDDRLocked[ddrId], "ddr is already locked");
@@ -27,66 +30,65 @@ contract DDR is ERC721Base, IDDR {
         bytes32 hashValue,
         string memory uri,
         address identity
-    ) public returns (uint256) {
+    ) public onlyPharmacy returns (uint256) {
         uint256 tokenId = super.mint(uri);
-        _Patient[tokenId] = identity;
-        if (_Patient[tokenId] == _Patient[tokenId - 1]) {
-            _hashValue = keccak256(abi.encodePacked(_hashValue, hashValue));
-        } else {
-            _hashValue = hashValue;
+        _patient[tokenId] = identity;
+        _listDDRHashValueOfPatient[identity].push(hashValue);
+        bytes32[] memory listDDRPatient = _listDDRHashValueOfPatient[identity];
+        require(listDDRPatient.length != 0,"ddr of patient not create");
+        if(listDDRPatient.length == 1){
+            _hashValuePatient = listDDRPatient[0];
         }
-        _ddrHash[tokenId] = _hashValue;
-        _DDRPatient[identity] = _hashValue;
-        _isDDRLocked[tokenId - 1] = true;
+        else{
+            _hashValuePatient = listDDRPatient[0];
+            for(uint256 i = 1; i < listDDRPatient.length; i++){
+                _hashValuePatient = keccak256(abi.encodePacked(_hashValuePatient, listDDRPatient[i]));
+            }
+        }
+        _ddrHashPatient[identity] = _hashValuePatient;
 
+        _listDDRHashValueOfPharmacy[msg.sender].push(hashValue);
+        bytes32[] memory listDDRPharmacy = _listDDRHashValueOfPharmacy[msg.sender];
+        require(listDDRPharmacy.length != 0,"ddr of pharmacy not create");
+        if(listDDRPharmacy.length == 1){
+            _hashValuePharmacy = listDDRPharmacy[0];
+        }
+        else{
+            _hashValuePharmacy = listDDRPharmacy[0];
+            for(uint256 i = 1; i < listDDRPharmacy.length; i++){
+                _hashValuePharmacy = keccak256(abi.encodePacked(_hashValuePharmacy, listDDRPharmacy[i]));
+            }
+        }
+        _ddrHashPharmacy[msg.sender] = _hashValuePharmacy;
+        _isDisclosable[tokenId][identity] = true;
+        emit approval(identity, tokenId);
+        _isDDRLocked[tokenId -1] = true;
         return tokenId;
     }
 
-    function getDDRofPatient(address _identity) public view returns (bytes32) {
-        return _DDRPatient[_identity];
-    }
-
-    function getHashValue(uint256 tokenId)
-        external
+    function ownerOf(uint256 tokenId)
+        public
         view
+        virtual
         override
-        returns (bytes32)
+        returns (address)
     {
-        return _ddrHash[tokenId];
+        address owner = _patient[tokenId];
+        require(owner != address(0), "ERC721: invalid token ID");
+        return owner;
     }
-
-    // function ownerOf(uint256 tokenId)
-    //     public
-    //     view
-    //     virtual
-    //     override
-    //     returns (address)
-    // {
-    //     address owner = _owner[tokenId];
-    //     require(owner != address(0), "ERC721: invalid token ID");
-    //     return owner;
-    // }
 
     function statusLockDDR(uint256 tokenId) public view returns (bool) {
         return _isDDRLocked[tokenId];
     }
 
-    function shareApproval(uint256 ddrId, address _address)
-        external
-        override
-        onlyPatient
-    {
-        _isDisclosable[ddrId][_address] = true;
-        emit approval(_address, ddrId);
-    }
-
-    function getShareApproval(uint256 ddrId, address _address)
+    function getShareApproval(uint256 ddrTokenId, address identity)
         external
         view
         override
         onlyPatient
         returns (bool)
     {
-        return _isDisclosable[ddrId][_address];
+        return _isDisclosable[ddrTokenId][identity];
     }
 }

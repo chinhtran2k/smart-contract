@@ -30,7 +30,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/utils/Authenticator.sol": "AuthenticatorHelper"
+			"hpa3-blockchain/contracts/utils/Authenticator.sol": "AuthenticatorHelper"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -44,15 +44,55 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/enum/AuthType.sol": {
-			"keccak256": "0x8b02592f4ed7aaff2dc25a5da4944638794395bd0d90670854b12c3f560fbb22",
+		"hpa3-blockchain-did/contracts/ClaimHolder.sol": {
+			"keccak256": "0x395a82dac2f9c60283f8eec51141df8d85165dae8f81784f868c974bb135065a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3eb1e73758d7f193a18e0a30dacbc751422f97481672c9f6f7d311af45f59efa",
-				"dweb:/ipfs/QmPRboSwWyP99ZDhG98Cfxr6sSV6LHxwVDxnexhTA4rqRL"
+				"bzz-raw://bcfec79ff022025644db0eb7bd023564f533a40090f1a55d256ffeedae15d111",
+				"dweb:/ipfs/QmY5M12qJAp47wJfMDVTdi7NntfKqwtvAF4FfKKGn46Wxz"
 			]
 		},
-		"contracts/interface/IAuthenticator.sol": {
+		"hpa3-blockchain-did/contracts/ClaimVerifier.sol": {
+			"keccak256": "0x69243879ddfca5340a4ec37419b40ff2582894bd715a77161aa10295539dccd6",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1253c175e51ef4cba8c8b9f70bef6c6069fb124c5fabcd05dee0b46f3094ec6a",
+				"dweb:/ipfs/QmNbbKVBBZgqKrdCNxZ8qNcjuJ9BX26pnhcMM45GbRUN5W"
+			]
+		},
+		"hpa3-blockchain-did/contracts/ERC725.sol": {
+			"keccak256": "0x2f822dce216ddd341d548d6df83cca38bbc2040ce9ba38878a6417280670f3d3",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5a3c036711b59d593bbf0b4d49e1a77b2fdc53b7b5dd62e3715e3fc4c3e7b2d0",
+				"dweb:/ipfs/Qme75ynzQXYhD7pdhWVEwnrWAmQPpJ8N57Mgc7jRKk6iQV"
+			]
+		},
+		"hpa3-blockchain-did/contracts/ERC735.sol": {
+			"keccak256": "0xaf1cd491d6c33c1a836a8ce8067b9c870f68666801e9afedebc1e2c1e87da506",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://76f511c2ee000df6a79fb6112aecb158dd6e1f2867a6d68aa77fdb45638a28e6",
+				"dweb:/ipfs/QmbhCgMN8pmNdQn1p8Jv7B3aFRJHvq11H4WjNf7n89KUaj"
+			]
+		},
+		"hpa3-blockchain-did/contracts/KeyHolder.sol": {
+			"keccak256": "0xb9a954027ad94a9e2c6e8b899ed6f232fcb23dda5a94bdbb9cb830f2790b1e7f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://923b103b1551498ea2675fec73ebf7d1962e238d7562f63d75f0c1a8888f863b",
+				"dweb:/ipfs/QmeQqAmrb8DcQ6JMSfK5VGMvUnoudXojLytH2A952mB2pw"
+			]
+		},
+		"hpa3-blockchain/contracts/enum/AuthType.sol": {
+			"keccak256": "0xf414e0857ab22c4e0e875f034628c02f43c588ef3b990c1fc81fdc4252094549",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://2151a064d2d495a307adacaf160def738349ff2a8e04dbe68e0c68b64d21297f",
+				"dweb:/ipfs/QmSZgpG2iohNN4rHqKGAqvUdWxrcPEpRff5CndfnuTmZ5b"
+			]
+		},
+		"hpa3-blockchain/contracts/interface/IAuthenticator.sol": {
 			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
 			"license": "MIT",
 			"urls": [
@@ -60,12 +100,12 @@
 				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
 			]
 		},
-		"contracts/utils/Authenticator.sol": {
-			"keccak256": "0xd16005ac64d248949aebc848d539ab70c0a82c8a3071099ae00b3d9474896600",
+		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
+			"keccak256": "0x947127b26b52716dfa18d445b694f930b4900b38e74b1e7df06af872fddde67f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://7a4d96ee0b9e76117cb5f2577096ef02f353e00633b5cee13dd1f44ae4919bd2",
-				"dweb:/ipfs/QmZxpvQ2X9aWC4Dd5K9uuaQHZSwSgBstak4W42LzB8LByT"
+				"bzz-raw://ef291f794f03231154952199f82bf60f41a970977f0d1ef2e632e8ab621ef1c4",
+				"dweb:/ipfs/QmNbtmTvB28KvQW7WVTXL9VMShfXZQwmbwND4SpkQCsNeG"
 			]
 		}
 	},
