@@ -66,11 +66,9 @@ contract DDR is ERC721Base, IDDR {
         return tokenId;
     }
 
-    function ownerOf(uint256 tokenId)
+    function patientOf(uint256 tokenId)
         public
         view
-        virtual
-        override
         returns (address)
     {
         address owner = _patient[tokenId];
