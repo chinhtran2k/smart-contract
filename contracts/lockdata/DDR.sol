@@ -15,7 +15,8 @@ contract DDR is ERC721Base, IDDR {
     mapping(uint256 => bytes32) private _ddrHashedData;
 
     mapping(uint256 => bool) private _isDDRLocked;
-    mapping(uint256 => mapping(address => bool)) private _isDisclosable;
+    mapping(uint256 => mapping(address => bool)) private _isSharedDDR;
+    mapping(uint256 => mapping(address => bool)) private _isConsentedDDR;
     mapping(uint256 => address) private _patient;
     mapping(address => uint256[]) private _listDDRHashValueOfPatient;
     mapping(address => uint256[]) private _listDDRHashValueOfPharmacy;
@@ -34,8 +35,8 @@ contract DDR is ERC721Base, IDDR {
     bytes32 private _hashValuePharmacy;
 
     modifier _valiDDRList(uint256 ddrId, address senderAddress) {
-        require(!_isDDRLocked[ddrId], "ddr is already locked");
-        require(ownerOf(ddrId) == senderAddress, "Not owner of ddr");
+        require(!_isDDRLocked[ddrId], "DDR is already locked.");
+        require(ownerOf(ddrId) == senderAddress, "Not owner of ddr.");
         _;
     }
 
@@ -73,14 +74,14 @@ contract DDR is ERC721Base, IDDR {
         bytes32 hashedData,
         string memory ddrRawId,
         string memory uri,
-        address identity
+        address patientDID
     ) public returns (uint256) {
-        // TODO: need to check identity
+        // TODO: need to check valid patientDID
         
         uint256 tokenId = super.mint(uri);
-        _patient[tokenId] = identity;
+        _patient[tokenId] = patientDID;
         
-        // Linked list DDR
+        // Create DDR hash value base on DID and hashed data
         bytes32 newHashValue = keccak256(abi.encodePacked(ddrRawId, hashedData));
         bytes32 hashedRawId = keccak256(abi.encodePacked(ddrRawId));
         require(_ddrRawId[hashedRawId] == 0x00, "DDR mint error: DDRID exist!");
@@ -89,8 +90,8 @@ contract DDR is ERC721Base, IDDR {
         _ddrRawId[hashedRawId] = tokenId;
         _ddrHashedData[tokenId] = hashedData;
         _ddrHash[tokenId] = newHashValue;
-        _patient[tokenId] = identity;
-        _listDDRHashValueOfPatient[identity].push(tokenId);
+        _patient[tokenId] = patientDID;
+        _listDDRHashValueOfPatient[patientDID].push(tokenId);
         _listDDRHashValueOfPharmacy[msg.sender].push(tokenId);
 
         // Assign data to token info
@@ -98,23 +99,28 @@ contract DDR is ERC721Base, IDDR {
         Tokens[tokenId].hashedData = hashedData;
         Tokens[tokenId].hashValue = newHashValue;
         Tokens[tokenId].pharmacy = address(msg.sender);
-        Tokens[tokenId].patient = identity;
+        Tokens[tokenId].patient = patientDID;
 
 
-        _isDisclosable[tokenId][identity] = true;
+        _isSharedDDR[tokenId][patientDID] = true;
         _isDDRLocked[tokenId - 1] = true;
-        emit ApprovalConsent(msg.sender, identity, tokenId);
+        emit MintedDDR(ddrRawId, 
+            hashedData,
+            newHashValue,
+            msg.sender,
+            patientDID);
+        emit ApprovalShareDDR(msg.sender, patientDID, tokenId);
         emit DDRTokenLocked(tokenId-1);
 
         return tokenId;
     }
 
-    function getListDDRHashValueOfPatient(address identity) public view returns (uint256[] memory) {
-        return _listDDRHashValueOfPatient[identity];
+    function getListDDRHashValueOfPatient(address patientDID) public view returns (uint256[] memory) {
+        return _listDDRHashValueOfPatient[patientDID];
     }
 
-    function getListDDRHashValueOfPharmacy(address identity) public view returns (uint256[] memory) {
-        return _listDDRHashValueOfPharmacy[identity];
+    function getListDDRHashValueOfPharmacy(address pharmacyDID) public view returns (uint256[] memory) {
+        return _listDDRHashValueOfPharmacy[pharmacyDID];
     }
 
     function patientOf(uint256 tokenId)
@@ -127,7 +133,7 @@ contract DDR is ERC721Base, IDDR {
         return owner;
     }
 
-    function pharmacytOf(uint256 tokenId)
+    function pharmacyOf(uint256 tokenId)
         public
         view
         returns (address)
@@ -137,16 +143,32 @@ contract DDR is ERC721Base, IDDR {
         return owner;
     }
 
-    function statusLockDDR(uint256 tokenId) public view returns (bool) {
+    //// Status part
+    function isLockedDDR(uint256 tokenId) public view returns (bool) {
         return _isDDRLocked[tokenId];
     }
 
-    function getShareApproval(uint256 ddrTokenId, address identity)
-        public
-        view
-        override
-        returns (bool)
-    {
-        return _isDisclosable[ddrTokenId][identity];
+    function isSharedDDR(address identity, uint256 ddrTokenId) public view returns (bool) {
+        return _isConsentedDDR[ddrTokenId][identity];
     }
+
+    function isConsentedDDR(address identity, uint256 ddrTokenId) public view returns (bool)
+    {
+        return _isConsentedDDR[ddrTokenId][identity];
+    }
+
+    //// Approval part
+    // "shareDDRFromPharmacy" only use for Pharmacy
+    function shareDDRFromPharmacy(uint256 ddrTokenId, address patientDID) public 
+    {
+        _isSharedDDR[ddrTokenId][patientDID];
+    }
+
+    // "requestDisclosureConsentDDRFromHospital" only use for Hospital
+    // function disclosureConsentDDRFromHospital(address patientDID) public  {
+    //     _isConsentDDR[ddrTokenId][clinicAddress] = true;
+    //     emit ApprovalDisclosureConsentDDR(clinicAddress, ddrTokenId);
+    // }
+
+    
 }

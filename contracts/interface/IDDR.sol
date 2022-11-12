@@ -2,12 +2,12 @@
 pragma solidity ^0.8.0;
 
 interface IDDR {
-    event ApprovalConsent(address Pharmacy, address Patient, uint256 tokenId);
+    event MintedDDR(string DDRRawId, 
+        bytes32 hashedData,
+        bytes32 hashValue,
+        address Pharmacy,
+        address Patient);
     event DDRTokenLocked(uint256 tokenId);
-
-    function getShareApproval(uint256 DDRId, address _address)
-        external
-        view
-        virtual
-        returns (bool);
+    event ApprovalShareDDR(address Pharmacy, address Patient, uint256 tokenId);
+    event ApprovalDisclosureConsentDDR(address Hospital, address Patient, uint256 tokenId);
 }
