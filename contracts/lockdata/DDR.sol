@@ -2,17 +2,34 @@
 pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
-import "../utils/Authenticator.sol";
+// import "../utils/Authenticator.sol";
 import "../interface/IDDR.sol";
 
 contract DDR is ERC721Base, IDDR {
-    mapping(address => bytes32) public _ddrHashPatient;
-    mapping(address => bytes32) public _ddrHashPharmacy;
+    mapping(address => bytes32) private _ddrHashPatient;
+    mapping(address => bytes32) private _ddrHashPharmacy;
+
+    // this allow to query DDR by ddrID
+    mapping(bytes32 => uint256) private _ddrRawId;
+    mapping(uint256 => bytes32) private _ddrHash;
+    mapping(uint256 => bytes32) private _ddrHashedData;
+
     mapping(uint256 => bool) private _isDDRLocked;
     mapping(uint256 => mapping(address => bool)) private _isDisclosable;
     mapping(uint256 => address) private _patient;
-    mapping(address => bytes32[]) private _listDDRHashValueOfPatient;
-    mapping(address => bytes32[]) private _listDDRHashValueOfPharmacy;
+    mapping(address => uint256[]) private _listDDRHashValueOfPatient;
+    mapping(address => uint256[]) private _listDDRHashValueOfPharmacy;
+
+    struct TokenInfo {
+        string ddrRawId;
+        bytes32 hashedData;
+        bytes32 hashValue;
+        address pharmacy;
+        address patient;
+    }
+
+    mapping(uint256 => TokenInfo) private Tokens;
+
     bytes32 private _hashValuePatient;
     bytes32 private _hashValuePharmacy;
 
@@ -26,54 +43,96 @@ contract DDR is ERC721Base, IDDR {
         ERC721Base("Drug Dispense Report", "DDR", _authAddress)
     {}
 
-    function mint(
+    function getDDRHash(uint256 tokenId) public view returns (bytes32) {
+        return _ddrHash[tokenId];
+    }
+
+    function getDDRHashByRawId(string memory ddrRawId) public view returns (bytes32) {
+        bytes32 hashedRawId = keccak256(abi.encodePacked(ddrRawId));
+        uint256 tokenId = _ddrRawId[hashedRawId];
+        return _ddrHash[tokenId];
+    }
+
+    function getToken(uint256 tokenId) public view returns (
+        string memory ddrRawId, 
+        bytes32 hashedData,
         bytes32 hashValue,
+        address pharmacy,
+        address patient
+        ) 
+    {
+        return (Tokens[tokenId].ddrRawId,
+            Tokens[tokenId].hashedData,
+            Tokens[tokenId].hashValue,
+            Tokens[tokenId].pharmacy,
+            Tokens[tokenId].patient
+        );
+    }
+
+    function mint(
+        bytes32 hashedData,
+        string memory ddrRawId,
         string memory uri,
         address identity
-    ) public onlyPharmacy returns (uint256) {
+    ) public returns (uint256) {
+        // TODO: need to check identity
+        
         uint256 tokenId = super.mint(uri);
         _patient[tokenId] = identity;
-        _listDDRHashValueOfPatient[identity].push(hashValue);
-        bytes32[] memory listDDRPatient = _listDDRHashValueOfPatient[identity];
-        require(listDDRPatient.length != 0,"ddr of patient not create");
-        if(listDDRPatient.length == 1){
-            _hashValuePatient = listDDRPatient[0];
-        }
-        else{
-            _hashValuePatient = listDDRPatient[0];
-            for(uint256 i = 1; i < listDDRPatient.length; i++){
-                _hashValuePatient = keccak256(abi.encodePacked(_hashValuePatient, listDDRPatient[i]));
-            }
-        }
-        _ddrHashPatient[identity] = _hashValuePatient;
+        
+        // Linked list DDR
+        bytes32 newHashValue = keccak256(abi.encodePacked(ddrRawId, hashedData));
+        bytes32 hashedRawId = keccak256(abi.encodePacked(ddrRawId));
+        require(_ddrRawId[hashedRawId] == 0x00, "DDR mint error: DDRID exist!");
 
-        _listDDRHashValueOfPharmacy[msg.sender].push(hashValue);
-        bytes32[] memory listDDRPharmacy = _listDDRHashValueOfPharmacy[msg.sender];
-        require(listDDRPharmacy.length != 0,"ddr of pharmacy not create");
-        if(listDDRPharmacy.length == 1){
-            _hashValuePharmacy = listDDRPharmacy[0];
-        }
-        else{
-            _hashValuePharmacy = listDDRPharmacy[0];
-            for(uint256 i = 1; i < listDDRPharmacy.length; i++){
-                _hashValuePharmacy = keccak256(abi.encodePacked(_hashValuePharmacy, listDDRPharmacy[i]));
-            }
-        }
-        _ddrHashPharmacy[msg.sender] = _hashValuePharmacy;
+        // Assign data to map
+        _ddrRawId[hashedRawId] = tokenId;
+        _ddrHashedData[tokenId] = hashedData;
+        _ddrHash[tokenId] = newHashValue;
+        _patient[tokenId] = identity;
+        _listDDRHashValueOfPatient[identity].push(tokenId);
+        _listDDRHashValueOfPharmacy[msg.sender].push(tokenId);
+
+        // Assign data to token info
+        Tokens[tokenId].ddrRawId = ddrRawId;
+        Tokens[tokenId].hashedData = hashedData;
+        Tokens[tokenId].hashValue = newHashValue;
+        Tokens[tokenId].pharmacy = address(msg.sender);
+        Tokens[tokenId].patient = identity;
+
+
         _isDisclosable[tokenId][identity] = true;
-        emit approval(identity, tokenId);
-        _isDDRLocked[tokenId -1] = true;
+        _isDDRLocked[tokenId - 1] = true;
+        emit ApprovalConsent(msg.sender, identity, tokenId);
+        emit DDRTokenLocked(tokenId-1);
+
         return tokenId;
     }
 
-    function ownerOf(uint256 tokenId)
+    function getListDDRHashValueOfPatient(address identity) public view returns (uint256[] memory) {
+        return _listDDRHashValueOfPatient[identity];
+    }
+
+    function getListDDRHashValueOfPharmacy(address identity) public view returns (uint256[] memory) {
+        return _listDDRHashValueOfPharmacy[identity];
+    }
+
+    function patientOf(uint256 tokenId)
         public
         view
-        virtual
-        override
         returns (address)
     {
         address owner = _patient[tokenId];
+        require(owner != address(0), "ERC721: invalid token ID");
+        return owner;
+    }
+
+    function pharmacytOf(uint256 tokenId)
+        public
+        view
+        returns (address)
+    {
+        address owner = ownerOf(tokenId);
         require(owner != address(0), "ERC721: invalid token ID");
         return owner;
     }
@@ -83,7 +142,7 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function getShareApproval(uint256 ddrTokenId, address identity)
-        external
+        public
         view
         override
         returns (bool)

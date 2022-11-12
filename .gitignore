@@ -13,3 +13,8 @@ artifacts
 test*
 dist
 test.ts
+expContract/
+contracts/DID
+**/artifacts/
+lockdata/artifacts/
+utils/artifacts/

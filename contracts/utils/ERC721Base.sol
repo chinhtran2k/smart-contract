@@ -67,4 +67,8 @@ contract ERC721Base is
     function safeMint(address to, uint256 tokenId) public onlyOwner {
         _safeMint(to, tokenId);
     }
+
+    function getCurrentTokenIds() public view returns (uint256) {
+        return _tokenIds.current();
+    }
 }

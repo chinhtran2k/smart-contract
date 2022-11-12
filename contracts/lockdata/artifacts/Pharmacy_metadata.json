@@ -168,20 +168,25 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "tokenId",
-						"type": "uint256"
+						"internalType": "uint256[]",
+						"name": "arrFrom",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "arrTo",
+						"type": "uint256[]"
 					}
 				],
-				"name": "getAddressPharmacy",
+				"name": "copyArrayToArrayUINT256",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "uint256[]",
 						"name": "",
-						"type": "address"
+						"type": "uint256[]"
 					}
 				],
-				"stateMutability": "view",
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -204,6 +209,68 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getCurrentQueue",
+				"outputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "",
+						"type": "bytes32[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getCurrentTokenIds",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "nodeId",
+						"type": "bytes32"
+					}
+				],
+				"name": "getNodeData",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "bytes32",
+								"name": "hashValue",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "nodeLeft",
+								"type": "bytes32"
+							},
+							{
+								"internalType": "bytes32",
+								"name": "nodeRight",
+								"type": "bytes32"
+							}
+						],
+						"internalType": "struct IMerkleTreeBase.MerkleNode",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -211,7 +278,26 @@
 						"type": "uint256"
 					}
 				],
-				"name": "getHashPharmacy",
+				"name": "getPharmacyAddressOf",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "PharmacyDID",
+						"type": "address"
+					}
+				],
+				"name": "getPharmacyRootHashValue",
 				"outputs": [
 					{
 						"internalType": "bytes32",
@@ -226,16 +312,35 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "pharmacy",
+						"name": "PharmacyDID",
 						"type": "address"
 					}
 				],
-				"name": "getHashValuePharmacy",
+				"name": "getPharmacyRootNodeId",
 				"outputs": [
 					{
 						"internalType": "bytes32",
 						"name": "",
 						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "pharmacyDID",
+						"type": "address"
+					}
+				],
+				"name": "getTokenIdOfPharmacy",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -266,10 +371,23 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "merkleLength",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "pharmacyAddress",
+						"name": "pharmacyDID",
 						"type": "address"
 					},
 					{
@@ -637,7 +755,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"hpa3-blockchain/contracts/lockdata/Pharmacy.sol": "Pharmacy"
+			"contracts/lockdata/Pharmacy.sol": "Pharmacy"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -771,7 +889,7 @@
 				"dweb:/ipfs/Qmct36zWXv3j7LZB83uwbg7TXwnZSN1fqHNDZ93GG98bGz"
 			]
 		},
-		"hpa3-blockchain-did/contracts/ClaimHolder.sol": {
+		"contracts/DID/ClaimHolder.sol": {
 			"keccak256": "0x395a82dac2f9c60283f8eec51141df8d85165dae8f81784f868c974bb135065a",
 			"license": "MIT",
 			"urls": [
@@ -779,7 +897,7 @@
 				"dweb:/ipfs/QmY5M12qJAp47wJfMDVTdi7NntfKqwtvAF4FfKKGn46Wxz"
 			]
 		},
-		"hpa3-blockchain-did/contracts/ClaimVerifier.sol": {
+		"contracts/DID/ClaimVerifier.sol": {
 			"keccak256": "0x69243879ddfca5340a4ec37419b40ff2582894bd715a77161aa10295539dccd6",
 			"license": "MIT",
 			"urls": [
@@ -787,7 +905,7 @@
 				"dweb:/ipfs/QmNbbKVBBZgqKrdCNxZ8qNcjuJ9BX26pnhcMM45GbRUN5W"
 			]
 		},
-		"hpa3-blockchain-did/contracts/ERC725.sol": {
+		"contracts/DID/ERC725.sol": {
 			"keccak256": "0x2f822dce216ddd341d548d6df83cca38bbc2040ce9ba38878a6417280670f3d3",
 			"license": "MIT",
 			"urls": [
@@ -795,7 +913,7 @@
 				"dweb:/ipfs/Qme75ynzQXYhD7pdhWVEwnrWAmQPpJ8N57Mgc7jRKk6iQV"
 			]
 		},
-		"hpa3-blockchain-did/contracts/ERC735.sol": {
+		"contracts/DID/ERC735.sol": {
 			"keccak256": "0xaf1cd491d6c33c1a836a8ce8067b9c870f68666801e9afedebc1e2c1e87da506",
 			"license": "MIT",
 			"urls": [
@@ -803,7 +921,7 @@
 				"dweb:/ipfs/QmbhCgMN8pmNdQn1p8Jv7B3aFRJHvq11H4WjNf7n89KUaj"
 			]
 		},
-		"hpa3-blockchain-did/contracts/KeyHolder.sol": {
+		"contracts/DID/KeyHolder.sol": {
 			"keccak256": "0xb9a954027ad94a9e2c6e8b899ed6f232fcb23dda5a94bdbb9cb830f2790b1e7f",
 			"license": "MIT",
 			"urls": [
@@ -811,60 +929,68 @@
 				"dweb:/ipfs/QmeQqAmrb8DcQ6JMSfK5VGMvUnoudXojLytH2A952mB2pw"
 			]
 		},
-		"hpa3-blockchain/contracts/enum/AuthType.sol": {
-			"keccak256": "0xf414e0857ab22c4e0e875f034628c02f43c588ef3b990c1fc81fdc4252094549",
+		"contracts/enum/AuthType.sol": {
+			"keccak256": "0x8b02592f4ed7aaff2dc25a5da4944638794395bd0d90670854b12c3f560fbb22",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://2151a064d2d495a307adacaf160def738349ff2a8e04dbe68e0c68b64d21297f",
-				"dweb:/ipfs/QmSZgpG2iohNN4rHqKGAqvUdWxrcPEpRff5CndfnuTmZ5b"
+				"bzz-raw://3eb1e73758d7f193a18e0a30dacbc751422f97481672c9f6f7d311af45f59efa",
+				"dweb:/ipfs/QmPRboSwWyP99ZDhG98Cfxr6sSV6LHxwVDxnexhTA4rqRL"
 			]
 		},
-		"hpa3-blockchain/contracts/interface/IAuthenticator.sol": {
-			"keccak256": "0x093fc2acf8a48c553caac683bce0ed5ac7b82998a52311187fdef00d49add4b4",
+		"contracts/interface/IAuthenticator.sol": {
+			"keccak256": "0x35502c1fe59be18409a9886c6c5474b2728bfa2bd533c9929d5ef05068794ba6",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://542f1b1b4894bb4e021e526174c493f6ed4c15e4d3e99a5a4b104ddf5a5fb455",
-				"dweb:/ipfs/QmVrA6Jhd7JqcPkv44jaGFnv9PpLBJoWceBezR8guZuxMv"
+				"bzz-raw://31af3390cbea88dae82a3501a424aae0632465ab4d011510a4d06df9b942335e",
+				"dweb:/ipfs/QmQN1FhPGHez38vXEZX7cuzqr2JGEmHB692NoNcd5T4MWJ"
 			]
 		},
-		"hpa3-blockchain/contracts/interface/IDDR.sol": {
-			"keccak256": "0x934ed354ac7479c45f2c059e8deb1b419736389ae3a9cff87de0125507ee180f",
+		"contracts/interface/IDDR.sol": {
+			"keccak256": "0x928ada929eaec56e9955c1d740172832255b90262e1bef58269fa2999da0bf4d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fd7d211efd0c160665767ae27e6ef0c29bd8fbbba40e6f2dbaa83368e597daae",
-				"dweb:/ipfs/QmaZjzm2bGZAwReZmBpGBUvQ7d7q4Cp4nAEPT3EEZFpawm"
+				"bzz-raw://305e4dd70be7bf23c427a4c677cb6e1a93dadb0112a79d878952b8f5cc96a942",
+				"dweb:/ipfs/QmU1ZDi9NnAbN17GPhD3ULunArjCDnX7MYnaJHfdZgSUCc"
 			]
 		},
-		"hpa3-blockchain/contracts/lockdata/DDR.sol": {
-			"keccak256": "0x0780e8fed09194fef1541bc09f3d0d06d848fae6d3534826c3298d52a14b89f5",
+		"contracts/interface/IMerkleTreeBase.sol": {
+			"keccak256": "0x1fe8547cf0f7137e7d8decf56841bde604611c0c26d59c7c485213c6cc46f27e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://f03e253f8b23d2fb31ac64568cb4d84eef8074a0b7d792881e41c1829e83277a",
-				"dweb:/ipfs/QmRqmUyuNC7nLYEZ8nuH1S6DyAgkwiBRKGYQ6tWsggykpJ"
+				"bzz-raw://e6ce3b794cfd03c6bf2a0eb19bb02e08ed053b81514015db1621b77c16badc45",
+				"dweb:/ipfs/QmRtZCfXUNxmAdQSKgmynERSencpwZyyCgdSecto64mwaG"
 			]
 		},
-		"hpa3-blockchain/contracts/lockdata/Pharmacy.sol": {
-			"keccak256": "0x0d3b0fe73db05300bcdcc40d60609cc14b572b843a6165e7aeafb9f42cfddf2a",
+		"contracts/lockdata/DDR.sol": {
+			"keccak256": "0x5520709837323dfbbf5a1a4b66bcc3b6d848c76da4af1661a96768ab4c2dac7e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://12bdc3d2c922b9211eacbe8028ae96d522898b23427ac9f33c3d1c43298aae3d",
-				"dweb:/ipfs/QmfFy4nzZxeLfwUnz1sJNPFwtFNsrPGyZoy2bdzaHZ8cFJ"
+				"bzz-raw://1b129e1cfee1b7021df76e4ba0fa7bb84d17147591403f51023af10e762e33f6",
+				"dweb:/ipfs/QmduCPeF8rUeGb6djNLbJ8xNytpLikcWfvYvhZPEKYDGKb"
 			]
 		},
-		"hpa3-blockchain/contracts/utils/Authenticator.sol": {
-			"keccak256": "0x947127b26b52716dfa18d445b694f930b4900b38e74b1e7df06af872fddde67f",
+		"contracts/lockdata/Pharmacy.sol": {
+			"keccak256": "0x2c436d9909fa8129216908490f7294d050ff8d34e90d0503c9064eca394dc191",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ef291f794f03231154952199f82bf60f41a970977f0d1ef2e632e8ab621ef1c4",
-				"dweb:/ipfs/QmNbtmTvB28KvQW7WVTXL9VMShfXZQwmbwND4SpkQCsNeG"
+				"bzz-raw://34c463406a8f15e71ba8f775dc71e96c0481c1fd81320a0b295df6c3b2a8c21d",
+				"dweb:/ipfs/QmRYBYBuPgQf9fEJ84XTZ3gWGwRNB8KefnrrTR6wK2KMNr"
 			]
 		},
-		"hpa3-blockchain/contracts/utils/ERC721Base.sol": {
-			"keccak256": "0xbb44c55f93db914e33c4ec23d113b0f1462f6f482504eefa0c039e6dc54fa1a3",
+		"contracts/utils/Authenticator.sol": {
+			"keccak256": "0xe50c250f6e7875dfd8cc747827c1b4941eb12c3670bdebe7bf9478fdf823ecd3",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5ba06d92d5a3500988834a62ce56e2d2586630aca7bd1d0cfe14b7c5bdffbcf1",
-				"dweb:/ipfs/Qmdn7wv4zTAS3463YkFrqxK6Xb93EX1dBDeKYofHhNy54B"
+				"bzz-raw://220952acfac0f19f627c66c7cda2cb40c4c27759aa677b43c6b586d73ad9124b",
+				"dweb:/ipfs/QmR7WFkvmrQcsboKRNERFrv5MwqqicMVTt3Poi5QMRJcuE"
+			]
+		},
+		"contracts/utils/ERC721Base.sol": {
+			"keccak256": "0x83a15fd7c7b955e4060c2e4e3de44da919a394de03d704c4f41cb79d080768ca",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://b1303a868c52c7df02e1bfaac9ba8abf75c9b2d5b8913f48330dbbc8720aec12",
+				"dweb:/ipfs/QmbNexLqHMTWq6geqcGAZgBZxsUdtozxpELk1rStAsete4"
 			]
 		}
 	},
