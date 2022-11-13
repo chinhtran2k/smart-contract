@@ -41,7 +41,7 @@ async function main() {
 
   // create config file
   fs.writeFileSync(
-    "../config.json",
+    "./config.json",
     JSON.stringify({
       Authenticator: {
         address: Authenticator.address,
