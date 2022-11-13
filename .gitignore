@@ -18,3 +18,14 @@ contracts/DID
 **/**/artifacts/
 contracts/lockdata/artifacts
 contracts/utils/artifacts
+node_modules
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+
+#Hardhat files
+cache
+artifacts
+
