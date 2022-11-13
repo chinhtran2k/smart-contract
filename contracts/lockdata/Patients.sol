@@ -11,6 +11,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(uint256 => address) private _patientOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPatients;
     mapping(address => bytes32) private _rootHashValuesOfPatient;
+    bytes32[] public _listRootHashValue;
 
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
@@ -117,7 +118,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
         bytes32 _rootPatientNodeId = queueNode[0];
         bytes32 _rootPatientHash = _allNodes[queueNode[0]].hashValue;
-
+        
         return(_rootPatientNodeId, _rootPatientHash);
     }
     
@@ -148,6 +149,8 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
         _rootHashValuesOfPatient[patientDID] = _rootPatientHash;
 
+        _listRootHashValue.push(_rootPatientHash);
+        emit PatientLockTokenMinted(tokenId, patientDID, _rootPatientNodeId, _rootPatientHash);
         return tokenId;
     }
 

@@ -3,14 +3,15 @@ pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
 import "./DDR.sol";
-import "../interface/IDDR.sol";
+import "../interface/IPatient.sol";
 import "../interface/IMerkleTreeBase.sol";
 
-contract Pharmacy is ERC721Base, IMerkleTreeBase {
+contract Pharmacy is ERC721Base, IPatient, IMerkleTreeBase {
     // Assign mapping
     mapping(uint256 => address) private _pharmacyOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPharmacy;
     mapping(address => bytes32) private _rootHashValuesOfPharmacy;
+    bytes32[] public _listRootHashValue;
 
     // Mapping Pharmacy to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPharmacy;
@@ -133,19 +134,21 @@ contract Pharmacy is ERC721Base, IMerkleTreeBase {
     constructor(address _ddrAddress, address _authAddress)
         ERC721Base("Pharmacy", "PM", _authAddress)
     {
-    _DDR = DDR(_ddrAddress);
+        _DDR = DDR(_ddrAddress);
     }
 
     function mint(address pharmacyDID, string memory uri) public onlyOwner returns(uint256){
-      uint256 tokenId = super.mint(uri);
+        uint256 tokenId = super.mint(uri);
 
-      (bytes32 _rootPharmacyNodeId, bytes32 _rootPharmacyHash) = lockDIDByMerkleTree(pharmacyDID);
-      _pharmacyOfTokenIds[tokenId] = pharmacyDID;
-      _tokenIdOfPharmacy[pharmacyDID] = tokenId;
-      _rootNodeIdsOfPharmacy[pharmacyDID] = _rootPharmacyNodeId;
-      _rootHashValuesOfPharmacy[pharmacyDID] = _rootPharmacyHash;
+        (bytes32 _rootPharmacyNodeId, bytes32 _rootPharmacyHash) = lockDIDByMerkleTree(pharmacyDID);
+        _pharmacyOfTokenIds[tokenId] = pharmacyDID;
+        _tokenIdOfPharmacy[pharmacyDID] = tokenId;
+        _rootNodeIdsOfPharmacy[pharmacyDID] = _rootPharmacyNodeId;
+        _rootHashValuesOfPharmacy[pharmacyDID] = _rootPharmacyHash;
 
-      return tokenId;
+        _listRootHashValue.push(_rootPharmacyHash);
+        emit PharmacyLockTokenMinted(tokenId, pharmacyDID, _rootPharmacyNodeId, _rootPharmacyHash);
+        return tokenId;
     }
 
     function getPharmacyAddressOf(uint256 tokenId) public view returns (address) {
