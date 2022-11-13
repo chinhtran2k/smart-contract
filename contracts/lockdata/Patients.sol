@@ -35,7 +35,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         return arrTo;
     }
 
-    function popQueue(uint index) private  {
+    function popQueue(uint index) private onlyOwner {
         // uint256 valueAtIndex = nodeArr[index]
         for (uint i = index; i < queueNode.length-1; i++) {
             queueNode[i] = queueNode[i+1];
@@ -43,7 +43,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         queueNode.pop();
     }
 
-    function lockDIDByMerkleTree(address patientDID) private returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
+    function lockDIDByMerkleTree(address patientDID) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
         uint256[] memory listDDROfPatient = _DDR.getListDDRHashValueOfPatient(patientDID);
         uint256 listDDRLength = listDDROfPatient.length;
 
@@ -137,7 +137,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _DDR = DDR(_ddrAddress);
     }
 
-    function mint(address patientDID, string memory uri) public returns(uint256){
+    //// This function only call when "Project manager" want to end the project and lock "ALL" data
+    //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
+    function mint(address patientDID, string memory uri) public onlyOwner returns(uint256){
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);

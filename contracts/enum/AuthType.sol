@@ -5,5 +5,5 @@ enum AuthType {
     NONE,
     PATIENT,
     PHARMACY,
-    CLINIC
+    HOSPITAL
 }

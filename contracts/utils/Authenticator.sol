@@ -3,32 +3,38 @@ pragma solidity ^0.8.0;
 import "../interface/IAuthenticator.sol";
 import "../DID/ClaimVerifier.sol";
 import "../DID/ClaimHolder.sol";
+import "../enum/AuthType.sol";
 
 contract Authenticator is IAuthenticator {
     mapping(address => bool) private _pharmacy;
     mapping(address => bool) private _patient;
-    mapping(address => bool) private _clinic;
-    ClaimVerifier private _checkClaim;
+    mapping(address => bool) private _hospital;
+    ClaimVerifier private _claimVerifier;
 
     constructor(address claimVerifier) {
-        _pharmacy[msg.sender] = true;
-        _patient[msg.sender] = true;
-        _clinic[msg.sender] = true;
-        _checkClaim = ClaimVerifier(claimVerifier);
+        _claimVerifier = ClaimVerifier(claimVerifier);
     }
 
-    function checkDID(ClaimHolder _address) external {
+    function createAuthentication(ClaimHolder _address) public {
         require(address(_address) != address(0), "Address zero is not allowed");
-        require(_pharmacy[msg.sender] == true, "Address is not pharmacy");
-        require(_patient[msg.sender] == true, "Address is not patient");
-        require(_clinic[msg.sender] == true, "Address is not clinic");
-        if (_checkClaim.checkClaim(_address, 1)) {
+        
+        bool isCreated = false;
+
+        if (_claimVerifier.checkClaim(_address, 1)) {
             _patient[address(_address)] = true;
-        } else if (_checkClaim.checkClaim(_address, 2)) {
+            isCreated = true;
+            emit CreatedLockAuthentication(address(_address), AuthType.PATIENT);
+        } else if (_claimVerifier.checkClaim(_address, 2)) {
             _pharmacy[address(_address)] = true;
-        } else if (_checkClaim.checkClaim(_address, 3)) {
-            _clinic[address(_address)] = true;
+            isCreated = true;
+            emit CreatedLockAuthentication(address(_address), AuthType.PHARMACY);
+        } else if (_claimVerifier.checkClaim(_address, 3)) {
+            _hospital[address(_address)] = true;
+            isCreated = true;
+            emit CreatedLockAuthentication(address(_address), AuthType.HOSPITAL);
         }
+
+        require(isCreated, "This DID is not valid!");
     }
 
     function checkAuth(address _address)
@@ -40,7 +46,7 @@ contract Authenticator is IAuthenticator {
         require(_address != address(0), "Address zero is not allowed");
         if (_patient[_address]) return AuthType.PATIENT;
         else if (_pharmacy[_address]) return AuthType.PHARMACY;
-        else if (_clinic[_address]) return AuthType.CLINIC;
+        else if (_hospital[_address]) return AuthType.HOSPITAL;
         else return AuthType.NONE;
     }
 }
@@ -53,27 +59,39 @@ contract AuthenticatorHelper {
         _IAuth = IAuthenticator(_authenticator);
     }
 
-    modifier onlyPharmacy() {
-        require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PHARMACY,
-            "Only pharmacy can call this function"
-        );
-        _;
+    function checkAuthDID(address _address)
+        public
+        view
+        returns (AuthType)
+{
+        require(_address != address(0), "Address zero is not allowed");
+        if (_IAuth.checkAuth(_address) == AuthType.PATIENT) return AuthType.PATIENT;
+        else if (_IAuth.checkAuth(_address) == AuthType.PHARMACY) return AuthType.PHARMACY;
+        else if (_IAuth.checkAuth(_address) == AuthType.HOSPITAL) return AuthType.HOSPITAL;
+        else return AuthType.NONE;
     }
 
     modifier onlyPatient() {
         require(
             _IAuth.checkAuth(msg.sender) == AuthType.PATIENT,
-            "Only patient can call this function"
+            "Only Patient can call this function"
         );
         _;
     }
 
-    modifier onlyClinic() {
+    modifier onlyPharmacy() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.CLINIC,
-            "Only clinic can call this function"
+            _IAuth.checkAuth(msg.sender) == AuthType.PHARMACY,
+            "Only Pharmacy can call this function"
         );
         _;
-}
+    }
+
+    modifier onlyHospital() {
+        require(
+            _IAuth.checkAuth(msg.sender) == AuthType.HOSPITAL,
+            "Only Hospital can call this function"
+        );
+        _;
+    }
 }

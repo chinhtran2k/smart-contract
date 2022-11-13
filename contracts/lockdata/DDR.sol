@@ -2,7 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
-// import "../utils/Authenticator.sol";
+import "../utils/Authenticator.sol";
+import "../enum/AuthType.sol";
 import "../interface/IDDR.sol";
 
 contract DDR is ERC721Base, IDDR {
@@ -75,9 +76,10 @@ contract DDR is ERC721Base, IDDR {
         string memory ddrRawId,
         string memory uri,
         address patientDID
-    ) public returns (uint256) {
+    ) public onlyPharmacy returns (uint256) {
         // TODO: need to check valid patientDID
-        
+        require(checkAuthDID(patientDID) == AuthType.PATIENT, "Patient DID is not valid!");
+
         uint256 tokenId = super.mint(uri);
         _patient[tokenId] = patientDID;
         
@@ -159,16 +161,19 @@ contract DDR is ERC721Base, IDDR {
 
     //// Approval part
     // "shareDDRFromPharmacy" only use for Pharmacy
-    function shareDDRFromPharmacy(uint256 ddrTokenId, address patientDID) public 
+    function shareDDRFromPharmacy(uint256 ddrTokenId, address patientDID) public onlyPharmacy
     {
         _isSharedDDR[ddrTokenId][patientDID];
+        emit ApprovalShareDDR(msg.sender, patientDID, ddrTokenId);
     }
 
-    // "requestDisclosureConsentDDRFromHospital" only use for Hospital
-    // function disclosureConsentDDRFromHospital(address patientDID) public  {
-    //     _isConsentDDR[ddrTokenId][clinicAddress] = true;
-    //     emit ApprovalDisclosureConsentDDR(clinicAddress, ddrTokenId);
-    // }
+    // "disclosureConsentDDRFromHospital" only use for Patient
+    function disclosureConsentDDRFromHospital(uint256[] memory ddrTokenIds, address hospitalDID) public onlyPatient {
+        for (uint i=0; i < ddrTokenIds.length; i++) {
+            _isConsentedDDR[ddrTokenIds[i]][hospitalDID] = true;
+        }
+        emit ApprovalDisclosureConsentDDR(msg.sender, hospitalDID, ddrTokenIds);
+    }
 
     
 }

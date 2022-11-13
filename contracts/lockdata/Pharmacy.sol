@@ -35,7 +35,7 @@ contract Pharmacy is ERC721Base, IMerkleTreeBase {
         return arrTo;
     }
 
-    function popQueue(uint index) private  {
+    function popQueue(uint index) private onlyOwner {
         // uint256 valueAtIndex = nodeArr[index]
         for (uint i = index; i < queueNode.length-1; i++) {
             queueNode[i] = queueNode[i+1];
@@ -43,7 +43,7 @@ contract Pharmacy is ERC721Base, IMerkleTreeBase {
         queueNode.pop();
     }
 
-    function lockDIDByMerkleTree(address pharmacyDID) private returns (bytes32 rootPharmacyNodeId, bytes32 rootPharmacyHash){
+    function lockDIDByMerkleTree(address pharmacyDID) private onlyOwner returns (bytes32 rootPharmacyNodeId, bytes32 rootPharmacyHash){
         uint256[] memory listDDROfPharmacy = _DDR.getListDDRHashValueOfPharmacy(pharmacyDID);
         uint256 listDDRLength = listDDROfPharmacy.length;
 
@@ -136,7 +136,7 @@ contract Pharmacy is ERC721Base, IMerkleTreeBase {
     _DDR = DDR(_ddrAddress);
     }
 
-    function mint(address pharmacyDID, string memory uri) public returns(uint256){
+    function mint(address pharmacyDID, string memory uri) public onlyOwner returns(uint256){
       uint256 tokenId = super.mint(uri);
 
       (bytes32 _rootPharmacyNodeId, bytes32 _rootPharmacyHash) = lockDIDByMerkleTree(pharmacyDID);
@@ -144,11 +144,6 @@ contract Pharmacy is ERC721Base, IMerkleTreeBase {
       _tokenIdOfPharmacy[pharmacyDID] = tokenId;
       _rootNodeIdsOfPharmacy[pharmacyDID] = _rootPharmacyNodeId;
       _rootHashValuesOfPharmacy[pharmacyDID] = _rootPharmacyHash;
-
-      // _hashValue = _DDR._ddrHashPharmacy(pharmacyAddress);
-      // _pharmacyHashValue[pharmacyAddress] = _hashValue;
-      // _pharmacyHash[tokenId] = _hashValue;
-      // _pharmacy[tokenId] = pharmacyAddress;
 
       return tokenId;
     }
