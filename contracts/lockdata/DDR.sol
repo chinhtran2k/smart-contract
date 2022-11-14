@@ -117,6 +117,22 @@ contract DDR is ERC721Base, IDDR {
         return tokenId;
     }
 
+    function mintBatch(
+        bytes32[] memory hashedDatas,
+        string[] memory ddrRawIds,
+        string[] memory uris,
+        address patientDID
+    ) public onlyPharmacy returns (uint256[] memory) {
+        require(hashedDatas.length == ddrRawIds.length, "DDR mint error: length of hashedData and ddrRawId is not equal!");
+        require(hashedDatas.length == uris.length, "DDR mint error: length of hashedData and uri is not equal!");
+
+        uint256[] memory tokenIds = new uint256[](hashedDatas.length);
+        for (uint256 i = 0; i < hashedDatas.length; i++) {
+            tokenIds[i] = mint(hashedDatas[i], ddrRawIds[i], uris[i], patientDID);
+        }
+        return tokenIds;
+    }
+
     function getListDDRHashValueOfPatient(address patientDID) public view returns (uint256[] memory) {
         return _listDDRHashValueOfPatient[patientDID];
     }
