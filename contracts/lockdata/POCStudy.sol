@@ -158,7 +158,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         _pharmacy = Pharmacy(pharmacyAddress);
     }
 
-    function mint(address to, string memory uri, uint256 level) public onlyOwner {
+    function mint(string memory uri, uint256 level) public onlyOwner {
         uint256 tokenId = super.mint(uri);
 
         // Lock level
@@ -175,17 +175,17 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         }
     }
 
-    function getRootHashPOCPatient(uint256 tokenId) public view returns (bytes32) {
+    function getRootHashPOCPatient() public view returns (bytes32) {
         return _rootHashPOCPatient[_rootPOCStudyPatient];
     }
-    function getRootHashPOCPharmacy(uint256 tokenId) public view returns (bytes32) {
+    function getRootHashPOCPharmacy() public view returns (bytes32) {
         return _rootHashPOCPharmacy[_rootPOCStudyPharmacy];
     }
 
-    function getRootNodeIdPOCPatient(uint256 tokenId) public view returns (bytes32) {
+    function getRootNodeIdPOCPatient() public view returns (bytes32) {
         return _rootNodeIdOfPOCPatient[_rootPOCStudyPatient];
     }
-    function getRootNodeIdPOCPharmacy(uint256 tokenId) public view returns (bytes32) {
+    function getRootNodeIdPOCPharmacy() public view returns (bytes32) {
         return _rootNodeIdOfPOCPharmacy[_rootPOCStudyPharmacy];
     }
 
