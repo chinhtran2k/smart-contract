@@ -11,7 +11,7 @@ contract Pharmacy is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(uint256 => address) private _pharmacyOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPharmacy;
     mapping(address => bytes32) private _rootHashValuesOfPharmacy;
-    bytes32[] public _listRootHashValue;
+    bytes32[] private _listRootHashValue;
 
     // Mapping Pharmacy to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPharmacy;
@@ -165,5 +165,9 @@ contract Pharmacy is ERC721Base, IPatient, IMerkleTreeBase {
 
     function getPharmacyRootNodeId(address PharmacyDID) public view returns (bytes32){
         return _rootNodeIdsOfPharmacy[PharmacyDID];
+    }
+
+    function getListRootHashValue() public view returns (bytes32[] memory) {
+        return _listRootHashValue;
     }
 }

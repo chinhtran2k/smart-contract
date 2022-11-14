@@ -11,7 +11,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(uint256 => address) private _patientOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPatients;
     mapping(address => bytes32) private _rootHashValuesOfPatient;
-    bytes32[] public _listRootHashValue;
+    bytes32[] private _listRootHashValue;
 
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
@@ -168,6 +168,10 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     function getPatientRootNodeId(address patientDID) public view returns (bytes32){
         return _rootNodeIdsOfPatient[patientDID];
+    }
+
+    function getListRootHashValue() public view returns (bytes32[] memory) {
+        return _listRootHashValue;
     }
 }
 
