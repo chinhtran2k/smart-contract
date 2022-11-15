@@ -8,6 +8,8 @@ import "../interface/IDDR.sol";
 import "../erc20Proxy/ERC20Proxy.sol";
 
 contract DDR is ERC721Base, IDDR {
+    ERC20Proxy public erc20Proxy;
+
     mapping(address => bytes32) private _ddrHashPatient;
     mapping(address => bytes32) private _ddrHashPharmacy;
 
@@ -134,6 +136,10 @@ contract DDR is ERC721Base, IDDR {
         return tokenIds;
     }
 
+    function setERC20Proxy(address _erc20Proxy) public onlyOwner {
+        erc20Proxy = ERC20Proxy(_erc20Proxy);
+    }
+
     function getListDDRHashValueOfPatient(address patientDID) public view returns (uint256[] memory) {
         return _listDDRHashValueOfPatient[patientDID];
     }
@@ -182,6 +188,7 @@ contract DDR is ERC721Base, IDDR {
     {
         _isSharedDDR[ddrTokenId][patientDID];
         emit ApprovalShareDDR(msg.sender, patientDID, ddrTokenId);
+        erc20Proxy.awardToken(patientDID);
     }
 
     // "disclosureConsentDDRFromHospital" only use for Patient
@@ -190,6 +197,7 @@ contract DDR is ERC721Base, IDDR {
             _isConsentedDDR[ddrTokenIds[i]][hospitalDID] = true;
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, hospitalDID, ddrTokenIds);
+        erc20Proxy.awardToken(tx.origin);
     }
 
     

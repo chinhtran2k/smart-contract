@@ -1,8 +1,7 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
-const PRIVATE_KEY =
-  "";
+const PRIVATE_KEY = "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.7",
