@@ -14,7 +14,6 @@ test*
 dist
 test.ts
 expContract/
-contracts/DID
 **/**/artifacts/
 contracts/lockdata/artifacts
 contracts/utils/artifacts
