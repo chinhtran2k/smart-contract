@@ -5,6 +5,7 @@ import "../utils/ERC721Base.sol";
 import "../utils/Authenticator.sol";
 import "../enum/AuthType.sol";
 import "../interface/IDDR.sol";
+import "../erc20Proxy/ERC20Proxy.sol";
 
 contract DDR is ERC721Base, IDDR {
     mapping(address => bytes32) private _ddrHashPatient;

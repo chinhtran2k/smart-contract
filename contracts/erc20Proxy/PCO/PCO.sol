@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "../interface/IPCO.sol";
-import "../utils/Authenticator.sol";
+import "./Authenticator.sol";
 
 contract PCO is ERC20, IPCO, AuthenticatorHelper {
     uint256 private _awardQuestionValue;
@@ -40,7 +40,7 @@ contract PCO is ERC20, IPCO, AuthenticatorHelper {
         AuthenticatorHelper(_authAddress)
     {
         _ownerAddress = _msgSender();
-        _mint(_ownerAddress, 10000000000000000 ether);
+        _mint(_ownerAddress, 10_000_000_000_000_000 ether);
         approve(address(this), totalSupply());
     }
 

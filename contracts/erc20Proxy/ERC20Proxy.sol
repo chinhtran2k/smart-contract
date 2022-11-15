@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 import "../DID/ClaimHolder.sol";
-import "../interface/IPCO.sol";
 import "./PCO.sol";
 
 contract ProxyContract {
