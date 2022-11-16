@@ -20,7 +20,6 @@ async function main() {
   );
   const DDRContract = await ethers.getContractFactory("DDR");
   const PatientContract = await ethers.getContractFactory("Patient");
-  const PharmacyContract = await ethers.getContractFactory("Pharmacy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
 
   console.log("Deploying...");
@@ -34,10 +33,6 @@ async function main() {
   );
   const DDR = await DDRContract.deploy(AuthenticatorHelper.address);
   const Patient = await PatientContract.deploy(
-    DDR.address,
-    AuthenticatorHelper.address
-  );
-  const Pharmacy = await PharmacyContract.deploy(
     DDR.address,
     AuthenticatorHelper.address
   );
@@ -55,7 +50,6 @@ async function main() {
   console.log("AuthenticatorHelper deployed to:", AuthenticatorHelper.address);
   console.log("DDR deployed to:", DDR.address);
   console.log("Patient deployed to:", Patient.address);
-  console.log("Pharmacy deployed to:", Pharmacy.address);
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
 
   // create config file
@@ -135,17 +129,6 @@ async function main() {
             .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/Patient.sol/Patient.json")
-            .contractName,
-      },
-      Pharmacy: {
-        address: Pharmacy.address,
-        abi: require("../artifacts/contracts/lockdata/Pharmacy.sol/Pharmacy.json")
-          .abi,
-        bytecode:
-          require("../artifacts/contracts/lockdata/Pharmacy.sol/Pharmacy.json")
-            .bytecode,
-        contractName:
-          require("../artifacts/contracts/lockdata/Pharmacy.sol/Pharmacy.json")
             .contractName,
       },
       ERC20Proxy: {

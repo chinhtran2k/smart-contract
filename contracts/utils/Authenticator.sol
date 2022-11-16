@@ -6,7 +6,6 @@ import "../DID/ClaimHolder.sol";
 import "../enum/AuthType.sol";
 
 contract Authenticator is IAuthenticator {
-    mapping(address => bool) private _pharmacy;
     mapping(address => bool) private _patient;
     mapping(address => bool) private _hospital;
     ClaimVerifier private _claimVerifier;
@@ -25,10 +24,6 @@ contract Authenticator is IAuthenticator {
             isCreated = true;
             emit CreatedLockAuthentication(address(_address), AuthType.PATIENT);
         } else if (_claimVerifier.checkClaim(_address, 2)) {
-            _pharmacy[address(_address)] = true;
-            isCreated = true;
-            emit CreatedLockAuthentication(address(_address), AuthType.PHARMACY);
-        } else if (_claimVerifier.checkClaim(_address, 3)) {
             _hospital[address(_address)] = true;
             isCreated = true;
             emit CreatedLockAuthentication(address(_address), AuthType.HOSPITAL);
@@ -44,10 +39,9 @@ contract Authenticator is IAuthenticator {
         returns (AuthType)
     {
         require(_address != address(0), "Address zero is not allowed");
-        if (_patient[_address]) return AuthType.PATIENT;
-        else if (_pharmacy[_address]) return AuthType.PHARMACY;
-        else if (_hospital[_address]) return AuthType.HOSPITAL;
-        else return AuthType.NONE;
+        if (_patient[_address]) {return AuthType.PATIENT;}
+        else if (_hospital[_address]) {return AuthType.HOSPITAL;}
+        else {return AuthType.NONE;}
     }
 }
 
@@ -65,24 +59,15 @@ contract AuthenticatorHelper {
         returns (AuthType)
 {
         require(_address != address(0), "Address zero is not allowed");
-        if (_IAuth.checkAuth(_address) == AuthType.PATIENT) return AuthType.PATIENT;
-        else if (_IAuth.checkAuth(_address) == AuthType.PHARMACY) return AuthType.PHARMACY;
-        else if (_IAuth.checkAuth(_address) == AuthType.HOSPITAL) return AuthType.HOSPITAL;
-        else return AuthType.NONE;
+        if (_IAuth.checkAuth(_address) == AuthType.PATIENT) {return AuthType.PATIENT;}
+        else if (_IAuth.checkAuth(_address) == AuthType.HOSPITAL) {return AuthType.HOSPITAL;}
+        else {return AuthType.NONE;}
     }
 
     modifier onlyPatient() {
         require(
             _IAuth.checkAuth(msg.sender) == AuthType.PATIENT,
             "Only Patient can call this function"
-        );
-        _;
-    }
-
-    modifier onlyPharmacy() {
-        require(
-            _IAuth.checkAuth(msg.sender) == AuthType.PHARMACY,
-            "Only Pharmacy can call this function"
         );
         _;
     }

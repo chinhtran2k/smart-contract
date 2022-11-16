@@ -4,25 +4,19 @@ pragma solidity ^0.8.0;
 import "../utils/ERC721Base.sol";
 import "../interface/IMerkleTreeBase.sol";
 import "./Patient.sol";
-import "./Pharmacy.sol";
 
 contract POCStudy is ERC721Base, IMerkleTreeBase {
     Patient public _patient;
-    Pharmacy public _pharmacy;
 
     event LockedPOCPatient(uint256 pocTokenId, bytes32 rootHashPOCPatient);
-    event LockedPOCPharmacy(uint256 pocTokenId, bytes32 rootHashPOCPharmacy);
 
     // Assign mapping
     uint256 public _rootPOCStudyPatient;
-    uint256 public _rootPOCStudyPharmacy;
 
     mapping(uint256 => bytes32) private _rootHashPOCPatient;
-    mapping(uint256 => bytes32) private _rootHashPOCPharmacy;
 
     // Merkle Tree structure
     mapping(uint256 => bytes32) private _rootNodeIdOfPOCPatient;
-    mapping(uint256 => bytes32) private _rootNodeIdOfPOCPharmacy;
 
     bytes32[] public _listRootHashValue;
 
@@ -52,15 +46,8 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         queueNode.pop();
     }
 
-    function lockLevelByMerkleTree(uint level) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash) {
-        bytes32[] memory listLevelRootHash;
-        if (level == 1) {
-            listLevelRootHash = _patient.getListRootHashValue();
-        } else if (level == 2) {
-            listLevelRootHash = _pharmacy.getListRootHashValue();
-        } else {
-            revert("Level not match.");
-        }
+    function lockStudyByMerkleTree() private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash) {
+        bytes32[] memory listLevelRootHash = _patient.getListRootHashValue();
         
         uint256 listLevelRootHashLength = listLevelRootHash.length;
 
@@ -151,48 +138,29 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         return queueNode;
     }
 
-    constructor(address patientAddress, address pharmacyAddress, address authAddress)
+    constructor(address patientAddress, address authAddress)
         ERC721Base("Proof of Concept Study", "POCStudy", authAddress)
     {
         _patient = Patient(patientAddress);
-        _pharmacy = Pharmacy(pharmacyAddress);
     }
 
     function mint(string memory uri, uint256 level) public onlyOwner {
         uint256 tokenId = super.mint(uri);
 
         // Lock level
-        if (level == 1) {
-            (_rootNodeIdOfPOCPatient[tokenId], _rootHashPOCPatient[tokenId]) = lockLevelByMerkleTree(level);
-            _rootPOCStudyPatient = tokenId;
-            emit LockedPOCPatient(tokenId, _rootHashPOCPatient[tokenId]);
-        } else if (level == 2) {
-            (_rootNodeIdOfPOCPharmacy[tokenId], _rootHashPOCPharmacy[tokenId]) = lockLevelByMerkleTree(level);
-            _rootPOCStudyPharmacy = tokenId;
-            emit LockedPOCPharmacy(tokenId, _rootHashPOCPharmacy[tokenId]);
-        } else {
-            revert("Level not match.");
-        }
+        (_rootNodeIdOfPOCPatient[tokenId], _rootHashPOCPatient[tokenId]) = lockStudyByMerkleTree();
+        _rootPOCStudyPatient = tokenId;
+        emit LockedPOCPatient(tokenId, _rootHashPOCPatient[tokenId]);
     }
 
     function getRootHashPOCPatient() public view returns (bytes32) {
         return _rootHashPOCPatient[_rootPOCStudyPatient];
     }
-    function getRootHashPOCPharmacy() public view returns (bytes32) {
-        return _rootHashPOCPharmacy[_rootPOCStudyPharmacy];
-    }
-
     function getRootNodeIdPOCPatient() public view returns (bytes32) {
         return _rootNodeIdOfPOCPatient[_rootPOCStudyPatient];
-    }
-    function getRootNodeIdPOCPharmacy() public view returns (bytes32) {
-        return _rootNodeIdOfPOCPharmacy[_rootPOCStudyPharmacy];
     }
 
     function getRootTokenIdPOCPatient() public view returns (uint256) {
         return _rootPOCStudyPatient;
-    }
-    function getRootTokenIdPOCPharmacy() public view returns (uint256) {
-        return _rootPOCStudyPharmacy;
     }
 }
