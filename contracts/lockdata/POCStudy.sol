@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
@@ -8,7 +9,7 @@ import "./Patient.sol";
 contract POCStudy is ERC721Base, IMerkleTreeBase {
     Patient public _patient;
 
-    event LockedPOCPatient(uint256 pocTokenId, bytes32 rootHashPOCPatient);
+    event LockedPOCPatient(uint256 pocTokenId, bytes32 rootHashPOCPatient, string message);
 
     // Assign mapping
     uint256 public _rootPOCStudyPatient;
@@ -144,13 +145,15 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         _patient = Patient(patientAddress);
     }
 
-    function mint(string memory uri, uint256 level) public onlyOwner {
+    function mint(string memory uri, string memory message) public onlyOwner returns (uint256) {
         uint256 tokenId = super.mint(uri);
 
         // Lock level
         (_rootNodeIdOfPOCPatient[tokenId], _rootHashPOCPatient[tokenId]) = lockStudyByMerkleTree();
         _rootPOCStudyPatient = tokenId;
-        emit LockedPOCPatient(tokenId, _rootHashPOCPatient[tokenId]);
+        emit LockedPOCPatient(tokenId, _rootHashPOCPatient[tokenId], message);
+
+        return tokenId;
     }
 
     function getRootHashPOCPatient() public view returns (bytes32) {

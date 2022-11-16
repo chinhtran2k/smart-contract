@@ -1,11 +1,10 @@
 import { ethers } from "hardhat";
-import { PromiseOrValue } from "../typechain-types/common";
 const fs = require("fs");
 
 async function main() {
   // Pre-defined addresses HPA2
-  const PCOAdress = "";
-  const TokenOwnerAddress = ""; // This is the account which hold all token
+  const PCOAdress = "0x2E2Afe3b8Bb81B4aBde568fCa28CB77957682dcF";
+  const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
 
   // Assign the contract factory
   const ClaimHolderContract = await ethers.getContractFactory("ClaimHolder");
@@ -26,16 +25,21 @@ async function main() {
   // Deploy the contract
   const ClaimHolder = await ClaimHolderContract.deploy();
   const ClaimVerifier = await ClaimVerifierContract.deploy(ClaimHolder.address);
-  const claimVerifierAdress: PromiseOrValue<string> = ClaimVerifier.address;
-  const Authenticator = await AuthenticatorContract.deploy(claimVerifierAdress);
+  const Authenticator = await AuthenticatorContract.deploy(
+    ClaimVerifier.address
+  );
   const AuthenticatorHelper = await AuthenticatorHelperContract.deploy(
     Authenticator.address
   );
-  const DDR = await DDRContract.deploy(AuthenticatorHelper.address);
+  const DDR = await DDRContract.deploy(
+    AuthenticatorHelper.address,
+    ClaimHolder.address
+  );
   const Patient = await PatientContract.deploy(
     DDR.address,
     AuthenticatorHelper.address
   );
+  console.log("okok");
   const ERC20Proxy = await ERC20ProxyContract.deploy(
     PCOAdress,
     TokenOwnerAddress,

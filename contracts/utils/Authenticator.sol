@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
+
 import "../interface/IAuthenticator.sol";
 import "../DID/ClaimVerifier.sol";
 import "../DID/ClaimHolder.sol";

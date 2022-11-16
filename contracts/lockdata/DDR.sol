@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
@@ -53,10 +54,9 @@ contract DDR is ERC721Base, IDDR {
         _;
     }
 
-    constructor(address _authAddress, address _erc20ProxyAddress, address _claimHolderAddress)
+    constructor(address _authAddress, address _claimHolderAddress)
         ERC721Base("Drug Dispense Report", "DDR", _authAddress)
     {
-        erc20Proxy = ERC20Proxy(_erc20ProxyAddress);
         claimHolder = ClaimHolder(_claimHolderAddress);
     }
 
@@ -172,9 +172,9 @@ contract DDR is ERC721Base, IDDR {
         view
         returns (address)
     {
-        address owner = _patient[tokenId];
-        require(owner != address(0), "ERC721: invalid token ID");
-        return owner;
+        address _owner = _patient[tokenId];
+        require(_owner != address(0), "ERC721: invalid token ID");
+        return _owner;
     }
 
     //// Status part
