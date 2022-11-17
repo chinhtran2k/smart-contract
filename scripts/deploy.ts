@@ -5,6 +5,8 @@ async function main() {
   // Pre-defined addresses HPA2
   const PCOAdress = "0x2E2Afe3b8Bb81B4aBde568fCa28CB77957682dcF";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
+  const CLAIM_SIGNER_PREDEFINED_ADDRESS =
+    "0xc3fdeaa9e9e5812c9f2c1b2ee7c1b8bf099537d8b8bade7aad445185aa4278ef"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
 
   // Assign the contract factory
   const ClaimHolderContract = await ethers.getContractFactory("ClaimHolder");
@@ -19,6 +21,7 @@ async function main() {
   );
   const DDRContract = await ethers.getContractFactory("DDR");
   const PatientContract = await ethers.getContractFactory("Patient");
+  const POCStudyContract = await ethers.getContractFactory("POCStudy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
 
   console.log("Deploying...");
@@ -32,14 +35,17 @@ async function main() {
     Authenticator.address
   );
   const DDR = await DDRContract.deploy(
-    AuthenticatorHelper.address,
-    ClaimHolder.address
+    ClaimHolder.address,
+    AuthenticatorHelper.address
   );
   const Patient = await PatientContract.deploy(
     DDR.address,
     AuthenticatorHelper.address
   );
-  console.log("okok");
+  const POCStudy = await POCStudyContract.deploy(
+    Patient.address,
+    AuthenticatorHelper.address
+  );
   const ERC20Proxy = await ERC20ProxyContract.deploy(
     PCOAdress,
     TokenOwnerAddress,
@@ -54,6 +60,7 @@ async function main() {
   console.log("AuthenticatorHelper deployed to:", AuthenticatorHelper.address);
   console.log("DDR deployed to:", DDR.address);
   console.log("Patient deployed to:", Patient.address);
+  console.log("POCStudy deployed to:", POCStudy.address);
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
 
   // create config file
@@ -133,6 +140,17 @@ async function main() {
             .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/Patient.sol/Patient.json")
+            .contractName,
+      },
+      POCStudy: {
+        address: POCStudy.address,
+        abi: require("../artifacts/contracts/lockdata/POCStudy.sol/POCStudy.json")
+          .abi,
+        bytecode:
+          require("../artifacts/contracts/lockdata/POCStudy.sol/POCStudy.json")
+            .bytecode,
+        contractName:
+          require("../artifacts/contracts/lockdata/POCStudy.sol/POCStudy.json")
             .contractName,
       },
       ERC20Proxy: {

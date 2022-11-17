@@ -3,11 +3,10 @@
 pragma solidity ^0.8.0;
 
 import "../DID/ClaimHolder.sol";
-import "../lockdata/DDR.sol";
 
 contract ERC20Proxy {
     address public proxyOwner;
-    DDR public ddr;
+    address public ddr;
 
     address public pcoToken;
     uint256 private awardValue;
@@ -19,7 +18,7 @@ contract ERC20Proxy {
     event ChangedPCOToken(address newPCOToken);
     event ChangedDDR(address newDDR);
 
-    constructor(address _pcoAddress, address _tokenOwner, DDR _ddr) {
+    constructor(address _pcoAddress, address _tokenOwner, address _ddr) {
         proxyOwner = msg.sender;
         ddr = _ddr;
         pcoToken = _pcoAddress;
@@ -33,7 +32,7 @@ contract ERC20Proxy {
 
     modifier onlyDDRContract() {
         require(msg.sender != address(0), "DDR is not set");
-        require(msg.sender == address(ddr), "Sender not match to DDR contract");
+        require(msg.sender == ddr, "Sender not match to DDR contract");
         _;
     }
 
@@ -53,7 +52,7 @@ contract ERC20Proxy {
     }
 
     function setDDRContract(address _ddrAddress) public onlyProxyOwner {
-        ddr = DDR(_ddrAddress);
+        ddr = _ddrAddress;
         emit ChangedDDR(_ddrAddress);
     }
 

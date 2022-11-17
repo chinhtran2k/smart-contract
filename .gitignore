@@ -27,3 +27,4 @@ typechain-types
 #Hardhat files
 cache
 artifacts
+flatten/*.sol

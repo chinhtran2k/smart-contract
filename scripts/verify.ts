@@ -3,6 +3,10 @@ const { exec } = require("child_process");
 const request = require("request");
 const Web3 = require("web3");
 const fs = require("fs");
+
+const PCOAdress = "0x2E2Afe3b8Bb81B4aBde568fCa28CB77957682dcF";
+const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
+
 const verifyRequest = async (
   addressHash: string,
   name: string,
@@ -71,6 +75,8 @@ const flattenContract = async (contractPath: string) => {
           .split("// SPDX-License-Identifier: MIT")
           .join("")
           .split("pragma solidity ^0.8.0;")
+          .join("")
+          .split("pragma solidity ^0.8.1;")
           .join("");
         const idxStart = removeSPDX.indexOf(
           "// Sources flattened with hardhat"
@@ -88,8 +94,14 @@ const flattenContract = async (contractPath: string) => {
 const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function main() {
-  const ClaimHolder = "contracts/ClaimHolder.sol";
-  const ClaimVerifier = "contracts/ClaimVerifier.sol";
+  const ClaimHolder = "contracts/DID/ClaimHolder.sol";
+  const ClaimVerifier = "contracts/DID/ClaimVerifier.sol";
+  const Authenticator = "contracts/utils/Authenticator.sol";
+  const AuthenticatorHelper = "contracts/utils/Authenticator.sol";
+  const DDR = "contracts/lockdata/DDR.sol";
+  const Patient = "contracts/lockdata/Patient.sol";
+  const POCStudy = "contracts/lockdata/POCStudy.sol";
+  const ERC20Proxy = "contracts/erc20Proxy/ERC20Proxy.sol";
 
   const listContract = [
     {
@@ -102,22 +114,53 @@ async function main() {
       ...CONFIG.ClaimVerifier,
       input: [CONFIG.ClaimHolder.address],
     },
+    {
+      path: Authenticator,
+      ...CONFIG.Authenticator,
+      input: [CONFIG.ClaimVerifier.address],
+    },
+    {
+      path: AuthenticatorHelper,
+      ...CONFIG.AuthenticatorHelper,
+      input: [CONFIG.Authenticator.address],
+    },
+    {
+      path: DDR,
+      ...CONFIG.DDR,
+      input: [CONFIG.ClaimHolder.address, CONFIG.AuthenticatorHelper.address],
+    },
+    {
+      path: Patient,
+      ...CONFIG.Patient,
+      input: [CONFIG.DDR.address, CONFIG.AuthenticatorHelper.address],
+    },
+    {
+      path: POCStudy,
+      ...CONFIG.POCStudy,
+      input: [CONFIG.Patient.address, CONFIG.AuthenticatorHelper.address],
+    },
+    {
+      path: ERC20Proxy,
+      ...CONFIG.ERC20Proxy,
+      input: [PCOAdress, TokenOwnerAddress, CONFIG.DDR.address],
+    },
   ];
 
   for (let i = 0; i < listContract.length; i++) {
     const contract = listContract[i];
     const contractSourceCode = await flattenContract(contract.path);
     const web3 = new Web3();
-    // console.log("contract abi: ", contract.abi[0]);
+    // console.log("contract abi: ", contract.abi[0].inputs);
     // console.log("contract input: ", contract.input);
-    // const abiParams = web3.eth.abi
-    //   .encodeFunctionCall(contract.abi[0].inputs);
+    const abiParams = web3.eth.abi
+      .encodeParameters(contract.abi[0].inputs, contract.input)
+      .replace("0x", "");
     // console.log("abi params: ", abiParams);
     await verifyRequest(
       contract.address,
       contract.contractName,
       contractSourceCode,
-      ""
+      abiParams
     );
 
     await delay(3000);

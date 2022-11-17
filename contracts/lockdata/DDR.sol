@@ -54,7 +54,7 @@ contract DDR is ERC721Base, IDDR {
         _;
     }
 
-    constructor(address _authAddress, address _claimHolderAddress)
+    constructor(address _claimHolderAddress, address _authAddress)
         ERC721Base("Drug Dispense Report", "DDR", _authAddress)
     {
         claimHolder = ClaimHolder(_claimHolderAddress);
