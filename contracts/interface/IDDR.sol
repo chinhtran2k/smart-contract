@@ -10,5 +10,5 @@ interface IDDR {
         address Patient);
     event DDRTokenLocked(uint256 tokenId);
     event ApprovalShareDDR(address Patient, uint256 tokenId);
-    event ApprovalDisclosureConsentDDR(address Patient, address Hospital, uint256[] ddrTokenIds);
+    event ApprovalDisclosureConsentDDR(address Patient, address Provider, uint256[] ddrTokenIds);
 }

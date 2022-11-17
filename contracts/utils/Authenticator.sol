@@ -9,26 +9,30 @@ import "../enum/AuthType.sol";
 
 contract Authenticator is IAuthenticator {
     mapping(address => bool) private _patient;
-    mapping(address => bool) private _hospital;
-    ClaimVerifier private _claimVerifier;
+    mapping(address => bool) private _provider;
+    ClaimVerifier public _claimVerifier;
 
     constructor(address claimVerifier) {
         _claimVerifier = ClaimVerifier(claimVerifier);
     }
 
-    function createAuthentication(ClaimHolder _address) public {
+    function createAuthentication(ClaimHolder _address, AuthType _claimType) public {
         require(address(_address) != address(0), "Address zero is not allowed");
         
         bool isCreated = false;
 
-        if (_claimVerifier.checkClaim(_address, 1)) {
+        if (_claimType == AuthType.PATIENT) {
+            _claimVerifier.checkClaim(_address, 1);
             _patient[address(_address)] = true;
             isCreated = true;
-            emit CreatedLockAuthentication(address(_address), AuthType.PATIENT);
-        } else if (_claimVerifier.checkClaim(_address, 2)) {
-            _hospital[address(_address)] = true;
+            emit CreatedAuthentication(address(_address), AuthType.PATIENT);
+        } else if (_claimType == AuthType.PROVIDER) {
+            _claimVerifier.checkClaim(_address, 2);
+            _provider[address(_address)] = true;
             isCreated = true;
-            emit CreatedLockAuthentication(address(_address), AuthType.HOSPITAL);
+            emit CreatedAuthentication(address(_address), AuthType.PROVIDER);
+        } else {
+            revert("Address not has valid claim");
         }
 
         require(isCreated, "This DID is not valid!");
@@ -42,13 +46,13 @@ contract Authenticator is IAuthenticator {
     {
         require(_address != address(0), "Address zero is not allowed");
         if (_patient[_address]) {return AuthType.PATIENT;}
-        else if (_hospital[_address]) {return AuthType.HOSPITAL;}
+        else if (_provider[_address]) {return AuthType.PROVIDER;}
         else {return AuthType.NONE;}
     }
 }
 
 contract AuthenticatorHelper {
-    IAuthenticator private _IAuth;
+    IAuthenticator public _IAuth;
 
     constructor(address _authenticator) {
         require(_authenticator != address(0), "Address zero is not allowed");
@@ -62,7 +66,7 @@ contract AuthenticatorHelper {
 {
         require(_address != address(0), "Address zero is not allowed");
         if (_IAuth.checkAuth(_address) == AuthType.PATIENT) {return AuthType.PATIENT;}
-        else if (_IAuth.checkAuth(_address) == AuthType.HOSPITAL) {return AuthType.HOSPITAL;}
+        else if (_IAuth.checkAuth(_address) == AuthType.PROVIDER) {return AuthType.PROVIDER;}
         else {return AuthType.NONE;}
     }
 
@@ -74,10 +78,10 @@ contract AuthenticatorHelper {
         _;
     }
 
-    modifier onlyHospital() {
+    modifier onlyProvider() {
         require(
-            _IAuth.checkAuth(msg.sender) == AuthType.HOSPITAL,
-            "Only Hospital can call this function"
+            _IAuth.checkAuth(msg.sender) == AuthType.PROVIDER,
+            "Only Provider can call this function"
         );
         _;
     }

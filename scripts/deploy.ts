@@ -2,11 +2,18 @@ import { ethers } from "hardhat";
 const fs = require("fs");
 
 async function main() {
+  const [deployer] = await ethers.getSigners();
+
+  console.log("Deploying contracts with the account:", deployer.address);
+  console.log("Account balance:", (await deployer.getBalance()).toString());
+
   // Pre-defined addresses HPA2
-  const PCOAdress = "0x2E2Afe3b8Bb81B4aBde568fCa28CB77957682dcF";
+  const PCOAdress = "0x56645b2765Dc5d2C9493491ef13746a072dA9f81";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0xc3fdeaa9e9e5812c9f2c1b2ee7c1b8bf099537d8b8bade7aad445185aa4278ef"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
+  const EXECUTION_PREDEFINED_ADDRESS =
+    "0x155c1c7686bd19ce88adb6a4af3cbc3a3caf489f62d0e06b901cb6d2a3400719"; //0xB981494fFE0dBd29137ff6bAa8bC494c827CFf3D
 
   // Assign the contract factory
   const ClaimHolderContract = await ethers.getContractFactory("ClaimHolder");
@@ -51,8 +58,6 @@ async function main() {
     TokenOwnerAddress,
     DDR.address
   );
-  // Set token proxy for DDR level
-  DDR.setERC20Proxy(ERC20Proxy.address);
 
   console.log("ClaimHolder deployed to:", ClaimHolder.address);
   console.log("ClaimVerifier deployed to:", ClaimVerifier.address);
@@ -62,6 +67,24 @@ async function main() {
   console.log("Patient deployed to:", Patient.address);
   console.log("POCStudy deployed to:", POCStudy.address);
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
+
+  // Add pre-defined keySigner to ClaimHolder
+  console.log(
+    "> Added pre-defined keySigner for ClaimHolder: ",
+    CLAIM_SIGNER_PREDEFINED_ADDRESS
+  );
+  await ClaimHolder.addKey(CLAIM_SIGNER_PREDEFINED_ADDRESS, 3, 1);
+
+  // Add pre-defined keyExecution to ClaimHolder
+  console.log(
+    "> Added pre-defined keyExecution for ClaimHolder: ",
+    EXECUTION_PREDEFINED_ADDRESS
+  );
+  await ClaimHolder.addKey(EXECUTION_PREDEFINED_ADDRESS, 2, 1);
+
+  // Set token proxy for DDR level
+  console.log("> Seted token proxy for DDR: ", ERC20Proxy.address);
+  await DDR.setERC20Proxy(ERC20Proxy.address);
 
   // create config file
   fs.writeFileSync(

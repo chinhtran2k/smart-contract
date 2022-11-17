@@ -5,5 +5,5 @@ pragma solidity ^0.8.0;
 enum AuthType {
     NONE,
     PATIENT,
-    HOSPITAL 
+    PROVIDER 
 }
