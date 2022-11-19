@@ -8,7 +8,7 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   // Pre-defined addresses HPA2
-  const PCOAdress = "0x56645b2765Dc5d2C9493491ef13746a072dA9f81";
+  const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0xc3fdeaa9e9e5812c9f2c1b2ee7c1b8bf099537d8b8bade7aad445185aa4278ef"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
@@ -43,15 +43,15 @@ async function main() {
   );
   const DDR = await DDRContract.deploy(
     ClaimHolder.address,
-    AuthenticatorHelper.address
+    Authenticator.address
   );
   const Patient = await PatientContract.deploy(
     DDR.address,
-    AuthenticatorHelper.address
+    Authenticator.address
   );
   const POCStudy = await POCStudyContract.deploy(
     Patient.address,
-    AuthenticatorHelper.address
+    Authenticator.address
   );
   const ERC20Proxy = await ERC20ProxyContract.deploy(
     PCOAdress,

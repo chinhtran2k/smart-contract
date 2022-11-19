@@ -127,15 +127,12 @@ contract DDR is ERC721Base, IDDR {
         Tokens[tokenId].hashValue = newHashValue;
         Tokens[tokenId].patient = patientDID;
 
-
-        _isSharedDDR[tokenId][patientDID] = true;
         _isDDRLocked[tokenId - 1] = true;
         emit MintedDDR(ddrRawId, 
             ddrPatientRawId,
             hashedData,
             newHashValue,
             patientDID);
-        emit ApprovalShareDDR(patientDID, tokenId);
         emit DDRTokenLocked(tokenId-1);
 
         return tokenId;
