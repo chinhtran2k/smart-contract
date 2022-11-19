@@ -127,17 +127,17 @@ async function main() {
     {
       path: DDR,
       ...CONFIG.DDR,
-      input: [CONFIG.ClaimHolder.address, CONFIG.AuthenticatorHelper.address],
+      input: [CONFIG.ClaimHolder.address, CONFIG.Authenticator.address],
     },
     {
       path: Patient,
       ...CONFIG.Patient,
-      input: [CONFIG.DDR.address, CONFIG.AuthenticatorHelper.address],
+      input: [CONFIG.DDR.address, CONFIG.Authenticator.address],
     },
     {
       path: POCStudy,
       ...CONFIG.POCStudy,
-      input: [CONFIG.Patient.address, CONFIG.AuthenticatorHelper.address],
+      input: [CONFIG.Patient.address, CONFIG.Authenticator.address],
     },
     {
       path: ERC20Proxy,

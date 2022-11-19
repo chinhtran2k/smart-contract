@@ -104,7 +104,9 @@ contract DDR is ERC721Base, IDDR {
         // TODO: need to check valid patientDID
         require(checkAuthDID(patientDID) == AuthType.PATIENT, "Patient DID is not valid!");
 
-        uint256 tokenId = super.mint(uri);
+        ClaimHolder patient = ClaimHolder(patientDID);
+
+        uint256 tokenId = super.mintTo(patient.owner(), uri);
         _patient[tokenId] = patientDID;
         
         // Create DDR hash value base on DID and hashed data

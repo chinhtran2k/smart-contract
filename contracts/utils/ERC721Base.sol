@@ -33,6 +33,16 @@ contract ERC721Base is
         return newItemId;
     }
 
+    function mintTo(address to, string memory _tokenURI) internal returns (uint256) {
+        _tokenIds.increment();
+
+        uint256 newItemId = _tokenIds.current();
+        _mint(to, newItemId);
+        _setTokenURI(newItemId, _tokenURI);
+
+        return newItemId;
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
         override(ERC721, ERC721Enumerable)
