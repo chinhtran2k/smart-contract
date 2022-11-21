@@ -102,7 +102,7 @@ contract DDR is ERC721Base, IDDR {
         address patientDID
     ) public onlyClaimHolder returns (uint256) {
         // TODO: need to check valid patientDID
-        require(checkAuthDID(patientDID) == AuthType.PATIENT, "Patient DID is not valid!");
+        require(_IAuth.checkAuth(ClaimHolder(patientDID), AuthType.PATIENT), "Patient DID is not valid!");
 
         ClaimHolder patient = ClaimHolder(patientDID);
 

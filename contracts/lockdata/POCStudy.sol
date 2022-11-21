@@ -100,6 +100,11 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
                 tempNode.pop();
             }
 
+            // Handle even queueNode
+            if ((queueNode.length % 2) == 1) {
+                queueNode.push(0x0000000000000000000000000000000000000000000000000000000000000000);
+            }
+
             // Get queue length
             uint nodeLen = queueNode.length;
             for (uint j = 0; j < nodeLen; j+=2) {
