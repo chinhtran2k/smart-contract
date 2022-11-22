@@ -4,12 +4,12 @@ pragma solidity ^0.8.0;
 
 interface IDDR {
     event MintedDDR(uint256 tokenId,
-        string DDRRawId, 
-        string DDRPatientRawId,
+        string ddrRawId, 
+        string ddrPatientRawId,
         bytes32 hashedData,
         bytes32 hashValue,
-        address Patient);
+        address patientDID);
     event DDRTokenLocked(uint256 tokenId);
-    event ApprovalShareDDR(address Patient, uint256 tokenId);
-    event ApprovalDisclosureConsentDDR(address Patient, address Provider, uint256[] ddrTokenIds);
+    event ApprovalShareDDR(address patientDID, uint256 tokenId);
+    event ApprovalDisclosureConsentDDR(address patientDID, address providerDID, uint256[] ddrTokenIds);
 }
