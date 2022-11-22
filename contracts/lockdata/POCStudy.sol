@@ -47,7 +47,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         queueNode.pop();
     }
 
-    function lockStudyByMerkleTree() public onlyOwner returns 
+    function lockStudyByMerkleTree() private onlyOwner returns 
         (bytes32 rootPatientNodeId, bytes32 rootPatientHash) 
         // (uint256[] memory)
     {
