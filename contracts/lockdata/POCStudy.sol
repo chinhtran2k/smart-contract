@@ -47,17 +47,20 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         queueNode.pop();
     }
 
-    function lockStudyByMerkleTree() private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash) {
+    function lockStudyByMerkleTree() public onlyOwner returns 
+        (bytes32 rootPatientNodeId, bytes32 rootPatientHash) 
+        // (uint256[] memory)
+    {
         bytes32[] memory listLevelRootHash = _patient.getListRootHashValue();
         
         uint256 listLevelRootHashLength = listLevelRootHash.length;
 
-        uint256[] memory listTokenLevel = new uint256[](listLevelRootHashLength);
-        for (uint i=1; i<listLevelRootHashLength+1; i++) {
-            listTokenLevel[i] = i;
-        }
+        require(listLevelRootHashLength > 0, "Patient level has no root hash value.");
 
-        require(listLevelRootHashLength > 0, "This level do not have root hash value.");
+        uint256[] memory listTokenLevel = new uint256[](listLevelRootHashLength);
+        for (uint i=0; i<listLevelRootHashLength; i++) {
+            listTokenLevel[i] = uint256(i+1);
+        }
 
         // Add 0x00 to bottom level if list has odd number of root hash value
         if ((listLevelRootHashLength % 2) == 1) {
@@ -77,9 +80,11 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
 
         // Initial bottom level data
         for (uint i = 0; i < listLevelRootHashLength; i++) {
+            address patientDID = _patient.getPatientAddressOf(listTokenLevel[i]);
+            bytes32 rootHashTemp = _patient.getPatientRootHashValue(patientDID);
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    listLevelRootHash[i],
+                    rootHashTemp,
                     0x0000000000000000000000000000000000000000000000000000000000000000,
                     0x0000000000000000000000000000000000000000000000000000000000000000
                 );

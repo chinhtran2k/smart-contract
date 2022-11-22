@@ -12,6 +12,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(uint256 => address) private _patientOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPatients;
     mapping(address => bytes32) private _rootHashValuesOfPatient;
+    mapping(uint256 => bytes32) private _rootHashValuesOfTokenId;
     bytes32[] private _listRootHashValue;
 
     // Mapping patient to root MerkleNode
