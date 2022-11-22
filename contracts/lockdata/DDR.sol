@@ -100,7 +100,7 @@ contract DDR is ERC721Base, IDDR {
         string memory ddrPatientRawId,
         string memory uri,
         address patientDID
-    ) public onlyClaimHolder returns (uint256) {
+    ) public returns (uint256) {
         // TODO: need to check valid patientDID
         require(_IAuth.checkAuth(ClaimHolder(patientDID), AuthType.PATIENT), "Patient DID is not valid!");
 
@@ -130,7 +130,8 @@ contract DDR is ERC721Base, IDDR {
         Tokens[tokenId].patient = patientDID;
 
         _isDDRLocked[tokenId - 1] = true;
-        emit MintedDDR(ddrRawId, 
+        emit MintedDDR(tokenId,
+            ddrRawId, 
             ddrPatientRawId,
             hashedData,
             newHashValue,

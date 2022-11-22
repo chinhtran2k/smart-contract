@@ -3,7 +3,8 @@
 pragma solidity ^0.8.0;
 
 interface IDDR {
-    event MintedDDR(string DDRRawId, 
+    event MintedDDR(uint256 tokenId,
+        string DDRRawId, 
         string DDRPatientRawId,
         bytes32 hashedData,
         bytes32 hashValue,
