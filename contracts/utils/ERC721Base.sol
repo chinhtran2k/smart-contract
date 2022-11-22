@@ -43,6 +43,15 @@ contract ERC721Base is
         return newItemId;
     }
 
+    function mintBatchTo(address to, string[] memory _tokenURIs) internal returns (uint256[] memory) {
+        uint256[] memory newItemIds = new uint256[](_tokenURIs.length);
+        for (uint256 i = 0; i < _tokenURIs.length; i++) {
+            newItemIds[i] = mintTo(to, _tokenURIs[i]);
+        }
+
+        return newItemIds;
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
         internal
         override(ERC721, ERC721Enumerable)

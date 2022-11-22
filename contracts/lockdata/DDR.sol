@@ -94,19 +94,15 @@ contract DDR is ERC721Base, IDDR {
         );
     }
 
-    function mint(
-        bytes32 hashedData,
-        string memory ddrRawId,
-        string memory ddrPatientRawId,
-        string memory uri,
-        address patientDID
-    ) public returns (uint256) {
-        // TODO: need to check valid patientDID
-        require(_IAuth.checkAuth(ClaimHolder(patientDID), AuthType.PATIENT), "Patient DID is not valid!");
-
-        ClaimHolder patient = ClaimHolder(patientDID);
-
-        uint256 tokenId = super.mintTo(patient.owner(), uri);
+    function setTokenInfo(
+            uint256 tokenId, 
+            bytes32 hashedData,
+            string memory ddrRawId,
+            string memory ddrPatientRawId,
+            address patientDID
+        ) 
+        internal returns (bytes32)
+    {
         _patient[tokenId] = patientDID;
         
         // Create DDR hash value base on DID and hashed data
@@ -130,6 +126,23 @@ contract DDR is ERC721Base, IDDR {
         Tokens[tokenId].patient = patientDID;
 
         _isDDRLocked[tokenId - 1] = true;
+    }
+
+    function mint(
+        bytes32 hashedData,
+        string memory ddrRawId,
+        string memory ddrPatientRawId,
+        string memory uri,
+        address patientDID
+    ) public returns (uint256) {
+        // TODO: need to check valid patientDID
+        require(_IAuth.checkAuth(ClaimHolder(patientDID), AuthType.PATIENT), "Patient DID is not valid!");
+
+        ClaimHolder patient = ClaimHolder(patientDID);
+
+        uint256 tokenId = super.mintTo(patient.owner(), uri);
+        bytes32 newHashValue = setTokenInfo(tokenId, hashedData, ddrRawId, ddrPatientRawId, patientDID);
+        
         emit MintedDDR(tokenId,
             ddrRawId, 
             ddrPatientRawId,
@@ -152,10 +165,16 @@ contract DDR is ERC721Base, IDDR {
         require(hashedDatas.length == uris.length, "DDR mint error: length of hashedData and uri is not equal!");
         require(hashedDatas.length == ddrPatientRawIds.length, "DDR mint error: length of hashedData and ddrPatientRawId is not equal!");
 
-        uint256[] memory tokenIds = new uint256[](hashedDatas.length);
-        for (uint256 i = 0; i < hashedDatas.length; i++) {
-            tokenIds[i] = mint(hashedDatas[i], ddrRawIds[i], ddrPatientRawIds[i], uris[i], patientDID);
+        // uint256[] memory tokenIds = new uint256[](hashedDatas.length);
+        uint256[] memory tokenIds = mintBatchTo(patientDID, uris);
+        bytes32[] memory newHashValues = new bytes32[](tokenIds.length);
+
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            newHashValues[i] = setTokenInfo(tokenIds[i], hashedDatas[i], ddrRawIds[i], ddrPatientRawIds[i], patientDID);
         }
+
+        emit MintedBatchDDR(tokenIds, ddrRawIds, ddrPatientRawIds, hashedDatas, newHashValues, patientDID);
+
         return tokenIds;
     }
 
@@ -193,10 +212,12 @@ contract DDR is ERC721Base, IDDR {
 
     //// Approval part
     // "shareDDR" only use by ClaimHolder
-    function shareDDR(uint256 ddrTokenId, address patientDID) public onlyClaimHolder
+    function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder
     {
-        _isSharedDDR[ddrTokenId][patientDID];
-        emit ApprovalShareDDR(patientDID, ddrTokenId);
+        for (uint256 i = 0; i < ddrTokenIds.length; i++) {
+            _isSharedDDR[ddrTokenIds[i]][patientDID];    
+        }
+        emit ApprovalShareDDR(patientDID, ddrTokenIds);
         erc20Proxy.awardToken(patientDID);
     }
 

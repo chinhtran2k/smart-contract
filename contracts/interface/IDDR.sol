@@ -9,7 +9,13 @@ interface IDDR {
         bytes32 hashedData,
         bytes32 hashValue,
         address patientDID);
+    event MintedBatchDDR(uint256[] tokenIds,
+        string[] ddrRawIds, 
+        string[] ddrPatientRawIds,
+        bytes32[] hashedDatas,
+        bytes32[] hashValues,
+        address patientDID);
     event DDRTokenLocked(uint256 tokenId);
-    event ApprovalShareDDR(address patientDID, uint256 tokenId);
+    event ApprovalShareDDR(address patientDID, uint256[] tokenId);
     event ApprovalDisclosureConsentDDR(address patientDID, address providerDID, uint256[] ddrTokenIds);
 }
