@@ -7,7 +7,7 @@ async function main() {
   console.log("Deploying contracts with the account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
-  // Pre-defined addresses HPA2
+  // Pre-defined addresses EDC
   const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =

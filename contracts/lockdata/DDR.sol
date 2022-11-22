@@ -126,6 +126,8 @@ contract DDR is ERC721Base, IDDR {
         Tokens[tokenId].patient = patientDID;
 
         _isDDRLocked[tokenId - 1] = true;
+
+        return newHashValue;
     }
 
     function mint(
