@@ -204,7 +204,7 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function isSharedDDR(address identity, uint256 ddrTokenId) public view returns (bool) {
-        return _isConsentedDDR[ddrTokenId][identity];
+        return _isSharedDDR[ddrTokenId][identity];
     }
 
     function isConsentedDDR(address identity, uint256 ddrTokenId) public view returns (bool)
@@ -217,7 +217,7 @@ contract DDR is ERC721Base, IDDR {
     function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder
     {
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
-            _isSharedDDR[ddrTokenIds[i]][patientDID];    
+            _isSharedDDR[ddrTokenIds[i]][patientDID] = true;    
         }
         emit ApprovalShareDDR(patientDID, ddrTokenIds);
         erc20Proxy.awardToken(patientDID);
