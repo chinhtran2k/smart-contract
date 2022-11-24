@@ -223,8 +223,8 @@ contract DDR is ERC721Base, IDDR {
         erc20Proxy.awardToken(patientDID);
     }
 
-    // "disclosureConsentDDRFromProvider" only use for Patient
-    function disclosureConsentDDRFromProvider(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
+    // "disclosureConsentDDR" only use for Patient
+    function disclosureConsentDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
         for (uint i=0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
         }
