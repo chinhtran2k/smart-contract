@@ -225,6 +225,9 @@ contract DDR is ERC721Base, IDDR {
 
     // "disclosureConsentDDR" only use for Patient
     function disclosureConsentDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
+        for (uint256 i = 0; i < ddrTokenIds.length; i++) {
+            require(_isSharedDDR[ddrTokenIds[i]][msg.sender], "DDR is not shared!");
+        }
         for (uint i=0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
         }
