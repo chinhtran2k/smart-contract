@@ -6,7 +6,15 @@ const PRIVATE_KEY =
   "24118478a12cd8e910ec3ae69edc8bda17c70754dd00d13f28dda0aa0f8644bb";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.7",
+  solidity: {
+    version: "0.8.7",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
+    },
+  },
   networks: {
     test: {
       url: `http://10.1.4.148:8545`,

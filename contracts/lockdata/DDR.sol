@@ -72,8 +72,8 @@ contract DDR is ERC721Base, IDDR {
         return _ddrPatientRawId[tokenId];
     }
 
-    function getDDRHashByRawId(string memory ddrRawId) public view returns (bytes32) {
-        bytes32 hashedRawId = keccak256(abi.encodePacked(ddrRawId));
+    function getDDRHashOfPatientDIDByRawId(address patientDID, string memory ddrRawId) public view returns (bytes32) {
+        bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrRawId));
         uint256 tokenId = _ddrHashedId[hashedRawId];
         return _ddrHash[tokenId];
     }
@@ -106,8 +106,8 @@ contract DDR is ERC721Base, IDDR {
         _patient[tokenId] = patientDID;
         
         // Create DDR hash value base on DID and hashed data
-        bytes32 newHashValue = keccak256(abi.encodePacked(ddrRawId, hashedData));
-        bytes32 hashedRawId = keccak256(abi.encodePacked(ddrRawId));
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, ddrRawId, hashedData));
+        bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrRawId));
         require(_ddrHashedId[hashedRawId] == 0x00, "DDR mint error: DDRID exist!");
 
         // Assign data to map

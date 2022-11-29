@@ -4,7 +4,7 @@ const request = require("request");
 const Web3 = require("web3");
 const fs = require("fs");
 
-const PCOAdress = "0x2E2Afe3b8Bb81B4aBde568fCa28CB77957682dcF";
+const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
 const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
 
 const verifyRequest = async (
@@ -37,7 +37,7 @@ const verifyRequest = async (
           "smart_contract[nightly_builds]": "false",
           "smart_contract[compiler_version]": "v0.8.7+commit.e28d00a7",
           "smart_contract[evm_version]": "default",
-          "smart_contract[optimization]": "false",
+          "smart_contract[optimization]": "true",
           "smart_contract[optimization_runs]": "200",
           "smart_contract[contract_source_code]": contractSourceCode,
           "smart_contract[autodetect_constructor_args]": "false",
