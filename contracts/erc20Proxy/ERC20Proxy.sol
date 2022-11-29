@@ -9,8 +9,8 @@ contract ERC20Proxy {
     address public ddr;
 
     address public pcoToken;
-    uint256 private awardValue;
-    address private tokenOwner;
+    uint256 public awardValue;
+    address public tokenOwner;
     
     event ChangedAwardValue(uint256 newValue);
     event ChangedTokenOwner(address newOwner);
@@ -18,11 +18,12 @@ contract ERC20Proxy {
     event ChangedPCOToken(address newPCOToken);
     event ChangedDDR(address newDDR);
 
-    constructor(address _pcoAddress, address _tokenOwner, address _ddr) {
+    constructor(address _pcoAddress, address _tokenOwner, address _ddr, uint256 _awardValue) {
         proxyOwner = msg.sender;
         ddr = _ddr;
         pcoToken = _pcoAddress;
         tokenOwner = _tokenOwner;
+        awardValue = _awardValue;
     }
 
     modifier onlyProxyOwner() {
@@ -56,12 +57,13 @@ contract ERC20Proxy {
         emit ChangedDDR(_ddrAddress);
     }
 
-    function awardToken(address to) public onlyDDRContract {
+    function awardToken(address to) public onlyDDRContract returns (bytes memory) {
         require(to != address(this), "Cannot award yourself");
-        (bool success, ) = pcoToken.call(
+        (bool success, bytes memory data) = pcoToken.call(
             abi.encodeWithSignature("transferFrom(address,address,uint256)", tokenOwner, to, awardValue)
         );
         require(success, "Award token failed");
         emit AwardedToken(to, awardValue);
+        return data;
     }
 }

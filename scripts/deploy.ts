@@ -14,6 +14,7 @@ async function main() {
     "0xc3fdeaa9e9e5812c9f2c1b2ee7c1b8bf099537d8b8bade7aad445185aa4278ef"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
   const EXECUTION_PREDEFINED_ADDRESS =
     "0x155c1c7686bd19ce88adb6a4af3cbc3a3caf489f62d0e06b901cb6d2a3400719"; //0xB981494fFE0dBd29137ff6bAa8bC494c827CFf3D
+  const DEFAULT_AWARD__VALUE_PREDEFINED = 100;
 
   // Assign the contract factory
   const ClaimHolderContract = await ethers.getContractFactory("ClaimHolder");
@@ -56,7 +57,8 @@ async function main() {
   const ERC20Proxy = await ERC20ProxyContract.deploy(
     PCOAdress,
     TokenOwnerAddress,
-    DDR.address
+    DDR.address,
+    DEFAULT_AWARD__VALUE_PREDEFINED
   );
 
   console.log("ClaimHolder deployed to:", ClaimHolder.address);

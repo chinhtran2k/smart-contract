@@ -216,6 +216,7 @@ contract DDR is ERC721Base, IDDR {
     function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder
     {
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
+            require(_ddrHash[ddrTokenIds[i]] != 0x00, "tokenId not exist, revert transaction");
             _isSharedDDR[ddrTokenIds[i]][patientDID] = true;    
         }
         emit ApprovalShareDDR(patientDID, ddrTokenIds);
