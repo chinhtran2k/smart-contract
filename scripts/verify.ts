@@ -6,6 +6,7 @@ const fs = require("fs");
 
 const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
 const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
+const DEFAULT_AWARD__VALUE_PREDEFINED = 100;
 
 const verifyRequest = async (
   addressHash: string,
@@ -142,7 +143,12 @@ async function main() {
     {
       path: ERC20Proxy,
       ...CONFIG.ERC20Proxy,
-      input: [PCOAdress, TokenOwnerAddress, CONFIG.DDR.address],
+      input: [
+        PCOAdress,
+        TokenOwnerAddress,
+        CONFIG.DDR.address,
+        DEFAULT_AWARD__VALUE_PREDEFINED,
+      ],
     },
   ];
 

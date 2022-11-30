@@ -57,13 +57,13 @@ contract ERC20Proxy {
         emit ChangedDDR(_ddrAddress);
     }
 
-    function awardToken(address to) public onlyDDRContract returns (bytes memory) {
+    function awardToken(address to, uint256 numOfItem) public onlyDDRContract returns (bytes memory) {
         require(to != address(this), "Cannot award yourself");
         (bool success, bytes memory data) = pcoToken.call(
-            abi.encodeWithSignature("transferFrom(address,address,uint256)", tokenOwner, to, awardValue)
+            abi.encodeWithSignature("transferFrom(address,address,uint256)", tokenOwner, to, awardValue*numOfItem)
         );
         require(success, "Award token failed");
-        emit AwardedToken(to, awardValue);
+        emit AwardedToken(to, awardValue*numOfItem);
         return data;
     }
 }
