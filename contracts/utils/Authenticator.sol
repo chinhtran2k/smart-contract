@@ -16,7 +16,7 @@ contract Authenticator is IAuthenticator {
         _claimVerifier = ClaimVerifier(claimVerifier);
     }
 
-    function checkAuth(ClaimHolder _address, AuthType _claimType)
+    function checkAuth(ClaimHolder _address, AuthType _claimKey)
         public
         view
         override
@@ -24,7 +24,7 @@ contract Authenticator is IAuthenticator {
     {
         require(address(_address) != address(0), "Address zero is not allowed");
 
-        if (_claimVerifier.claimIsValid(_address, uint(_claimType))) {
+        if (_claimVerifier.claimIsValid(_address, uint(_claimKey))) {
             return true;
         }
     }
