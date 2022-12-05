@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 abstract contract ERC725 {
 
     uint256 constant MANAGEMENT_KEY = 1;
-    uint256 constant ACTION_KEY = 2;
+    uint256 constant DELEGATE_KEY = 2;
     uint256 constant CLAIM_SIGNER_KEY = 3;
     uint256 constant ENCRYPTION_KEY = 4;
 
@@ -16,7 +16,7 @@ abstract contract ERC725 {
     event Approved(uint256 indexed executionId, bool approved);
 
     struct Key {
-        uint256 purpose; //e.g., MANAGEMENT_KEY = 1, ACTION_KEY = 2, etc.
+        uint256 purpose; //e.g., MANAGEMENT_KEY = 1, DELEGATE_KEY = 2, etc.
         uint256 keyType; // e.g. 1 = ECDSA, 2 = RSA, etc.
         bytes32 key;
     }

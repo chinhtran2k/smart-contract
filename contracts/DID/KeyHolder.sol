@@ -84,7 +84,7 @@ contract KeyHolder is ERC725 {
         override
         returns (bool success)
     {
-        require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 2), "Sender does not have action key");
+        require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 2), "Sender does not have delegate key");
 
         emit Approved(_id, _approve);
 
