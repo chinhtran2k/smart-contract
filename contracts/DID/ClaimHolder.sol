@@ -16,7 +16,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
     }
 
     function addClaim(
-        uint256 _claimType,
+        uint256 _claimKey,
         uint256 _scheme,
         address _issuer,
         bytes memory _signature,
@@ -27,17 +27,17 @@ contract ClaimHolder is KeyHolder, ERC735 {
         override
         returns (bytes32 claimRequestId)
     {
-        bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimType));
+        bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimKey));
 
         if (msg.sender != address(this)) {
           require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
         }
 
         if (claims[claimId].issuer != _issuer) {
-            claimsByType[_claimType].push(claimId);
+            claimsByType[_claimKey].push(claimId);
         }
 
-        claims[claimId].claimType = _claimType;
+        claims[claimId].claimKey = _claimKey;
         claims[claimId].scheme = _scheme;
         claims[claimId].issuer = _issuer;
         claims[claimId].signature = _signature;
@@ -46,7 +46,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
         emit ClaimAdded(
             claimId,
-            _claimType,
+            _claimKey,
             _scheme,
             _issuer,
             _signature,
@@ -63,12 +63,12 @@ contract ClaimHolder is KeyHolder, ERC735 {
         }
 
         /* uint index; */
-        /* (index, ) = claimsByType[claims[_claimId].claimType].indexOf(_claimId);
-        claimsByType[claims[_claimId].claimType].removeByIndex(index); */
+        /* (index, ) = claimsByType[claims[_claimId].claimKey].indexOf(_claimId);
+        claimsByType[claims[_claimId].claimKey].removeByIndex(index); */
 
         emit ClaimRemoved(
             _claimId,
-            claims[_claimId].claimType,
+            claims[_claimId].claimKey,
             claims[_claimId].scheme,
             claims[_claimId].issuer,
             claims[_claimId].signature,
@@ -85,7 +85,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         override
         view
         returns(
-            uint256 claimType,
+            uint256 claimKey,
             uint256 scheme,
             address issuer,
             bytes memory signature,
@@ -94,7 +94,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         )
     {
         return (
-            claims[_claimId].claimType,
+            claims[_claimId].claimKey,
             claims[_claimId].scheme,
             claims[_claimId].issuer,
             claims[_claimId].signature,
@@ -103,13 +103,13 @@ contract ClaimHolder is KeyHolder, ERC735 {
         );
     }
 
-    function getClaimIdsByType(uint256 _claimType)
+    function getClaimIdsByType(uint256 _claimKey)
         public
         override
         view
         returns(bytes32[] memory claimIds)
     {
-        return claimsByType[_claimType];
+        return claimsByType[_claimKey];
     }
 
 }

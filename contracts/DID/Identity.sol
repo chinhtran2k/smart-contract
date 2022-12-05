@@ -8,7 +8,7 @@ import './ClaimHolder.sol';
 contract Identity is ClaimHolder {
 
     constructor(
-        uint256[] memory _claimType,
+        uint256[] memory _claimKey,
         uint256[] memory _scheme,
         address[] memory _issuer,
         bytes memory _signature,
@@ -24,26 +24,26 @@ contract Identity is ClaimHolder {
         uint uoffset = 0;
         uint doffset = 0;
 
-        for (uint i = 0; i < _claimType.length; i++) {
+        for (uint i = 0; i < _claimKey.length; i++) {
 
-            claimId = keccak256(abi.encodePacked(_issuer[i], _claimType[i]));
+            claimId = keccak256(abi.encodePacked(_issuer[i], _claimKey[i]));
 
             claims[claimId] = Claim(
-                _claimType[i],
+                _claimKey[i],
                 _scheme[i],
                 _issuer[i],
                 getBytes(_signature, offset, _sigSizes[i]),
                 getBytes(_data, doffset, dataSizes[i]),
                 getString(_uri, uoffset, uriSizes[i])
             );
-            claimsByType[_claimType[i]].push(claimId);
+            claimsByType[_claimKey[i]].push(claimId);
             offset += _sigSizes[i];
             uoffset += uriSizes[i];
             doffset += dataSizes[i];
 
             emit ClaimAdded(
                 claimId,
-                claims[claimId].claimType,
+                claims[claimId].claimKey,
                 claims[claimId].scheme,
                 claims[claimId].issuer,
                 claims[claimId].signature,
