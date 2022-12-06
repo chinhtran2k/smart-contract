@@ -209,8 +209,11 @@ contract DDR is ERC721Base, IDDR {
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             _isSharedDDR[ddrTokenIds[i]][patientDID] = true;
         }
-        emit ApprovalShareDDR(patientDID, ddrTokenIds);
-        erc20Proxy.awardToken(patientDID, ddrTokenIds.length);
+
+        ClaimHolder patient = ClaimHolder(patientDID);
+
+        emit ApprovalShareDDR(patient.owner(), ddrTokenIds);
+        erc20Proxy.awardToken(patient.owner(), ddrTokenIds.length);
     }
 
     // "disclosureConsentDDR" only use for Patient
