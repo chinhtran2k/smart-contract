@@ -16,7 +16,7 @@ contract Authenticator is IAuthenticator {
         _claimVerifier = ClaimVerifier(claimVerifier);
     }
 
-    function checkAuth(ClaimHolder _address, AuthType _claimKey)
+    function checkAuth(ClaimHolder _address, string memory _claimKey)
         public
         view
         override
@@ -24,7 +24,7 @@ contract Authenticator is IAuthenticator {
     {
         require(address(_address) != address(0), "Address zero is not allowed");
 
-        if (_claimVerifier.claimIsValid(_address, uint(_claimKey))) {
+        if (_claimVerifier.claimIsValid(_address, _claimKey)) {
             return true;
         }
     }
@@ -40,7 +40,7 @@ contract AuthenticatorHelper {
 
     modifier onlyPatient() {
         require(
-            _IAuth.checkAuth(ClaimHolder(msg.sender), AuthType.PATIENT),
+            _IAuth.checkAuth(ClaimHolder(msg.sender), "PATIENT"),
             "Only Patient can call this function"
         );
         _;
@@ -48,7 +48,7 @@ contract AuthenticatorHelper {
 
     modifier onlyProvider() {
         require(
-            _IAuth.checkAuth(ClaimHolder(msg.sender), AuthType.PROVIDER),
+            _IAuth.checkAuth(ClaimHolder(msg.sender), "PROVIDER"),
             "Only Provider can call this function"
         );
         _;

@@ -8,7 +8,11 @@ import './KeyHolder.sol';
 contract ClaimHolder is KeyHolder, ERC735 {
 
     mapping (bytes32 => Claim) claims;
-    mapping (uint256 => bytes32[]) claimsByType;
+    mapping (string => bytes32[]) claimsByKey;
+
+    mapping (string => bool) hasClaim;
+    string[] public claimsKeyOwned;
+
     address public owner;
 
     constructor() {
@@ -16,7 +20,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
     }
 
     function addClaim(
-        uint256 _claimKey,
+        string memory _claimKey,
         uint256 _scheme,
         address _issuer,
         bytes memory _signature,
@@ -34,7 +38,12 @@ contract ClaimHolder is KeyHolder, ERC735 {
         }
 
         if (claims[claimId].issuer != _issuer) {
-            claimsByType[_claimKey].push(claimId);
+            claimsByKey[_claimKey].push(claimId);
+        }
+
+        if (!hasClaim[_claimKey]) {
+            hasClaim[_claimKey] = true;
+            claimsKeyOwned.push(_claimKey);
         }
 
         claims[claimId].claimKey = _claimKey;
@@ -80,12 +89,16 @@ contract ClaimHolder is KeyHolder, ERC735 {
         return true;
     }
 
+    function getClaimsKeyOwned() public view returns (string[] memory) {
+        return claimsKeyOwned;
+    }
+
     function getClaim(bytes32 _claimId)
         public
         override
         view
         returns(
-            uint256 claimKey,
+            string memory claimKey,
             uint256 scheme,
             address issuer,
             bytes memory signature,
@@ -103,13 +116,13 @@ contract ClaimHolder is KeyHolder, ERC735 {
         );
     }
 
-    function getClaimIdsByType(uint256 _claimKey)
+    function getClaimIdsByKey(string memory _claimKey)
         public
         override
         view
         returns(bytes32[] memory claimIds)
     {
-        return claimsByType[_claimKey];
+        return claimsByKey[_claimKey];
     }
 
 }

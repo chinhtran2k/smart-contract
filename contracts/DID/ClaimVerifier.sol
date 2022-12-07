@@ -6,8 +6,8 @@ import './ClaimHolder.sol';
 
 contract ClaimVerifier {
 
-  event ClaimValid(ClaimHolder _identity, uint256 claimKey);
-  event ClaimInvalid(ClaimHolder _identity, uint256 claimKey);
+  event ClaimValid(ClaimHolder _identity, string claimKey);
+  event ClaimInvalid(ClaimHolder _identity, string claimKey);
 
   ClaimHolder public trustedClaimHolder;
 
@@ -15,7 +15,7 @@ contract ClaimVerifier {
     trustedClaimHolder = ClaimHolder(_trustedClaimHolder);
   }
 
-  function checkClaim(ClaimHolder _identity, uint256 claimKey)
+  function checkClaim(ClaimHolder _identity, string memory claimKey)
     public
     returns (bool claimValid)
   {
@@ -28,12 +28,12 @@ contract ClaimVerifier {
     }
   }
 
-  function claimIsValid(ClaimHolder _identity, uint256 claimKey)
+  function claimIsValid(ClaimHolder _identity, string memory claimKey)
     public
     view
     returns (bool claimValid)
   {
-    uint256 foundclaimKey;
+    string memory foundclaimKey;
     uint256 scheme;
     address issuer;
     bytes memory sig;

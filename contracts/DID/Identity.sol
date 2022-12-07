@@ -8,7 +8,7 @@ import './ClaimHolder.sol';
 contract Identity is ClaimHolder {
 
     constructor(
-        uint256[] memory _claimKey,
+        string[] memory _claimKey,
         uint256[] memory _scheme,
         address[] memory _issuer,
         bytes memory _signature,
@@ -36,7 +36,11 @@ contract Identity is ClaimHolder {
                 getBytes(_data, doffset, dataSizes[i]),
                 getString(_uri, uoffset, uriSizes[i])
             );
-            claimsByType[_claimKey[i]].push(claimId);
+            claimsByKey[_claimKey[i]].push(claimId);
+            if (!hasClaim[_claimKey[i]]) {
+                hasClaim[_claimKey[i]] = true;
+                claimsKeyOwned.push(_claimKey[i]);
+            }
             offset += _sigSizes[i];
             uoffset += uriSizes[i];
             doffset += dataSizes[i];
