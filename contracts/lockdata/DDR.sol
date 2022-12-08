@@ -26,7 +26,9 @@ contract DDR is ERC721Base, IDDR {
     mapping(uint256 => mapping(address => bool)) private _isSharedDDR;
     mapping(uint256 => mapping(address => bool)) private _isConsentedDDR;
     mapping(uint256 => address) private _patient;
-    mapping(address => uint256[]) private _listDDRHashValueOfPatient;
+    mapping(uint256 => address[]) private _didConsentedOf;
+    mapping(address => uint256[]) private _listDDRTokenIdOfPatient;
+    mapping(address => uint256[]) private _listDDRTokenIdOfProvider;
 
     struct TokenInfo {
         string ddrRawId;
@@ -61,6 +63,10 @@ contract DDR is ERC721Base, IDDR {
 
     function getDDRHash(uint256 tokenId) public view returns (bytes32) {
         return _ddrHash[tokenId];
+    }
+
+    function getTokenIdOfPatientDIDByRawId(address patientDID, string memory ddrRawId) public view returns (uint256) {
+        return _ddrHashedId[keccak256(abi.encodePacked(patientDID, ddrRawId))];
     }
 
     function getDDRHashOfPatientDIDByRawId(address patientDID, string memory ddrRawId) public view returns (bytes32) {
@@ -103,7 +109,7 @@ contract DDR is ERC721Base, IDDR {
         _ddrHashedData[tokenId] = hashedData;
         _ddrHash[tokenId] = newHashValue;
         _patient[tokenId] = patientDID;
-        _listDDRHashValueOfPatient[patientDID].push(tokenId);
+        _listDDRTokenIdOfPatient[patientDID].push(tokenId);
 
         // Assign data to token info
         Tokens[tokenId].ddrRawId = ddrRawId;
@@ -170,8 +176,12 @@ contract DDR is ERC721Base, IDDR {
         erc20Proxy = ERC20Proxy(_erc20Proxy);
     }
 
-    function getListDDRHashValueOfPatient(address patientDID) public view returns (uint256[] memory) {
-        return _listDDRHashValueOfPatient[patientDID];
+    function getListDDRTokenIdOfPatient(address patientDID) public view returns (uint256[] memory) {
+        return _listDDRTokenIdOfPatient[patientDID];
+    }
+
+    function getListDDRTokenIdOfProvider(address providerDID) public view returns (uint256[] memory) {
+        return _listDDRTokenIdOfProvider[providerDID];
     }
 
     function patientOf(uint256 tokenId)
@@ -198,9 +208,15 @@ contract DDR is ERC721Base, IDDR {
         return _isConsentedDDR[ddrTokenId][identity];
     }
 
+    function getDIDConsentedOf(uint256 tokenId) public view returns (address[] memory) {
+        return _didConsentedOf[tokenId];
+    }
+
     //// Approval part
     // "shareDDR" only use by ClaimHolder
     function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder {
+        ClaimHolder tempPatient = ClaimHolder(patientDID);
+
         // check if token is shared
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             require(_ddrHash[ddrTokenIds[i]] != 0x00, "tokenId not exist, revert transaction");
@@ -210,13 +226,12 @@ contract DDR is ERC721Base, IDDR {
             _isSharedDDR[ddrTokenIds[i]][patientDID] = true;
         }
 
-        ClaimHolder patient = ClaimHolder(patientDID);
-
-        emit ApprovalShareDDR(patient.owner(), ddrTokenIds);
-        erc20Proxy.awardToken(patient.owner(), ddrTokenIds.length);
+        emit ApprovalShareDDR(tempPatient.owner(), ddrTokenIds);
+        erc20Proxy.awardToken(tempPatient.owner(), ddrTokenIds.length);
     }
 
-    // "disclosureConsentDDR" only use for Patient
+    
+    // "disclosureConsentDDR" only use by Patient
     function disclosureConsentDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
         // check if token is consented
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
@@ -225,6 +240,8 @@ contract DDR is ERC721Base, IDDR {
         }
         for (uint i=0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
+            _listDDRTokenIdOfProvider[providerDID].push(ddrTokenIds[i]);
+            _didConsentedOf[ddrTokenIds[i]].push(providerDID);
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, providerDID, ddrTokenIds);
         erc20Proxy.awardToken(tx.origin, ddrTokenIds.length);

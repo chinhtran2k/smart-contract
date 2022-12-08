@@ -4,6 +4,9 @@ const request = require("request");
 const Web3 = require("web3");
 const fs = require("fs");
 
+const URL_BLOCKSCOUT = "http://10.1.4.148:4000";
+const URL_BLOCKSCOUT_TTC = "http://192.168.2.8:4000";
+
 const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
 const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
 const DEFAULT_AWARD__VALUE_PREDEFINED = 100;
@@ -19,7 +22,8 @@ const verifyRequest = async (
     request(
       {
         method: "POST",
-        url: "http://192.168.2.8:4000/verify_smart_contract/contract_verifications",
+        url:
+          URL_BLOCKSCOUT_TTC + "/verify_smart_contract/contract_verifications",
         headers: {
           Accept:
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -27,7 +31,7 @@ const verifyRequest = async (
           "Cache-Control": "max-age=0",
           Connection: "keep-alive",
           "Content-Type": "application/x-www-form-urlencoded",
-          Origin: "http://192.168.2.8:4000",
+          Origin: URL_BLOCKSCOUT_TTC,
           "Upgrade-Insecure-Requests": "1",
           "User-Agent":
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36",
