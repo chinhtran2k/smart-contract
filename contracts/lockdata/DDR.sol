@@ -29,17 +29,9 @@ contract DDR is ERC721Base, IDDR {
     mapping(uint256 => address[]) private _didConsentedOf;
     mapping(address => uint256[]) private _listDDRTokenIdOfPatient;
     mapping(address => uint256[]) private _listDDRTokenIdOfProvider;
+    mapping(uint256 => string) private _ddrId;
 
-    struct TokenInfo {
-        string ddrRawId;
-        bytes32 hashedData;
-        bytes32 hashValue;
-        address patient;
-    }
-
-    mapping(uint256 => TokenInfo) private Tokens;
-
-    bytes32 private _hashValuePatient;
+    bytes32 private _hashStringPatient;
 
     modifier _valiDDRList(uint256 ddrId, address senderAddress) {
         require(!_isDDRLocked[ddrId], "DDR is already locked.");
@@ -76,16 +68,19 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function getToken(uint256 tokenId) public view returns (
-        string memory ddrRawId, 
-        bytes32 hashedData,
-        bytes32 hashValue,
-        address patient
+        address patientDID, 
+        string memory ddrId,
+        bytes32 ddrHashedData,
+        bytes32 ddrHash,
+        address[] memory didConsentedOf
         ) 
     {
-        return (Tokens[tokenId].ddrRawId,
-            Tokens[tokenId].hashedData,
-            Tokens[tokenId].hashValue,
-            Tokens[tokenId].patient
+        return (
+            _patient[tokenId],
+            _ddrId[tokenId],
+            _ddrHashedData[tokenId],
+            _ddrHash[tokenId],
+            _didConsentedOf[tokenId]
         );
     }
 
@@ -110,13 +105,8 @@ contract DDR is ERC721Base, IDDR {
         _ddrHash[tokenId] = newHashValue;
         _patient[tokenId] = patientDID;
         _listDDRTokenIdOfPatient[patientDID].push(tokenId);
-
-        // Assign data to token info
-        Tokens[tokenId].ddrRawId = ddrRawId;
-        Tokens[tokenId].hashedData = hashedData;
-        Tokens[tokenId].hashValue = newHashValue;
-        Tokens[tokenId].patient = patientDID;
-
+        _ddrId[tokenId] = ddrRawId;
+        
         _isDDRLocked[tokenId - 1] = true;
 
         return newHashValue;
