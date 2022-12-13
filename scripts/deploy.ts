@@ -29,6 +29,7 @@ async function main() {
   );
   const DDRContract = await ethers.getContractFactory("DDR");
   const PatientContract = await ethers.getContractFactory("Patient");
+  const ProviderContract = await ethers.getContractFactory("Provider")
   const POCStudyContract = await ethers.getContractFactory("POCStudy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
 
@@ -50,8 +51,12 @@ async function main() {
     DDR.address,
     Authenticator.address
   );
+  const Provider = await ProviderContract.deploy(
+    Authenticator.address
+  );
   const POCStudy = await POCStudyContract.deploy(
     Patient.address,
+    Provider.address,
     Authenticator.address
   );
   const ERC20Proxy = await ERC20ProxyContract.deploy(
@@ -67,6 +72,7 @@ async function main() {
   console.log("AuthenticatorHelper deployed to:", AuthenticatorHelper.address);
   console.log("DDR deployed to:", DDR.address);
   console.log("Patient deployed to:", Patient.address);
+  console.log("Provider deployed to:", Provider.address);
   console.log("POCStudy deployed to:", POCStudy.address);
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
 
@@ -165,6 +171,17 @@ async function main() {
             .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/Patient.sol/Patient.json")
+            .contractName,
+      },
+      Provider: {
+        address: Provider.address,
+        abi: require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
+          .abi,
+        bytecode:
+          require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
+            .bytecode,
+        contractName:
+          require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
             .contractName,
       },
       POCStudy: {

@@ -5,19 +5,21 @@ pragma solidity ^0.8.0;
 import "../utils/ERC721Base.sol";
 import "../interface/IMerkleTreeBase.sol";
 import "./Patient.sol";
+import "./Provider.sol";
 
 contract POCStudy is ERC721Base, IMerkleTreeBase {
     Patient public _patient;
+    Provider public _provider;
 
-    event LockedPOCPatient(uint256 pocTokenId, bytes32 rootHashPOCPatient, string message);
+    event LockedPOC(uint256 pocTokenId, bytes32 rootHashPOC, string message);
 
     // Assign mapping
-    uint256 public _rootPOCStudyPatient;
+    uint256 public _rootPOCStudy;
 
-    mapping(uint256 => bytes32) private _rootHashPOCPatient;
+    mapping(uint256 => bytes32) private _rootHashPOC;
 
     // Merkle Tree structure
-    mapping(uint256 => bytes32) private _rootNodeIdOfPOCPatient;
+    mapping(uint256 => bytes32) private _rootNodeIdOfPOC;
 
     bytes32[] public _listRootHashValue;
 
@@ -51,23 +53,33 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         (bytes32 rootPatientNodeId, bytes32 rootPatientHash) 
         // (uint256[] memory)
     {
-        bytes32[] memory listLevelRootHash = _patient.getListRootHashValue();
+        address[] memory listPatientAddress = _patient.getListAddressPatient();
+        address[] memory listProviderAddress = _provider.getListAddressOfProvider();
         
-        uint256 listLevelRootHashLength = listLevelRootHash.length;
-
-        require(listLevelRootHashLength > 0, "Patient level has no root hash value.");
-
-        uint256[] memory listTokenLevel = new uint256[](listLevelRootHashLength);
-        for (uint i=0; i<listLevelRootHashLength; i++) {
-            listTokenLevel[i] = uint256(i+1);
+        bytes32[] memory listRootHash = new bytes32[](listPatientAddress.length + listProviderAddress.length);
+        for (uint i=0; i<listPatientAddress.length; i++) {
+            listRootHash[i] = _patient.getPatientRootHashValue(listPatientAddress[i]);
+        }
+        for (uint i=0; i<listProviderAddress.length; i++) {
+            listRootHash[i+listPatientAddress.length] = _provider.getHashValueProvider(listProviderAddress[i]);
         }
 
+        uint256 listLevelRootHashLength = listRootHash.length;
+
+        require(listLevelRootHashLength > 0, "pcostudy level has no root hash value.");
+        
         // Add 0x00 to bottom level if list has odd number of root hash value
         if ((listLevelRootHashLength % 2) == 1) {
             listLevelRootHashLength = listLevelRootHashLength + 1;
-            uint256[] memory templistTokenLevelRootHash = new uint256[](listLevelRootHashLength);
-            templistTokenLevelRootHash = copyArrayToArrayUINT256(listTokenLevel, templistTokenLevelRootHash);
-            listTokenLevel = templistTokenLevelRootHash;
+            bytes32[] memory _tempListLevelRootHash = new bytes32[](listLevelRootHashLength);
+
+            // listRootHash = new bytes32[](listLevelRootHashLength);
+            for (uint k = 0; k < listLevelRootHashLength; k++) {
+                _tempListLevelRootHash[k] = listRootHash[k];
+            }
+
+            _tempListLevelRootHash[listLevelRootHashLength-1] = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            listRootHash = _tempListLevelRootHash;
         }
 
         // Clear temporary memory
@@ -78,10 +90,9 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
             tempNode.pop();
         }
 
-        // Initial bottom level data
+        // Initial bottom level data 
         for (uint i = 0; i < listLevelRootHashLength; i++) {
-            address patientDID = _patient.getPatientAddressOf(listTokenLevel[i]);
-            bytes32 rootHashTemp = _patient.getPatientRootHashValue(patientDID);
+            bytes32 rootHashTemp = listRootHash[i];
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
                     rootHashTemp,
@@ -149,31 +160,32 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         return queueNode;
     }
 
-    constructor(address patientAddress, address authAddress)
+    constructor(address patientAddress, address providerAddress, address authAddress)
         ERC721Base("Proof of Concept Study", "POCStudy", authAddress)
     {
         _patient = Patient(patientAddress);
+        _provider = Provider(providerAddress);
     }
 
     function mint(string memory uri, string memory message) public onlyOwner returns (uint256) {
         uint256 tokenId = super.mint(uri);
 
         // Lock level
-        (_rootNodeIdOfPOCPatient[tokenId], _rootHashPOCPatient[tokenId]) = lockStudyByMerkleTree();
-        _rootPOCStudyPatient = tokenId;
-        emit LockedPOCPatient(tokenId, _rootHashPOCPatient[tokenId], message);
+        (_rootNodeIdOfPOC[tokenId], _rootHashPOC[tokenId]) = lockStudyByMerkleTree();
+        _rootPOCStudy = tokenId;
+        emit LockedPOC(tokenId, _rootHashPOC[tokenId], message);
 
         return tokenId;
     }
 
-    function getRootHashPOCPatient() public view returns (bytes32) {
-        return _rootHashPOCPatient[_rootPOCStudyPatient];
+    function getRootHashPOC() public view returns (bytes32) {
+        return _rootHashPOC[_rootPOCStudy];
     }
-    function getRootNodeIdPOCPatient() public view returns (bytes32) {
-        return _rootNodeIdOfPOCPatient[_rootPOCStudyPatient];
+    function getRootNodeIdPOC() public view returns (bytes32) {
+        return _rootNodeIdOfPOC[_rootPOCStudy];
     }
 
-    function getRootTokenIdPOCPatient() public view returns (uint256) {
-        return _rootPOCStudyPatient;
+    function getRootTokenIdPOC() public view returns (uint256) {
+        return _rootPOCStudy;
     }
 }

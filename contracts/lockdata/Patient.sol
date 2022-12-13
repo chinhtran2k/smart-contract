@@ -13,7 +13,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(address => uint256) private _tokenIdOfPatients;
     mapping(address => bytes32) private _rootHashValuesOfPatient;
     mapping(uint256 => bytes32) private _rootHashValuesOfTokenId;
+    mapping(address => bool) private _isPatientMinted;
     bytes32[] private _listRootHashValue;
+    address[] private _listAddressPatient;
 
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
@@ -167,8 +169,11 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        _rootHashValuesOfPatient[patientDID] = _rootPatientHash;
-
+        _rootHashValuesOfPatient[patientDID] = _rootPatientHash; 
+        if(_isPatientMinted[patientDID] == false){
+            _listAddressPatient.push(patientDID);
+            _isPatientMinted[patientDID]==true;
+        }
         _listRootHashValue.push(_rootPatientHash);
         emit PatientLockTokenMinted(tokenId, patientDID, _rootPatientNodeId, _rootPatientHash);
         return tokenId;
@@ -192,6 +197,10 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     function getListRootHashValue() public view returns (bytes32[] memory) {
         return _listRootHashValue;
+    }
+
+    function getListAddressPatient() public view returns(address[] memory){
+        return _listAddressPatient;
     }
 }
 
