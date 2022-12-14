@@ -160,22 +160,42 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _DDR = DDR(_ddrAddress);
     }
 
+    function getDataClaim(address patientDID) internal view returns(bytes32){
+        ClaimHolder claimHolder = ClaimHolder(patientDID);
+        uint256 scheme;
+        address issuer;
+        bytes memory signature;
+        bytes memory data;
+        string memory uri;
+        string[] memory claimKey = claimHolder.getClaimsKeyOwned();
+        bytes32[] memory listHashDataPatient = new bytes32[](claimKey.length);
+        for(uint256 i=0; i< claimKey.length; i++){
+            bytes32 _claimId = keccak256(abi.encodePacked(patientDID, claimKey[i]));
+            (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
+            listHashDataPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
+        }
+        bytes32 hashDataPatient = keccak256(abi.encodePacked(listHashDataPatient));
+        return hashDataPatient;
+    }
+
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
     function mint(address patientDID, string memory uri) public onlyOwner returns(uint256){
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
+        bytes32 claimData = getDataClaim(patientDID);
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, _rootPatientHash, claimData));
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        _rootHashValuesOfPatient[patientDID] = _rootPatientHash; 
+        _rootHashValuesOfPatient[patientDID] = newHashValue; 
         if(_isPatientMinted[patientDID] == false){
             _listAddressPatient.push(patientDID);
             _isPatientMinted[patientDID]==true;
         }
-        _listRootHashValue.push(_rootPatientHash);
-        emit PatientLockTokenMinted(tokenId, patientDID, _rootPatientNodeId, _rootPatientHash);
+        _listRootHashValue.push(newHashValue);
+        emit PatientLockTokenMinted(tokenId, patientDID, _rootPatientNodeId, newHashValue);
         return tokenId;
     }
 
