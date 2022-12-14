@@ -13,6 +13,7 @@ contract Provider is ERC721Base, IProvider {
     mapping(address => uint256) private _tokenIdOfProvider;
     mapping(address => bytes32) private _ddrHash;
     mapping(address => bool) private _isProviderMint;
+    mapping(bytes32 => uint256) private _providerHashedId;
     uint256[] private _listTokenProvider;
     bytes32[] private _listHashValue;
     address[] private _listAddressOfProvider;
@@ -29,7 +30,7 @@ contract Provider is ERC721Base, IProvider {
             address providerDID
         ) 
         internal
-    {
+    {   
         _providerOfTokenIds[tokenId] = providerDID;
         _tokenIdOfProvider[providerDID] = tokenId;
         _ddrHash[providerDID] = newHashValue;
@@ -39,25 +40,30 @@ contract Provider is ERC721Base, IProvider {
         emit ProviderTokenLocked(tokenId);
     }
 
-    function getDataClaim(address providerDID, string memory claimKey) internal view returns(bytes32){
-        bytes32 _claimId = keccak256(abi.encodePacked(providerDID, claimKey));
+    function getDataClaim(address providerDID) internal view returns(bytes32){
         ClaimHolder claimHolder = ClaimHolder(providerDID);
         uint256 scheme;
         address issuer;
         bytes memory signature;
         bytes memory data;
         string memory uri;
-        (claimKey, scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
-        bytes32 hashDataProvider =  keccak256(abi.encodePacked(claimKey, scheme, issuer, signature, data, uri));
+        string[] memory claimKey = claimHolder.getClaimsKeyOwned();
+        bytes32[] memory listHashDataProvider = new bytes32[](claimKey.length);
+        for(uint256 i=0; i< claimKey.length; i++){
+            bytes32 _claimId = keccak256(abi.encodePacked(providerDID, claimKey[i]));
+            (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
+            listHashDataProvider[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
+        }
+        bytes32 hashDataProvider = keccak256(abi.encodePacked(listHashDataProvider));
         return hashDataProvider;
     }
 
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
-    function mint(address providerDID, string memory accountId, string memory claimKey, string memory uri) public onlyOwner returns(uint256){
+    function mint(address providerDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
         require(bytes(accountId).length > 0, "DDR ID is empty!");
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "PROVIDER"), "Provider DID is not valid!");
-        bytes32 hashDataProvider =  getDataClaim(providerDID, claimKey);
+        bytes32 hashDataProvider = getDataClaim(providerDID);
 
         bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));
         uint256 tokenId = super.mint(uri);
