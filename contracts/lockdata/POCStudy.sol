@@ -50,7 +50,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
     }
 
     function lockStudyByMerkleTree() private onlyOwner returns 
-        (bytes32 rootPatientNodeId, bytes32 rootPatientHash) 
+        (bytes32 rootNodeId, bytes32 rootHash) 
         // (uint256[] memory)
     {
         address[] memory listPatientAddress = _patient.getListAddressPatient();
@@ -69,15 +69,13 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         require(listLevelRootHashLength > 0, "pcostudy level has no root hash value.");
         
         // Add 0x00 to bottom level if list has odd number of root hash value
-        if ((listLevelRootHashLength % 2) == 1) {
+        if (listLevelRootHashLength % 2 == 1) {
             listLevelRootHashLength = listLevelRootHashLength + 1;
             bytes32[] memory _tempListLevelRootHash = new bytes32[](listLevelRootHashLength);
 
-            // listRootHash = new bytes32[](listLevelRootHashLength);
-            for (uint k = 0; k < listLevelRootHashLength; k++) {
+            for (uint256 k = 0; k < listRootHash.length; k++) {
                 _tempListLevelRootHash[k] = listRootHash[k];
             }
-
             _tempListLevelRootHash[listLevelRootHashLength-1] = 0x0000000000000000000000000000000000000000000000000000000000000000;
             listRootHash = _tempListLevelRootHash;
         }
