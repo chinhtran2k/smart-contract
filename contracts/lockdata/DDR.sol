@@ -48,7 +48,7 @@ contract DDR is ERC721Base, IDDR {
     }
 
     constructor(address _claimHolderAddress, address _authAddress)
-        ERC721Base("Drug Dispense Report", "DDR", _authAddress)
+        ERC721Base("DDR Lock", "DDR", _authAddress)
     {
         claimHolder = ClaimHolder(_claimHolderAddress);
     }
@@ -118,7 +118,7 @@ contract DDR is ERC721Base, IDDR {
         string memory uri,
         address patientDID
     ) public onlyClaimHolder returns (uint256) {
-        require(_IAuth.checkAuth(ClaimHolder(patientDID), "PATIENT"), "Patient DID is not valid!");
+        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
         require(bytes(ddrRawId).length > 0, "DDR ID is empty!");
         ClaimHolder patient = ClaimHolder(patientDID);
 

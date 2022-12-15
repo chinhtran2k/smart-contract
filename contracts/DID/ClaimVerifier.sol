@@ -6,8 +6,8 @@ import './ClaimHolder.sol';
 
 contract ClaimVerifier {
 
-  event ClaimValid(ClaimHolder _identity, string claimKey);
-  event ClaimInvalid(ClaimHolder _identity, string claimKey);
+  event ClaimValid(ClaimHolder _identity, string claimKey, string claimValue);
+  event ClaimInvalid(ClaimHolder _identity, string claimKey, string claimValue);
 
   ClaimHolder public trustedClaimHolder;
 
@@ -15,20 +15,20 @@ contract ClaimVerifier {
     trustedClaimHolder = ClaimHolder(_trustedClaimHolder);
   }
 
-  function checkClaim(ClaimHolder _identity, string memory claimKey)
+  function checkClaim(ClaimHolder _identity, string memory claimKey, string memory claimValue)
     public
     returns (bool claimValid)
   {
-    if (claimIsValid(_identity, claimKey)) {
-      emit ClaimValid(_identity, claimKey);
+    if (claimIsValid(_identity, claimKey, claimValue)) {
+      emit ClaimValid(_identity, claimKey, claimValue);
       return true;
     } else {
-      emit ClaimInvalid(_identity, claimKey);
+      emit ClaimInvalid(_identity, claimKey, claimValue);
       return false;
     }
   }
 
-  function claimIsValid(ClaimHolder _identity, string memory claimKey)
+  function claimIsValid(ClaimHolder _identity, string memory claimKey, string memory claimValue)
     public
     view
     returns (bool claimValid)
@@ -44,6 +44,10 @@ contract ClaimVerifier {
 
     // Fetch claim from user
     ( foundclaimKey, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
+
+    if (keccak256(data) != keccak256(bytes(claimValue))) {
+      return false;
+    }
 
     bytes32 dataHash = keccak256(abi.encodePacked(_identity, claimKey, data));
     bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));

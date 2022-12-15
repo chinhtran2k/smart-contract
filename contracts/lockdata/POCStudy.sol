@@ -159,7 +159,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
     }
 
     constructor(address patientAddress, address providerAddress, address authAddress)
-        ERC721Base("Proof of Concept Study", "POCStudy", authAddress)
+        ERC721Base("POC Study Lock", "POCStudy", authAddress)
     {
         _patient = Patient(patientAddress);
         _provider = Provider(providerAddress);

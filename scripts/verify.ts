@@ -105,6 +105,7 @@ async function main() {
   const AuthenticatorHelper = "contracts/utils/Authenticator.sol";
   const DDR = "contracts/lockdata/DDR.sol";
   const Patient = "contracts/lockdata/Patient.sol";
+  const Provider = "contracts/lockdata/Provider.sol";
   const POCStudy = "contracts/lockdata/POCStudy.sol";
   const ERC20Proxy = "contracts/erc20Proxy/ERC20Proxy.sol";
 
@@ -140,9 +141,18 @@ async function main() {
       input: [CONFIG.DDR.address, CONFIG.Authenticator.address],
     },
     {
+      path: Provider,
+      ...CONFIG.Provider,
+      input: [CONFIG.Authenticator.address],
+    },
+    {
       path: POCStudy,
       ...CONFIG.POCStudy,
-      input: [CONFIG.Patient.address, CONFIG.Authenticator.address],
+      input: [
+        CONFIG.Patient.address,
+        CONFIG.Provider.address,
+        CONFIG.Authenticator.address,
+      ],
     },
     {
       path: ERC20Proxy,

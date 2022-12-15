@@ -29,7 +29,7 @@ async function main() {
   );
   const DDRContract = await ethers.getContractFactory("DDR");
   const PatientContract = await ethers.getContractFactory("Patient");
-  const ProviderContract = await ethers.getContractFactory("Provider")
+  const ProviderContract = await ethers.getContractFactory("Provider");
   const POCStudyContract = await ethers.getContractFactory("POCStudy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
 
@@ -51,9 +51,7 @@ async function main() {
     DDR.address,
     Authenticator.address
   );
-  const Provider = await ProviderContract.deploy(
-    Authenticator.address
-  );
+  const Provider = await ProviderContract.deploy(Authenticator.address);
   const POCStudy = await POCStudyContract.deploy(
     Patient.address,
     Provider.address,

@@ -155,7 +155,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     // PatientLock part
     constructor(address _ddrAddress, address _authAddress)
-        ERC721Base("Patient", "PT", _authAddress)
+        ERC721Base("Patient Lock", "PT", _authAddress)
     {
         _DDR = DDR(_ddrAddress);
     }
