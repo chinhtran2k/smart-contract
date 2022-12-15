@@ -160,7 +160,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _DDR = DDR(_ddrAddress);
     }
 
-    function getDataClaim(address patientDID) internal view returns(bytes32){
+    function getHashClaim(address patientDID) internal view returns(bytes32){
         ClaimHolder claimHolder = ClaimHolder(patientDID);
         uint256 scheme;
         address issuer;
@@ -184,7 +184,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
-        bytes32 claimData = getDataClaim(patientDID);
+        bytes32 claimData = getHashClaim(patientDID);
         bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, _rootPatientHash, claimData));
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;

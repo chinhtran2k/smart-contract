@@ -40,7 +40,7 @@ contract Provider is ERC721Base, IProvider {
         emit ProviderTokenLocked(tokenId);
     }
 
-    function getDataClaim(address providerDID) internal view returns(bytes32){
+    function getHashClaim(address providerDID) internal view returns(bytes32){
         ClaimHolder claimHolder = ClaimHolder(providerDID);
         uint256 scheme;
         address issuer;
@@ -63,7 +63,7 @@ contract Provider is ERC721Base, IProvider {
     function mint(address providerDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
         require(bytes(accountId).length > 0, "DDR ID is empty!");
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "PROVIDER"), "Provider DID is not valid!");
-        bytes32 hashDataProvider = getDataClaim(providerDID);
+        bytes32 hashDataProvider = getHashClaim(providerDID);
 
         bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));
         uint256 tokenId = super.mint(uri);
