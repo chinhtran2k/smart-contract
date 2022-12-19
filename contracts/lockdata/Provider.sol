@@ -18,10 +18,13 @@ contract Provider is ERC721Base, IProvider {
     bytes32[] private _listHashValue;
     address[] private _listAddressOfProvider;
     mapping(uint256 => bool) _isDDRLocked;
+    address public claimIssuer;
+    mapping(address => bytes32) _ClaimData;
     // ProviderLock part
-    constructor(address _authAddress)
+    constructor(address _authAddress, address _claimHolder)
         ERC721Base("Provider Lock", "PR", _authAddress)
     {
+        claimIssuer = _claimHolder;
     }
 
     function setTokenInfo(
@@ -50,7 +53,7 @@ contract Provider is ERC721Base, IProvider {
         string[] memory claimKey = claimHolder.getClaimsKeyOwned();
         bytes32[] memory listHashDataProvider = new bytes32[](claimKey.length);
         for(uint256 i=0; i< claimKey.length; i++){
-            bytes32 _claimId = keccak256(abi.encodePacked(providerDID, claimKey[i]));
+            bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i]));
             (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
             listHashDataProvider[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
         }
@@ -64,8 +67,8 @@ contract Provider is ERC721Base, IProvider {
         require(bytes(accountId).length > 0, "DDR ID is empty!");
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Provider DID is not valid!");
         bytes32 hashDataProvider = getHashClaim(providerDID);
-
         bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));
+        _ClaimData[providerDID] = hashDataProvider;
         uint256 tokenId = super.mint(uri);
         if(_isProviderMint[providerDID] == false){
             _listAddressOfProvider.push(providerDID);
@@ -76,6 +79,11 @@ contract Provider is ERC721Base, IProvider {
 
         return tokenId;
     }
+
+    function getClaimData(address providerDID) public view returns (bytes32) {
+        return _ClaimData[providerDID];
+    }
+
     function isLockedProvider(uint256 tokenId) public view returns (bool) {
         return _isDDRLocked[tokenId];
     }

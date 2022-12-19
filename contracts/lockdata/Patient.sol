@@ -14,12 +14,13 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(address => bytes32) private _rootHashValuesOfPatient;
     mapping(uint256 => bytes32) private _rootHashValuesOfTokenId;
     mapping(address => bool) private _isPatientMinted;
+    mapping(address => bytes32) private _ClaimData;
     bytes32[] private _listRootHashValue;
     address[] private _listAddressPatient;
 
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
-
+    address public claimIssuer;
     DDR public _DDR;
 
     // Merkle Tree structure
@@ -154,10 +155,11 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     // ***
 
     // PatientLock part
-    constructor(address _ddrAddress, address _authAddress)
+    constructor(address _ddrAddress, address _claimHolder, address _authAddress)
         ERC721Base("Patient Lock", "PT", _authAddress)
     {
         _DDR = DDR(_ddrAddress);
+        claimIssuer = _claimHolder;
     }
 
     function getHashClaim(address patientDID) internal view returns(bytes32){
@@ -170,12 +172,26 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         string[] memory claimKey = claimHolder.getClaimsKeyOwned();
         bytes32[] memory listHashDataPatient = new bytes32[](claimKey.length);
         for(uint256 i=0; i< claimKey.length; i++){
-            bytes32 _claimId = keccak256(abi.encodePacked(patientDID, claimKey[i]));
+            bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i]));
             (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
             listHashDataPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
         }
         bytes32 hashDataPatient = keccak256(abi.encodePacked(listHashDataPatient));
         return hashDataPatient;
+    }
+
+    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 claimData) internal {
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, claimData));
+        _ClaimData[patientDID] = claimData;
+        _patientOfTokenIds[tokenId] = patientDID;
+        _tokenIdOfPatients[patientDID] = tokenId;
+        _rootHashValuesOfPatient[patientDID] = newHashValue; 
+        if(_isPatientMinted[patientDID] == false){
+            _listAddressPatient.push(patientDID);
+            _isPatientMinted[patientDID]==true;
+        }
+        _listRootHashValue.push(newHashValue);
+        emit PatientLockTokenMinted(tokenId, patientDID, rootPatientHash, newHashValue);
     }
 
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
@@ -185,18 +201,13 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
         bytes32 claimData = getHashClaim(patientDID);
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, _rootPatientHash, claimData));
-        _patientOfTokenIds[tokenId] = patientDID;
-        _tokenIdOfPatients[patientDID] = tokenId;
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        _rootHashValuesOfPatient[patientDID] = newHashValue; 
-        if(_isPatientMinted[patientDID] == false){
-            _listAddressPatient.push(patientDID);
-            _isPatientMinted[patientDID]==true;
-        }
-        _listRootHashValue.push(newHashValue);
-        emit PatientLockTokenMinted(tokenId, patientDID, _rootPatientNodeId, newHashValue);
+        setLockInfo(tokenId, patientDID, _rootPatientHash, claimData);
         return tokenId;
+    }
+
+    function getClaimData(address patientDID) public view returns(bytes32){
+        return _ClaimData[patientDID];
     }
 
     function getPatientAddressOf(uint256 tokenId) public view returns (address) {
