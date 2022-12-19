@@ -63,7 +63,7 @@ contract Provider is ERC721Base, IProvider {
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
     function mint(address providerDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
-        require(bytes(accountId).length > 0, "DDR ID is empty!");
+        require(bytes(accountId).length > 0, "Provider ID is empty!");
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Provider DID is not valid!");
         bytes32 hashDataProvider = getHashClaim(providerDID);
         bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));

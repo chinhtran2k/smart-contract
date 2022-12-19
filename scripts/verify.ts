@@ -138,12 +138,16 @@ async function main() {
     {
       path: Patient,
       ...CONFIG.Patient,
-      input: [CONFIG.DDR.address, CONFIG.Authenticator.address],
+      input: [
+        CONFIG.DDR.address,
+        CONFIG.ClaimHolder.address,
+        CONFIG.Authenticator.address,
+      ],
     },
     {
       path: Provider,
       ...CONFIG.Provider,
-      input: [CONFIG.Authenticator.address],
+      input: [CONFIG.Authenticator.address, CONFIG.ClaimHolder.address],
     },
     {
       path: POCStudy,
