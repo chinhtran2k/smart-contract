@@ -14,7 +14,6 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(address => bytes32) private _rootHashValuesOfPatient;
     mapping(uint256 => bytes32) private _rootHashValuesOfTokenId;
     mapping(address => bool) private _isPatientMinted;
-    mapping(address => bytes32) private _ClaimData;
     bytes32[] private _listRootHashValue;
     address[] private _listAddressPatient;
 
@@ -162,7 +161,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         claimIssuer = _claimHolder;
     }
 
-    function getHashClaim(address patientDID) internal view returns(bytes32){
+    function getHashClaim(address patientDID) public view returns(bytes32){
         ClaimHolder claimHolder = ClaimHolder(patientDID);
         uint256 scheme;
         address issuer;
@@ -182,7 +181,6 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 claimData) internal {
         bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, claimData));
-        _ClaimData[patientDID] = claimData;
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue; 
@@ -204,10 +202,6 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
         setLockInfo(tokenId, patientDID, _rootPatientHash, claimData);
         return tokenId;
-    }
-
-    function getClaimData(address patientDID) public view returns(bytes32){
-        return _ClaimData[patientDID];
     }
 
     function getPatientAddressOf(uint256 tokenId) public view returns (address) {

@@ -19,7 +19,6 @@ contract Provider is ERC721Base, IProvider {
     address[] private _listAddressOfProvider;
     mapping(uint256 => bool) _isDDRLocked;
     address public claimIssuer;
-    mapping(address => bytes32) _ClaimData;
     // ProviderLock part
     constructor(address _authAddress, address _claimHolder)
         ERC721Base("Provider Lock", "PR", _authAddress)
@@ -43,7 +42,7 @@ contract Provider is ERC721Base, IProvider {
         emit ProviderTokenLocked(tokenId);
     }
 
-    function getHashClaim(address providerDID) internal view returns(bytes32){
+    function getHashClaim(address providerDID) public view returns(bytes32){
         ClaimHolder claimHolder = ClaimHolder(providerDID);
         uint256 scheme;
         address issuer;
@@ -68,7 +67,6 @@ contract Provider is ERC721Base, IProvider {
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Provider DID is not valid!");
         bytes32 hashDataProvider = getHashClaim(providerDID);
         bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));
-        _ClaimData[providerDID] = hashDataProvider;
         uint256 tokenId = super.mint(uri);
         if(_isProviderMint[providerDID] == false){
             _listAddressOfProvider.push(providerDID);
@@ -78,10 +76,6 @@ contract Provider is ERC721Base, IProvider {
         setTokenInfo(tokenId, newHashValue, providerDID);
 
         return tokenId;
-    }
-
-    function getClaimData(address providerDID) public view returns (bytes32) {
-        return _ClaimData[providerDID];
     }
 
     function isLockedProvider(uint256 tokenId) public view returns (bool) {
