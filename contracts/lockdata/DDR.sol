@@ -223,6 +223,8 @@ contract DDR is ERC721Base, IDDR {
     
     // "disclosureConsentDDR" only use by Patient
     function consentDisclosureDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
+        ClaimHolder tempPatient = ClaimHolder(address(msg.sender));
+
         // check if token is consented
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             require(_isSharedDDR[ddrTokenIds[i]][msg.sender], "DDR is not shared!");
@@ -234,6 +236,6 @@ contract DDR is ERC721Base, IDDR {
             _didConsentedOf[ddrTokenIds[i]].push(providerDID);
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, providerDID, ddrTokenIds);
-        erc20Proxy.awardToken(tx.origin, ddrTokenIds.length);
+        erc20Proxy.awardToken(tempPatient.owner(), ddrTokenIds.length);
     }
 }
