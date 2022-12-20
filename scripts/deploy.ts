@@ -8,8 +8,7 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   // Pre-defined addresses EDC
-  // const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
-  const PCOAdress = "0xDa46c687723751af0e7266A8A32eBe34E21070F0";
+  const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0xc3fdeaa9e9e5812c9f2c1b2ee7c1b8bf099537d8b8bade7aad445185aa4278ef"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
@@ -53,7 +52,10 @@ async function main() {
     ClaimHolder.address,
     Authenticator.address
   );
-  const Provider = await ProviderContract.deploy(Authenticator.address, ClaimHolder.address);
+  const Provider = await ProviderContract.deploy(
+    Authenticator.address,
+    ClaimHolder.address
+  );
   const POCStudy = await POCStudyContract.deploy(
     Patient.address,
     Provider.address,
