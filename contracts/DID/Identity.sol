@@ -39,7 +39,7 @@ contract Identity is ClaimHolder {
             claimsByKey[_claimKey[i]].push(claimId);
             if (!hasClaim[_claimKey[i]]) {
                 hasClaim[_claimKey[i]] = true;
-                claimsKeyOwned.push(_claimKey[i]);
+                claimsKeyOwnedByIssuer[_issuer[i]].push(_claimKey[i]);
             }
             offset += _sigSizes[i];
             uoffset += uriSizes[i];

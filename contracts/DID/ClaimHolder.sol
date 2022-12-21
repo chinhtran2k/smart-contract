@@ -12,7 +12,6 @@ contract ClaimHolder is KeyHolder, ERC735 {
 
     mapping (string => bool) hasClaim;
     mapping (address => string[]) public claimsKeyOwnedByIssuer;
-
     address public owner;
 
     constructor() {
@@ -70,34 +69,15 @@ contract ClaimHolder is KeyHolder, ERC735 {
         if (msg.sender != address(this)) {
           require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 1), "Sender does not have management key");
         }
-
-        uint256 index = 0;
-        // Remove claimsByKey
-        for (uint256 i = 0; i < claimsByKey[claims[_claimId].claimKey].length; i++) {
-            if (claimsByKey[claims[_claimId].claimKey][i] == _claimId) {
-                index = i;
+        address _issuer = claims[_claimId].issuer;
+        string memory _claimKey = claims[_claimId].claimKey;
+        for(uint256 i = 0; i < claimsKeyOwnedByIssuer[_issuer].length; i++){
+            if(keccak256(abi.encodePacked(claimsKeyOwnedByIssuer[_issuer][i])) == keccak256(abi.encodePacked(_claimKey))){
+                claimsKeyOwnedByIssuer[_issuer][i] = claimsKeyOwnedByIssuer[_issuer][claimsKeyOwnedByIssuer[_issuer].length - 1];
                 break;
             }
         }
-        for (uint256 i = index; i < claimsByKey[claims[_claimId].claimKey].length - 1; i++) {
-            claimsByKey[claims[_claimId].claimKey][i] = claimsByKey[claims[_claimId].claimKey][i + 1];
-        }
-        claimsByKey[claims[_claimId].claimKey].pop();
-
-        // Remove claimsKeyOwnedByIssuer
-        for (uint256 i = 0; i < claimsKeyOwnedByIssuer[claims[_claimId].issuer].length; i++) {
-            if (keccak256(abi.encodePacked(claimsKeyOwnedByIssuer[claims[_claimId].issuer][i])) == keccak256(abi.encodePacked(claims[_claimId].claimKey))) {
-                index = i;
-                break;
-            }
-        }
-        for (uint256 i = index; i < claimsKeyOwnedByIssuer[claims[_claimId].issuer].length - 1; i++) {
-            claimsKeyOwnedByIssuer[claims[_claimId].issuer][i] = claimsKeyOwnedByIssuer[claims[_claimId].issuer][i + 1];
-        }
-        claimsKeyOwnedByIssuer[claims[_claimId].issuer].pop();
-
-        // claimsByType[claims[_claimId].claimKey].removeByIndex(index);
-        
+        claimsKeyOwnedByIssuer[_issuer].pop();
 
         emit ClaimRemoved(
             _claimId,
@@ -108,7 +88,6 @@ contract ClaimHolder is KeyHolder, ERC735 {
             claims[_claimId].data,
             claims[_claimId].uri
         );
-
 
         delete claims[_claimId];
         return true;
