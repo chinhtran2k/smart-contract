@@ -36,7 +36,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
           require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
         }
 
-        if (claims[claimId].issuer != _issuer) {
+        if (!hasClaim[_claimKey]) {
             claimsByKey[_claimKey].push(claimId);
         }
 
