@@ -71,6 +71,8 @@ contract ClaimHolder is KeyHolder, ERC735 {
         }
         address _issuer = claims[_claimId].issuer;
         string memory _claimKey = claims[_claimId].claimKey;
+
+        // Remove claimsKey
         for(uint256 i = 0; i < claimsKeyOwnedByIssuer[_issuer].length; i++){
             if(keccak256(abi.encodePacked(claimsKeyOwnedByIssuer[_issuer][i])) == keccak256(abi.encodePacked(_claimKey))){
                 claimsKeyOwnedByIssuer[_issuer][i] = claimsKeyOwnedByIssuer[_issuer][claimsKeyOwnedByIssuer[_issuer].length - 1];
@@ -78,6 +80,16 @@ contract ClaimHolder is KeyHolder, ERC735 {
             }
         }
         claimsKeyOwnedByIssuer[_issuer].pop();
+
+        // Remove claimsByKey
+        for (uint256 i = 0; i < claimsByKey[_claimKey].length; i++) {
+            if (claimsByKey[_claimKey][i] == _claimId) {
+                claimsByKey[_claimKey][i] = claimsByKey[_claimKey][claimsByKey[_claimKey].length -1] ;
+                break;
+            }
+        }
+        claimsByKey[_claimKey].pop();
+
 
         emit ClaimRemoved(
             _claimId,
@@ -128,8 +140,5 @@ contract ClaimHolder is KeyHolder, ERC735 {
     {
         return claimsByKey[_claimKey];
     }
-    
-    function getIndexOfArray(string[] memory a) internal {
-        
-    }
+
 }
