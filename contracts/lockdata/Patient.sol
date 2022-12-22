@@ -171,7 +171,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         string[] memory claimKey = claimHolder.getClaimsKeyOwnedByIssuer(claimIssuer);
         bytes32[] memory listHashDataPatient = new bytes32[](claimKey.length);
         for(uint256 i=0; i< claimKey.length; i++){
-            bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i]));
+            bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i], data));
             (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
             listHashDataPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
         }

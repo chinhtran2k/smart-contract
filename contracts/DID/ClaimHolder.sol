@@ -30,7 +30,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         override
         returns (bytes32 claimRequestId)
     {
-        bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimKey));
+        bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimKey, _data));
 
         if (msg.sender != address(this)) {
           require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
