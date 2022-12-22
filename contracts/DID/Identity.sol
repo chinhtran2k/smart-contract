@@ -26,7 +26,7 @@ contract Identity is ClaimHolder {
 
         for (uint i = 0; i < _claimKey.length; i++) {
 
-            claimId = keccak256(abi.encodePacked(_issuer[i], _claimKey[i], getBytes(_data, doffset, dataSizes[i])));
+            claimId = keccak256(abi.encodePacked(_issuer[i], _claimKey[i]));
 
             claims[claimId] = Claim(
                 _claimKey[i],

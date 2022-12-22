@@ -40,7 +40,7 @@ contract ClaimVerifier {
     bytes memory data;
 
     // Construct claimId (identifier + claim type)
-    bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, claimKey, bytes(claimValue)));
+    bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, claimKey));
 
     // Fetch claim from user
     ( foundclaimKey, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
