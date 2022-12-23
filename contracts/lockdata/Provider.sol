@@ -66,8 +66,8 @@ contract Provider is ERC721Base, IProvider {
         require(bytes(accountId).length > 0, "Provider ID is empty!");
         require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Provider DID is not valid!");
         bytes32 hashDataProvider = getHashClaim(providerDID);
-        bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider));
         uint256 tokenId = super.mint(uri);
+        bytes32 newHashValue = keccak256(abi.encodePacked(providerDID, accountId, hashDataProvider, tokenId));
         if(_isProviderMint[providerDID] == false){
             _listAddressOfProvider.push(providerDID);
             _isProviderMint[providerDID]==true;

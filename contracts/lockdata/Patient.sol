@@ -179,8 +179,8 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         return hashDataPatient;
     }
 
-    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 claimData) internal {
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, claimData));
+    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashDataProvider) internal {
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashDataProvider, tokenId));
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue; 
@@ -198,9 +198,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
-        bytes32 claimData = getHashClaim(patientDID);
+        bytes32 hashDataProvider = getHashClaim(patientDID);
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        setLockInfo(tokenId, patientDID, _rootPatientHash, claimData);
+        setLockInfo(tokenId, patientDID, _rootPatientHash, hashDataProvider);
         return tokenId;
     }
 
