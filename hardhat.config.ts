@@ -28,7 +28,7 @@ const config: HardhatUserConfig = {
       url: `http://localhost:7545`,
       accounts: [`${PRIVATE_KEY}`],
     },
-    production: {
+    product: {
       url: `http://hpa3-production-blc-alb-1798551139.ap-northeast-1.elb.amazonaws.com`,
       accounts: [`${PRIVATE_KEY}`],
     },

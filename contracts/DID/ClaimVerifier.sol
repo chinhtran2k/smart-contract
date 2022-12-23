@@ -45,7 +45,9 @@ contract ClaimVerifier {
     // Fetch claim from user
     ( foundclaimKey, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
 
-    require(keccak256(data) == keccak256(bytes(claimValue)), "Claim value does not match!");
+    if (keccak256(data) != keccak256(bytes(claimValue))) {
+      return false;
+    }
 
     bytes32 dataHash = keccak256(abi.encodePacked(_identity, claimKey, data));
     bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));

@@ -9,7 +9,7 @@ const URL_BLOCKSCOUT_TTC = "http://192.168.2.8:4000";
 
 const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
 const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
-const DEFAULT_AWARD__VALUE_PREDEFINED = 100;
+const DEFAULT_AWARD_VALUE_PREDEFINED = 100;
 
 const verifyRequest = async (
   addressHash: string,
@@ -165,7 +165,7 @@ async function main() {
         PCOAdress,
         TokenOwnerAddress,
         CONFIG.DDR.address,
-        DEFAULT_AWARD__VALUE_PREDEFINED,
+        DEFAULT_AWARD_VALUE_PREDEFINED,
       ],
     },
   ];
