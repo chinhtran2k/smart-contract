@@ -1,14 +1,16 @@
-import { ethers } from "hardhat";
+import { ethers, hardhatArguments } from "hardhat";
+import Web3 from "web3";
 const fs = require("fs");
+const web3 = new Web3();
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
+  const deployers = await ethers.getSigners();
 
-  console.log("Deploying contracts with the account:", deployer.address);
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  console.log("Deploying contracts with the account:", deployers[0].address);
+  console.log("Account balance:", (await deployers[0].getBalance()).toString());
 
   // Pre-defined addresses EDC
-  const PCOAdress = "0xDa46c687723751af0e7266A8A32eBe34E21070F0";
+  const PCOAdress = "0xc75FF78E2b46c5e5B64944feD2554e4Ee983CE1C";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0x187bcbef9261e6c7eaefd8368e2b930a8bd7335cf541d8a05e9337beaf4c5f89"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
@@ -79,11 +81,12 @@ async function main() {
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
 
   // Add pre-defined keySigner to ClaimHolder
-  console.log(
-    "> Added pre-defined keySigner for ClaimHolder: ",
+  const signerAccount = await web3.eth.accounts.privateKeyToAccount(
     CLAIM_SIGNER_PREDEFINED_ADDRESS
   );
-  await ClaimHolder.addKey(CLAIM_SIGNER_PREDEFINED_ADDRESS, 3, 1);
+  const hashedAddress = await web3.utils.keccak256(signerAccount.address);
+  console.log("> Added pre-defined keySigner for ClaimHolder: ", hashedAddress);
+  await ClaimHolder.addKey(hashedAddress, 3, 1);
 
   // Add pre-defined keyExecution to ClaimHolder
   console.log(
