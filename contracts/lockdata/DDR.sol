@@ -67,7 +67,8 @@ contract DDR is ERC721Base, IDDR {
         return _ddrHash[tokenId];
     }
 
-    function getToken(uint256 tokenId) public view returns (
+    function getToken(uint256 tokenID) public view returns (
+        uint256 tokenId,
         address patientDID, 
         string memory ddrId,
         bytes32 ddrHashedData,
@@ -76,11 +77,12 @@ contract DDR is ERC721Base, IDDR {
         ) 
     {
         return (
-            _patient[tokenId],
-            _ddrId[tokenId],
-            _ddrHashedData[tokenId],
-            _ddrHash[tokenId],
-            _didConsentedOf[tokenId]
+            tokenID,
+            _patient[tokenID],
+            _ddrId[tokenID],
+            _ddrHashedData[tokenID],
+            _ddrHash[tokenID],
+            _didConsentedOf[tokenID]
         );
     }
 
