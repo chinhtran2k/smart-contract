@@ -28,7 +28,7 @@ contract DDR is ERC721Base, IDDR {
     mapping(uint256 => address) private _patient;
     mapping(uint256 => address[]) private _didConsentedOf;
     mapping(address => uint256[]) private _listDDRTokenIdOfPatient;
-    mapping(address => uint256[]) private _listDDRTokenIdOfProvider;
+    mapping(address =>mapping(address => uint256[])) private _listDDRTokenIdPatientOfProvider;
     mapping(uint256 => string) private _ddrId;
 
     bytes32 private _hashStringPatient;
@@ -172,8 +172,8 @@ contract DDR is ERC721Base, IDDR {
         return _listDDRTokenIdOfPatient[patientDID];
     }
 
-    function getListDDRTokenIdOfProvider(address providerDID) public view returns (uint256[] memory) {
-        return _listDDRTokenIdOfProvider[providerDID];
+    function getListDDRTokenIdOfProvider(address pateintDID, address providerDID) public view returns (uint256[] memory) {
+        return _listDDRTokenIdPatientOfProvider[providerDID][pateintDID];
     }
 
     function patientOf(uint256 tokenId)
@@ -234,7 +234,7 @@ contract DDR is ERC721Base, IDDR {
         }
         for (uint i=0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
-            _listDDRTokenIdOfProvider[providerDID].push(ddrTokenIds[i]);
+            _listDDRTokenIdPatientOfProvider[providerDID][msg.sender].push(ddrTokenIds[i]);
             _didConsentedOf[ddrTokenIds[i]].push(providerDID);
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, providerDID, ddrTokenIds);

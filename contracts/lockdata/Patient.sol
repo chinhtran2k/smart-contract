@@ -3,7 +3,8 @@
 pragma solidity ^0.8.0;
 
 import "../utils/ERC721Base.sol";
-import "./DDR.sol";
+import "./DDRBranch.sol";
+import "./DisclosureBranch.sol";
 import "../interface/IPatient.sol";
 import "../interface/IMerkleTreeBase.sol";
 
@@ -20,7 +21,8 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
     address public claimIssuer;
-    DDR public _DDR;
+    DDRBranch public _ddrBranch;
+    DisclosureBranch public _disclosureBranch;
 
     // Merkle Tree structure
     mapping(bytes32 => MerkleNode) private _allNodes;
@@ -49,17 +51,31 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     }
 
     function lockDIDByMerkleTree(address patientDID) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
-        uint256[] memory listDDROfPatient = _DDR.getListDDRTokenIdOfPatient(patientDID);
-        uint256 listDDRLength = listDDROfPatient.length;
+        uint256[] memory listDDRBranch = _ddrBranch.getListTokenID(patientDID);
+        uint256[] memory listDisclosureBranch = _disclosureBranch.getListTokenId(patientDID);
 
-        require(listDDRLength > 0, "Patient do not have DDR.");
+        bytes32[] memory listRootHash = new bytes32[](listDDRBranch.length + listDisclosureBranch.length);
+        for (uint i=0; i<listDDRBranch.length; i++) {
+            listRootHash[i] = _ddrBranch.getTokenIdRootHashValue(listDDRBranch[i]);
+        }
+        for (uint i=0; i<listDisclosureBranch.length; i++) {
+            listRootHash[i+listDDRBranch.length] = _disclosureBranch.getTokenIdRootHashValue(listDisclosureBranch[i]);
+        }
+
+        uint256 listLevelRootHashLength = listRootHash.length;
+
+        require(listLevelRootHashLength > 0, "Patient do not have DDR.");
 
         // Add 0x00 to bottom level if patient has odd number of DDR
-        if ((listDDRLength % 2) == 1) {
-            listDDRLength = listDDRLength + 1;
-            uint256[] memory templistDDROfPatient = new uint256[](listDDRLength);
-            templistDDROfPatient = copyArrayToArrayUINT256(listDDROfPatient, templistDDROfPatient);
-            listDDROfPatient = templistDDROfPatient;
+        if (listLevelRootHashLength % 2 == 1) {
+            listLevelRootHashLength = listLevelRootHashLength + 1;
+            bytes32[] memory _tempListLevelRootHash = new bytes32[](listLevelRootHashLength);
+
+            for (uint256 k = 0; k < listRootHash.length; k++) {
+                _tempListLevelRootHash[k] = listRootHash[k];
+            }
+            _tempListLevelRootHash[listLevelRootHashLength-1] = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            listRootHash = _tempListLevelRootHash;
         }
 
         // Clear temporary memory
@@ -70,24 +86,12 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             tempNode.pop();
         }
 
-        // Initial bottom level data
-        for (uint i = 0; i < listDDRLength; i++) {
-            // Combine DDR and consented address
-            bytes32 combineConsentedDID = 0x0000000000000000000000000000000000000000000000000000000000000000;
-
-            if (_DDR.getDIDConsentedOf(listDDROfPatient[i]).length > 0) {
-                address[] memory consentedDID = _DDR.getDIDConsentedOf(listDDROfPatient[i]);
-                combineConsentedDID = keccak256(abi.encodePacked(consentedDID));
-            }
-            
-
-            bytes32 ddrCombinedHash = keccak256(abi.encodePacked(
-                _DDR.getDDRHash(listDDROfPatient[i]),
-                combineConsentedDID));
-
+        // Initial bottom level data 
+        for (uint i = 0; i < listLevelRootHashLength; i++) {
+            bytes32 rootHashTemp = listRootHash[i];
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    ddrCombinedHash,
+                    rootHashTemp,
                     0x0000000000000000000000000000000000000000000000000000000000000000,
                     0x0000000000000000000000000000000000000000000000000000000000000000
                 );
@@ -138,10 +142,10 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             queueNode = tempNode;
         }
 
-        bytes32 _rootPatientNodeId = queueNode[0];
-        bytes32 _rootPatientHash = _allNodes[queueNode[0]].hashValue;
-        
-        return(_rootPatientNodeId, _rootPatientHash);
+        bytes32 _rootLevelNodeId = queueNode[0];
+        bytes32 _rootLevelHash = _allNodes[queueNode[0]].hashValue;
+
+        return(_rootLevelNodeId, _rootLevelHash);
     }
     
     function getNodeData(bytes32 nodeId) public override view returns (MerkleNode memory) {
@@ -154,10 +158,12 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     // ***
 
     // PatientLock part
-    constructor(address _ddrAddress, address _claimHolder, address _authAddress)
+    constructor(address _claimHolder,address _ddrBranchAddress, address _disclosureBranchAddress, address _authAddress)
         ERC721Base("Patient Lock", "PT", _authAddress)
     {
-        _DDR = DDR(_ddrAddress);
+        _ddrBranch = DDRBranch(_ddrBranchAddress);
+        _disclosureBranch = DisclosureBranch(_disclosureBranchAddress);
+        
         claimIssuer = _claimHolder;
     }
 
@@ -179,11 +185,12 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         return hashDataPatient;
     }
 
-    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashDataProvider) internal {
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashDataProvider, tokenId));
+    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashDataPatient) internal {
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashDataPatient, tokenId));
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue; 
+        _rootHashValuesOfTokenId[tokenId] = newHashValue; 
         if(_isPatientMinted[patientDID] == false){
             _listAddressPatient.push(patientDID);
             _isPatientMinted[patientDID]==true;
@@ -198,9 +205,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
-        bytes32 hashDataProvider = getHashClaim(patientDID);
+        bytes32 hashDataPatient = getHashClaim(patientDID);
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        setLockInfo(tokenId, patientDID, _rootPatientHash, hashDataProvider);
+        setLockInfo(tokenId, patientDID, _rootPatientHash, hashDataPatient);
         return tokenId;
     }
 
@@ -214,6 +221,10 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     function getPatientRootHashValue(address patientDID) public view returns (bytes32) {
         return _rootHashValuesOfPatient[patientDID];
+    }
+
+    function getTokenIdRootHashValue(uint256 tokenId) public view returns (bytes32) {
+        return _rootHashValuesOfTokenId[tokenId];
     }
 
     function getPatientRootNodeId(address patientDID) public view returns (bytes32){

@@ -5,11 +5,9 @@ pragma solidity ^0.8.0;
 import "../utils/ERC721Base.sol";
 import "../interface/IMerkleTreeBase.sol";
 import "./Patient.sol";
-import "./Provider.sol";
 
 contract POCStudy is ERC721Base, IMerkleTreeBase {
     Patient public _patient;
-    Provider public _provider;
 
     event LockedPOC(uint256 pocTokenId, bytes32 rootHashPOC, string message);
 
@@ -54,14 +52,10 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         // (uint256[] memory)
     {
         address[] memory listPatientAddress = _patient.getListAddressPatient();
-        address[] memory listProviderAddress = _provider.getListAddressOfProvider();
         
-        bytes32[] memory listRootHash = new bytes32[](listPatientAddress.length + listProviderAddress.length);
+        bytes32[] memory listRootHash = new bytes32[](listPatientAddress.length);
         for (uint i=0; i<listPatientAddress.length; i++) {
             listRootHash[i] = _patient.getPatientRootHashValue(listPatientAddress[i]);
-        }
-        for (uint i=0; i<listProviderAddress.length; i++) {
-            listRootHash[i+listPatientAddress.length] = _provider.getHashValueProvider(listProviderAddress[i]);
         }
 
         uint256 listLevelRootHashLength = listRootHash.length;
@@ -158,11 +152,10 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         return queueNode;
     }
 
-    constructor(address patientAddress, address providerAddress, address authAddress)
+    constructor(address patientAddress, address authAddress)
         ERC721Base("POC Study Lock", "POCStudy", authAddress)
     {
         _patient = Patient(patientAddress);
-        _provider = Provider(providerAddress);
     }
 
     function mint(string memory uri, string memory message) public onlyOwner returns (uint256) {

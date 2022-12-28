@@ -11,6 +11,7 @@ async function main() {
 
   // Pre-defined addresses EDC
   const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
+  // const PCOAdress = "0xDa46c687723751af0e7266A8A32eBe34E21070F0";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0x187bcbef9261e6c7eaefd8368e2b930a8bd7335cf541d8a05e9337beaf4c5f89"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
@@ -30,8 +31,9 @@ async function main() {
     "AuthenticatorHelper"
   );
   const DDRContract = await ethers.getContractFactory("DDR");
+  const DDRBranchContract = await ethers.getContractFactory("DDRBranch");
+  const DisclosureBranchContract = await ethers.getContractFactory("DisclosureBranch");
   const PatientContract = await ethers.getContractFactory("Patient");
-  const ProviderContract = await ethers.getContractFactory("Provider");
   const POCStudyContract = await ethers.getContractFactory("POCStudy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
 
@@ -49,18 +51,22 @@ async function main() {
     ClaimHolder.address,
     Authenticator.address
   );
-  const Patient = await PatientContract.deploy(
+  const DDRBranch = await DDRBranchContract.deploy(
     DDR.address,
-    ClaimHolder.address,
     Authenticator.address
   );
-  const Provider = await ProviderContract.deploy(
-    Authenticator.address,
-    ClaimHolder.address
+  const DisclosureBranch = await DisclosureBranchContract.deploy(
+    DDR.address,
+    Authenticator.address
+  );
+  const Patient = await PatientContract.deploy(
+    ClaimHolder.address,
+    DDRBranch.address,
+    DisclosureBranch.address,
+    Authenticator.address
   );
   const POCStudy = await POCStudyContract.deploy(
     Patient.address,
-    Provider.address,
     Authenticator.address
   );
   const ERC20Proxy = await ERC20ProxyContract.deploy(
@@ -75,8 +81,9 @@ async function main() {
   console.log("Authenticator deployed to:", Authenticator.address);
   console.log("AuthenticatorHelper deployed to:", AuthenticatorHelper.address);
   console.log("DDR deployed to:", DDR.address);
+  console.log("DDRBranch deployed to:", DDRBranch.address);
+  console.log("DisclosureBranch deployed to:", DisclosureBranch.address);
   console.log("Patient deployed to:", Patient.address);
-  console.log("Provider deployed to:", Provider.address);
   console.log("POCStudy deployed to:", POCStudy.address);
   console.log("ERC20Proxy deployed to:", ERC20Proxy.address);
 
@@ -167,6 +174,24 @@ async function main() {
           require("../artifacts/contracts/lockdata/DDR.sol/DDR.json")
             .contractName,
       },
+      DDRBranch: {
+        address: DDRBranch.address,
+        abi: require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json").abi,
+        bytecode: require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
+          .bytecode,
+        contractName:
+          require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
+            .contractName,
+      },
+      DisclosureBranch: {
+        address: DisclosureBranch.address,
+        abi: require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json").abi,
+        bytecode: require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
+          .bytecode,
+        contractName:
+          require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
+            .contractName,
+      },
       Patient: {
         address: Patient.address,
         abi: require("../artifacts/contracts/lockdata/Patient.sol/Patient.json")
@@ -176,17 +201,6 @@ async function main() {
             .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/Patient.sol/Patient.json")
-            .contractName,
-      },
-      Provider: {
-        address: Provider.address,
-        abi: require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
-          .abi,
-        bytecode:
-          require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
-            .bytecode,
-        contractName:
-          require("../artifacts/contracts/lockdata/Provider.sol/Provider.json")
             .contractName,
       },
       POCStudy: {
