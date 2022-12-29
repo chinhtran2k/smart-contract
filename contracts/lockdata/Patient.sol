@@ -51,15 +51,15 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     }
 
     function lockDIDByMerkleTree(address patientDID) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
-        uint256[] memory listDDRBranch = _ddrBranch.getListTokenID(patientDID);
+        uint256[] memory listDDRBranch = _ddrBranch.getListTokenId(patientDID);
         uint256[] memory listDisclosureBranch = _disclosureBranch.getListTokenId(patientDID);
 
         bytes32[] memory listRootHash = new bytes32[](listDDRBranch.length + listDisclosureBranch.length);
         for (uint i=0; i<listDDRBranch.length; i++) {
-            listRootHash[i] = _ddrBranch.getTokenIdRootHashValue(listDDRBranch[i]);
+            listRootHash[i] = _ddrBranch.getTokenIdRootHashDDR(listDDRBranch[i]);
         }
         for (uint i=0; i<listDisclosureBranch.length; i++) {
-            listRootHash[i+listDDRBranch.length] = _disclosureBranch.getTokenIdRootHashValue(listDisclosureBranch[i]);
+            listRootHash[i+listDDRBranch.length] = _disclosureBranch.getTokenIdRootHashDisclosure(listDisclosureBranch[i]);
         }
 
         uint256 listLevelRootHashLength = listRootHash.length;
@@ -175,18 +175,18 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         bytes memory data;
         string memory uri;
         string[] memory claimKey = claimHolder.getClaimsKeyOwnedByIssuer(claimIssuer);
-        bytes32[] memory listHashDataPatient = new bytes32[](claimKey.length);
+        bytes32[] memory listhashClaimPatient = new bytes32[](claimKey.length);
         for(uint256 i=0; i< claimKey.length; i++){
             bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i]));
             (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
-            listHashDataPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
+            listhashClaimPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
         }
-        bytes32 hashDataPatient = keccak256(abi.encodePacked(listHashDataPatient));
-        return hashDataPatient;
+        bytes32 hashClaimPatient = keccak256(abi.encodePacked(listhashClaimPatient));
+        return hashClaimPatient;
     }
 
-    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashDataPatient) internal {
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashDataPatient, tokenId));
+    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashClaimPatient) internal {
+        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashClaimPatient, tokenId));
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue; 
@@ -205,9 +205,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         uint256 tokenId = super.mint(uri);
     
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
-        bytes32 hashDataPatient = getHashClaim(patientDID);
+        bytes32 hashClaimPatient = getHashClaim(patientDID);
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        setLockInfo(tokenId, patientDID, _rootPatientHash, hashDataPatient);
+        setLockInfo(tokenId, patientDID, _rootPatientHash, hashClaimPatient);
         return tokenId;
     }
 
