@@ -46,8 +46,8 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
     }
 
     function lockDIDByMerkleTree(address patientDID) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
-        uint256[] memory listDDROfPatient = _DDR.getListDDRTokenIdOfPatient(patientDID);
-        uint256 listDDRLength = listDDROfPatient.length;
+        uint256[] memory listTokenDDROfPatient = _DDR.getListDDRTokenIdOfPatient(patientDID);
+        uint256 listDDRLength = listTokenDDROfPatient.length;
 
         require(listDDRLength > 0, "Patient do not have DDR.");
 
@@ -55,8 +55,8 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
         if ((listDDRLength % 2) == 1) {
             listDDRLength = listDDRLength + 1;
             uint256[] memory templistDDROfPatient = new uint256[](listDDRLength);
-            templistDDROfPatient = copyArrayToArrayUINT256(listDDROfPatient, templistDDROfPatient);
-            listDDROfPatient = templistDDROfPatient;
+            templistDDROfPatient = copyArrayToArrayUINT256(listTokenDDROfPatient, templistDDROfPatient);
+            listTokenDDROfPatient = templistDDROfPatient;
         }
 
         // Clear temporary memory
@@ -69,13 +69,10 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
 
         // Initial bottom level data
         for (uint i = 0; i < listDDRLength; i++) {
-            // Combine DDR and consented address
-            bytes32 DDRHash = keccak256(abi.encodePacked(
-                _DDR.getDDRHash(listDDROfPatient[i])));
 
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    DDRHash,
+                     _DDR.getDDRHash(listTokenDDROfPatient[i]),
                     0x0000000000000000000000000000000000000000000000000000000000000000,
                     0x0000000000000000000000000000000000000000000000000000000000000000
                 );

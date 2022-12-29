@@ -51,7 +51,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
 
         require(listDDRLength > 0, "provider do not have DDR.");
 
-        // Add 0x00 to bottom level if provider has odd number of DDR
+        // Add 0x00 to bottom level if patient has odd number of DDR
         if ((listDDRLength % 2) == 1) {
             listDDRLength = listDDRLength + 1;
             uint256[] memory templistDisclosure = new uint256[](listDDRLength);
@@ -71,11 +71,8 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
         for (uint i = 0; i < listDDRLength; i++) {
             // Bottom level doesn't have child
 
-            bytes32 disclosureBranchHash = keccak256(abi.encodePacked(
-                _DDR.getDDRHash(listTokenIdDisclosure[i])));
-
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    disclosureBranchHash,
+                    _DDR.getDDRHash(listTokenIdDisclosure[i]),
                     0x0000000000000000000000000000000000000000000000000000000000000000,
                     0x0000000000000000000000000000000000000000000000000000000000000000
                 );
@@ -94,6 +91,11 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
             // Clear memory
             while (tempNode.length != 0) {
                 tempNode.pop();
+            }
+
+            // Handle even queueNode
+            if ((queueNode.length % 2) == 1) {
+                queueNode.push(0x0000000000000000000000000000000000000000000000000000000000000000);
             }
 
             // Get queue length
