@@ -22,8 +22,7 @@ const verifyRequest = async (
     request(
       {
         method: "POST",
-        url:
-          URL_BLOCKSCOUT_TTC + "/verify_smart_contract/contract_verifications",
+        url: URL_BLOCKSCOUT + "/verify_smart_contract/contract_verifications",
         headers: {
           Accept:
             "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -31,7 +30,7 @@ const verifyRequest = async (
           "Cache-Control": "max-age=0",
           Connection: "keep-alive",
           "Content-Type": "application/x-www-form-urlencoded",
-          Origin: URL_BLOCKSCOUT_TTC,
+          Origin: URL_BLOCKSCOUT,
           "Upgrade-Insecure-Requests": "1",
           "User-Agent":
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.64 Safari/537.36",
@@ -104,8 +103,9 @@ async function main() {
   const Authenticator = "contracts/utils/Authenticator.sol";
   const AuthenticatorHelper = "contracts/utils/Authenticator.sol";
   const DDR = "contracts/lockdata/DDR.sol";
+  const DDRBranch = "contracts/lockdata/DDRBranch.sol";
+  const DisclosureBranch = "contracts/lockdata/DisclosureBranch.sol";
   const Patient = "contracts/lockdata/Patient.sol";
-  const Provider = "contracts/lockdata/Provider.sol";
   const POCStudy = "contracts/lockdata/POCStudy.sol";
   const ERC20Proxy = "contracts/erc20Proxy/ERC20Proxy.sol";
 
@@ -136,27 +136,29 @@ async function main() {
       input: [CONFIG.ClaimHolder.address, CONFIG.Authenticator.address],
     },
     {
+      path: DDRBranch,
+      ...CONFIG.DDRBranch,
+      input: [CONFIG.DDR.address, CONFIG.Authenticator.address],
+    },
+    {
+      path: DisclosureBranch,
+      ...CONFIG.DisclosureBranch,
+      input: [CONFIG.DDR.address, CONFIG.Authenticator.address],
+    },
+    {
       path: Patient,
       ...CONFIG.Patient,
       input: [
-        CONFIG.DDR.address,
         CONFIG.ClaimHolder.address,
+        CONFIG.DDRBranch.address,
+        CONFIG.DisclosureBranch.address,
         CONFIG.Authenticator.address,
       ],
-    },
-    {
-      path: Provider,
-      ...CONFIG.Provider,
-      input: [CONFIG.Authenticator.address, CONFIG.ClaimHolder.address],
     },
     {
       path: POCStudy,
       ...CONFIG.POCStudy,
-      input: [
-        CONFIG.Patient.address,
-        CONFIG.Provider.address,
-        CONFIG.Authenticator.address,
-      ],
+      input: [CONFIG.Patient.address, CONFIG.Authenticator.address],
     },
     {
       path: ERC20Proxy,
