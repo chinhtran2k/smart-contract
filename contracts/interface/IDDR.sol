@@ -5,12 +5,10 @@ pragma solidity ^0.8.0;
 interface IDDR {
     event MintedDDR(uint256 tokenId,
         string ddrId,
-        bytes32 hashedData,
         bytes32 hashValue,
         address patientDID);
     event MintedBatchDDR(uint256[] tokenIds,
         string[] ddrIds,
-        bytes32[] hashedDatas,
         bytes32[] hashValues,
         address patientDID);
     event DDRTokenLocked(uint256 tokenId);

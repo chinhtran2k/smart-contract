@@ -20,7 +20,6 @@ contract DDR is ERC721Base, IDDR {
     // this allow to query DDR by ddrID
     mapping(bytes32 => uint256) private _ddrHashedId;
     mapping(uint256 => bytes32) private _ddrHash;
-    mapping(uint256 => bytes32) private _ddrHashedData;
 
     mapping(uint256 => bool) private _isDDRLocked;
     mapping(uint256 => mapping(address => bool)) private _isSharedDDR;
@@ -71,8 +70,7 @@ contract DDR is ERC721Base, IDDR {
         uint256 tokenId,
         address patientDID, 
         string memory ddrId,
-        bytes32 hashData,
-        bytes32 ddrHashValue,
+        bytes32 hashValue,
         address[] memory didConsentedOf
         ) 
     {
@@ -80,7 +78,6 @@ contract DDR is ERC721Base, IDDR {
             tokenID,
             _patient[tokenID],
             _ddrId[tokenID],
-            _ddrHashedData[tokenID],
             _ddrHash[tokenID],
             _didConsentedOf[tokenID]
         );
@@ -88,34 +85,29 @@ contract DDR is ERC721Base, IDDR {
 
     function setTokenInfo(
             uint256 tokenId, 
-            bytes32 hashedData,
+            bytes32 hashedValue,
             string memory ddrId,
             address patientDID
         ) 
-        internal returns (bytes32)
+        internal
     {
         _patient[tokenId] = patientDID;
-        
-        // Create DDR hash value base on DID and hashed data
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, ddrId, hashedData));
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
-        require(_ddrHashedId[hashedRawId] == 0x00, "DDR mint error: DDRID exist!");
+        // Create DDR hash value base on DID and hashed value
+        require(_ddrHashedId[hashedValue] == 0x00, "DDR mint error: DDRID exist!");
 
         // Assign data to map
         _ddrHashedId[hashedRawId] = tokenId;
-        _ddrHashedData[tokenId] = hashedData;
-        _ddrHash[tokenId] = newHashValue;
+        _ddrHash[tokenId] = hashedValue;
         _patient[tokenId] = patientDID;
         _listDDRTokenIdOfPatient[patientDID].push(tokenId);
         _ddrId[tokenId] = ddrId;
         
         _isDDRLocked[tokenId - 1] = true;
-
-        return newHashValue;
     }
 
     function mint(
-        bytes32 hashedData,
+        bytes32 hashedValue,
         string memory ddrId,
         string memory uri,
         address patientDID
@@ -125,12 +117,11 @@ contract DDR is ERC721Base, IDDR {
         ClaimHolder patient = ClaimHolder(patientDID);
 
         uint256 tokenId = super.mintTo(patient.owner(), uri);
-        bytes32 newHashValue = setTokenInfo(tokenId, hashedData, ddrId, patientDID);
+        setTokenInfo(tokenId, hashedValue, ddrId, patientDID);
         
         emit MintedDDR(tokenId,
             ddrId,
-            hashedData,
-            newHashValue,
+            hashedValue,
             patientDID);
         emit DDRTokenLocked(tokenId-1);
 
@@ -138,28 +129,27 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function mintBatch(
-        bytes32[] memory hashedDatas,
+        bytes32[] memory hashedValues,
         string[] memory ddrIds,
         string[] memory uris,
         address patientDID
     ) public onlyClaimHolder returns (uint256[] memory) {
-        require(hashedDatas.length == ddrIds.length, "DDR mint error: length of hashedData and ddrId is not equal!");
-        require(hashedDatas.length == uris.length, "DDR mint error: length of hashedData and uri is not equal!");
+        require(hashedValues.length == ddrIds.length, "DDR mint error: length of hashedValue and ddrId is not equal!");
+        require(hashedValues.length == uris.length, "DDR mint error: length of hashedValue and uri is not equal!");
 
         // check ddrId
         for (uint256 i = 0; i < ddrIds.length; i++) {
             require(bytes(ddrIds[i]).length > 0, "DDR ID is empty!");
         }
 
-        // uint256[] memory tokenIds = new uint256[](hashedDatas.length);
+        // uint256[] memory tokenIds = new uint256[](hashedValues.length);
         uint256[] memory tokenIds = mintBatchTo(patientDID, uris);
-        bytes32[] memory newHashValues = new bytes32[](tokenIds.length);
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            newHashValues[i] = setTokenInfo(tokenIds[i], hashedDatas[i], ddrIds[i], patientDID);
+            setTokenInfo(tokenIds[i], hashedValues[i], ddrIds[i], patientDID);
         }
 
-        emit MintedBatchDDR(tokenIds, ddrIds, hashedDatas, newHashValues, patientDID);
+        emit MintedBatchDDR(tokenIds, ddrIds, hashedValues, patientDID);
 
         return tokenIds;
     }
