@@ -71,7 +71,7 @@ contract DDR is ERC721Base, IDDR {
         uint256 tokenId,
         address patientDID, 
         string memory ddrId,
-        bytes32 ddr,
+        bytes32 hashData,
         bytes32 ddrHashValue,
         address[] memory didConsentedOf
         ) 
