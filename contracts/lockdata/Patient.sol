@@ -6,6 +6,7 @@ import "../utils/ERC721Base.sol";
 import "./DDRBranch.sol";
 import "./DisclosureBranch.sol";
 import "../interface/IPatient.sol";
+import "./Claim.sol";
 import "../interface/IMerkleTreeBase.sol";
 
 contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
@@ -20,8 +21,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     // Mapping patient to root MerkleNode
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
-    address public claimIssuer;
+    address public claimAddress;
     DDRBranch public _ddrBranch;
+    Claim public _claim;
     DisclosureBranch public _disclosureBranch;
 
     // Merkle Tree structure
@@ -158,31 +160,12 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     // ***
 
     // PatientLock part
-    constructor(address _claimHolder,address _ddrBranchAddress, address _disclosureBranchAddress, address _authAddress)
+    constructor(address _claimAddress,address _ddrBranchAddress, address _disclosureBranchAddress, address _authAddress)
         ERC721Base("Patient Lock", "PT", _authAddress)
     {
         _ddrBranch = DDRBranch(_ddrBranchAddress);
         _disclosureBranch = DisclosureBranch(_disclosureBranchAddress);
-        
-        claimIssuer = _claimHolder;
-    }
-
-    function getHashClaim(address patientDID) public view returns(bytes32){
-        ClaimHolder claimHolder = ClaimHolder(patientDID);
-        uint256 scheme;
-        address issuer;
-        bytes memory signature;
-        bytes memory data;
-        string memory uri;
-        string[] memory claimKey = claimHolder.getClaimsKeyOwnedByIssuer(claimIssuer);
-        bytes32[] memory listhashClaimPatient = new bytes32[](claimKey.length);
-        for(uint256 i=0; i< claimKey.length; i++){
-            bytes32 _claimId = keccak256(abi.encodePacked(claimIssuer, claimKey[i]));
-            (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
-            listhashClaimPatient[i] = keccak256(abi.encodePacked(claimKey[i], scheme, issuer, signature, data, uri));
-        }
-        bytes32 hashClaimPatient = keccak256(abi.encodePacked(listhashClaimPatient));
-        return hashClaimPatient;
+        _claim = Claim(_claimAddress);
     }
 
     function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashClaimPatient) internal {
@@ -203,9 +186,9 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
     function mint(address patientDID, string memory uri) public onlyOwner returns(uint256){
         uint256 tokenId = super.mint(uri);
-    
+        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
         (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
-        bytes32 hashClaimPatient = getHashClaim(patientDID);
+        bytes32 hashClaimPatient = _claim.getHashValueClaim(patientDID);
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
         setLockInfo(tokenId, patientDID, _rootPatientHash, hashClaimPatient);
         return tokenId;
