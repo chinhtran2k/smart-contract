@@ -28,20 +28,20 @@ contract Claim is ERC721Base, IClaim{
     function setTokenInfo(
             uint256 tokenId, 
             bytes32 newHashValue,
-            address claimDID
+            address accountDID
         ) 
         internal
     {   
-        _claimOfTokenIds[tokenId] = claimDID;
-        _ddrHash[claimDID] = newHashValue;
+        _claimOfTokenIds[tokenId] = accountDID;
+        _ddrHash[accountDID] = newHashValue;
         _listHashValue.push(newHashValue);
         _isClaimLocked[tokenId] = true;
-        emit claimLockTokenMinted(tokenId, claimDID, newHashValue);
+        emit claimLockTokenMinted(tokenId, accountDID, newHashValue);
         emit claimTokenLocked(tokenId);
     }
 
-    function getHashClaim(address claimDID) public view returns(bytes32){
-        ClaimHolder claimHolder = ClaimHolder(claimDID);
+    function getHashClaim(address accountDID) public view returns(bytes32){
+        ClaimHolder claimHolder = ClaimHolder(accountDID);
         uint256 scheme;
         address issuer;
         bytes memory signature;
@@ -60,18 +60,18 @@ contract Claim is ERC721Base, IClaim{
 
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
-    function mint(address claimDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
+    function mint(address accountDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
         require(bytes(accountId).length > 0, "claim ID is empty!");
-        require(_IAuth.checkAuth(ClaimHolder(claimDID), "ACCOUNT_ID", accountId), "Account claimDID is not valid!");
-        bytes32 hashDataclaim = getHashClaim(claimDID);
+        require(_IAuth.checkAuth(ClaimHolder(accountDID), "ACCOUNT_ID", accountId), "Account accountDID is not valid!");
+        bytes32 hashDataclaim = getHashClaim(accountDID);
         uint256 tokenId = super.mint(uri);
-        bytes32 newHashValue = keccak256(abi.encodePacked(claimDID, accountId, hashDataclaim, tokenId));
-        if(_isClaimMint[claimDID] == false){
-            _listAddressOfClaim.push(claimDID);
-            _isClaimMint[claimDID]==true;
+        bytes32 newHashValue = keccak256(abi.encodePacked(accountDID, accountId, hashDataclaim, tokenId));
+        if(_isClaimMint[accountDID] == false){
+            _listAddressOfClaim.push(accountDID);
+            _isClaimMint[accountDID]==true;
         }
         _listTokenClaim.push(tokenId);
-        setTokenInfo(tokenId, newHashValue, claimDID);
+        setTokenInfo(tokenId, newHashValue, accountDID);
 
         return tokenId;
     }
@@ -92,8 +92,8 @@ contract Claim is ERC721Base, IClaim{
         return _listTokenClaim;
     }
     
-    function getHashValueClaim(address claimDID) public view returns(bytes32) {
-        return _ddrHash[claimDID];
+    function getHashValueClaim(address accountDID) public view returns(bytes32) {
+        return _ddrHash[accountDID];
     }
 
     function getListAddressOfClaim() public view returns(address[] memory){

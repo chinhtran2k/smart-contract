@@ -10,8 +10,8 @@ async function main() {
   console.log("Account balance:", (await deployers[0].getBalance()).toString());
 
   // Pre-defined addresses EDC
-  // const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
-  const PCOAdress = "0xDa46c687723751af0e7266A8A32eBe34E21070F0";
+  const PCOAdress = "0x08114a50bAF075F67BCCCcc7Fe5189db54E8D7f8";
+  // const PCOAdress = "0xDa46c687723751af0e7266A8A32eBe34E21070F0";
   const TokenOwnerAddress = "0x51C4B0487e16186da402daebE06C4cD71b5015c8"; // This is the account which hold all token
   const CLAIM_SIGNER_PREDEFINED_ADDRESS =
     "0x187bcbef9261e6c7eaefd8368e2b930a8bd7335cf541d8a05e9337beaf4c5f89"; //0xBC4238FbE2CC00C4a093907bCdb4694FEC00882c
