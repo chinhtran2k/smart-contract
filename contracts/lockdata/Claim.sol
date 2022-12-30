@@ -10,7 +10,7 @@ import "../interface/IMerkleTreeBase.sol";
 contract Claim is ERC721Base, IClaim{
     // Assign mapping
     mapping(uint256 => address) private _claimOfTokenIds;
-    mapping(address => bytes32) private _ddrHash;
+    mapping(address => bytes32) private _claimHash;
     mapping(address => bool) private _isClaimMint;
     mapping(bytes32 => uint256) private _claimHashedId;
     uint256[] private _listTokenClaim;
@@ -33,7 +33,7 @@ contract Claim is ERC721Base, IClaim{
         internal
     {   
         _claimOfTokenIds[tokenId] = accountDID;
-        _ddrHash[accountDID] = newHashValue;
+        _claimHash[accountDID] = newHashValue;
         _listHashValue.push(newHashValue);
         _isClaimLocked[tokenId] = true;
         emit claimLockTokenMinted(tokenId, accountDID, newHashValue);
@@ -93,7 +93,7 @@ contract Claim is ERC721Base, IClaim{
     }
     
     function getHashValueClaim(address accountDID) public view returns(bytes32) {
-        return _ddrHash[accountDID];
+        return _claimHash[accountDID];
     }
 
     function getListAddressOfClaim() public view returns(address[] memory){
