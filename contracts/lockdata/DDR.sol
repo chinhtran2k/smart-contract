@@ -207,6 +207,7 @@ contract DDR is ERC721Base, IDDR {
     //// Approval part
     // "shareDDR" only use by ClaimHolder
     function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder {
+        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
         ClaimHolder tempPatient = ClaimHolder(patientDID);
 
         // check if token is shared
@@ -225,6 +226,7 @@ contract DDR is ERC721Base, IDDR {
     
     // "disclosureConsentDDR" only use by Patient
     function consentDisclosureDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
+        require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Patient DID is not valid!");
         ClaimHolder tempPatient = ClaimHolder(address(msg.sender));
 
         // check if token is consented
