@@ -62,10 +62,10 @@ contract Claim is ERC721Base, IClaim{
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
     function mint(address accountDID, string memory accountId, string memory uri) public onlyOwner returns(uint256){
         require(bytes(accountId).length > 0, "claim ID is empty!");
-        require(_IAuth.checkAuth(ClaimHolder(accountDID), "ACCOUNT_ID", accountId), "Account accountDID is not valid!");
+        require(_IAuth.checkAuth(ClaimHolder(accountDID), "ACCOUNT_ID", accountId), "Account Id is not valid!");
         bytes32 hashDataclaim = getHashClaim(accountDID);
         uint256 tokenId = super.mint(uri);
-        bytes32 newHashValue = keccak256(abi.encodePacked(accountDID, accountId, hashDataclaim, tokenId));
+        bytes32 newHashValue = keccak256(abi.encodePacked(accountDID, accountId, hashDataclaim));
         if(_isClaimMint[accountDID] == false){
             _listAddressOfClaim.push(accountDID);
             _isClaimMint[accountDID]==true;
