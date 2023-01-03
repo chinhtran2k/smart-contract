@@ -16,7 +16,6 @@ contract DDR is ERC721Base, IDDR {
 
     mapping(address => bytes32) private _ddrHashPatient;
 
-
     // this allow to query DDR by ddrID
     mapping(bytes32 => uint256) private _ddrHashedId;
     mapping(uint256 => bytes32) private _ddrHash;
@@ -27,7 +26,8 @@ contract DDR is ERC721Base, IDDR {
     mapping(uint256 => address) private _patient;
     mapping(uint256 => address[]) private _didConsentedOf;
     mapping(address => uint256[]) private _listDDRTokenIdOfPatient;
-    mapping(address =>mapping(address => uint256[])) private _listDDRTokenIdPatientOfProvider;
+    mapping(address => mapping(address => uint256[]))
+        private _listDDRTokenIdPatientOfProvider;
     mapping(uint256 => string) private _ddrId;
 
     bytes32 private _hashStringPatient;
@@ -56,23 +56,32 @@ contract DDR is ERC721Base, IDDR {
         return _ddrHash[tokenId];
     }
 
-    function getTokenIdOfPatientDIDByRawId(address patientDID, string memory ddrId) public view returns (uint256) {
+    function getTokenIdOfPatientDIDByRawId(
+        address patientDID,
+        string memory ddrId
+    ) public view returns (uint256) {
         return _ddrHashedId[keccak256(abi.encodePacked(patientDID, ddrId))];
     }
 
-    function getDDRHashOfPatientDIDByRawId(address patientDID, string memory ddrId) public view returns (bytes32) {
+    function getDDRHashOfPatientDIDByRawId(
+        address patientDID,
+        string memory ddrId
+    ) public view returns (bytes32) {
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
         uint256 tokenId = _ddrHashedId[hashedRawId];
         return _ddrHash[tokenId];
     }
 
-    function getToken(uint256 tokenID) public view returns (
-        uint256 tokenId,
-        address patientDID, 
-        string memory ddrId,
-        bytes32 hashValue,
-        address[] memory didConsentedOf
-        ) 
+    function getToken(uint256 tokenID)
+        public
+        view
+        returns (
+            uint256 tokenId,
+            address patientDID,
+            string memory ddrId,
+            bytes32 hashedValue,
+            address[] memory didConsentedOf
+        )
     {
         return (
             tokenID,
@@ -84,17 +93,18 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function setTokenInfo(
-            uint256 tokenId, 
-            bytes32 hashedValue,
-            string memory ddrId,
-            address patientDID
-        ) 
-        internal
-    {
+        uint256 tokenId,
+        bytes32 hashedValue,
+        string memory ddrId,
+        address patientDID
+    ) internal {
         _patient[tokenId] = patientDID;
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
         // Create DDR hash value base on DID and hashed value
-        require(_ddrHashedId[hashedValue] == 0x00, "DDR mint error: DDRID exist!");
+        require(
+            _ddrHashedId[hashedValue] == 0x00,
+            "DDR mint error: DDRID exist!"
+        );
 
         // Assign data to map
         _ddrHashedId[hashedRawId] = tokenId;
@@ -102,7 +112,7 @@ contract DDR is ERC721Base, IDDR {
         _patient[tokenId] = patientDID;
         _listDDRTokenIdOfPatient[patientDID].push(tokenId);
         _ddrId[tokenId] = ddrId;
-        
+
         _isDDRLocked[tokenId - 1] = true;
     }
 
@@ -112,18 +122,22 @@ contract DDR is ERC721Base, IDDR {
         string memory uri,
         address patientDID
     ) public onlyClaimHolder returns (uint256) {
-        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
+        require(
+            _IAuth.checkAuth(
+                ClaimHolder(patientDID),
+                "ACCOUNT_TYPE",
+                "PATIENT"
+            ),
+            "Patient DID is not valid!"
+        );
         require(bytes(ddrId).length > 0, "DDR ID is empty!");
         ClaimHolder patient = ClaimHolder(patientDID);
 
         uint256 tokenId = super.mintTo(patient.owner(), uri);
         setTokenInfo(tokenId, hashedValue, ddrId, patientDID);
-        
-        emit MintedDDR(tokenId,
-            ddrId,
-            hashedValue,
-            patientDID);
-        emit DDRTokenLocked(tokenId-1);
+
+        emit MintedDDR(tokenId, ddrId, hashedValue, patientDID);
+        emit DDRTokenLocked(tokenId - 1);
 
         return tokenId;
     }
@@ -134,8 +148,14 @@ contract DDR is ERC721Base, IDDR {
         string[] memory uris,
         address patientDID
     ) public onlyClaimHolder returns (uint256[] memory) {
-        require(hashedValues.length == ddrIds.length, "DDR mint error: length of hashedValue and ddrId is not equal!");
-        require(hashedValues.length == uris.length, "DDR mint error: length of hashedValue and uri is not equal!");
+        require(
+            hashedValues.length == ddrIds.length,
+            "DDR mint error: length of hashedValue and ddrId is not equal!"
+        );
+        require(
+            hashedValues.length == uris.length,
+            "DDR mint error: length of hashedValue and uri is not equal!"
+        );
 
         // check ddrId
         for (uint256 i = 0; i < ddrIds.length; i++) {
@@ -158,19 +178,22 @@ contract DDR is ERC721Base, IDDR {
         erc20Proxy = ERC20Proxy(_erc20Proxy);
     }
 
-    function getListDDRTokenIdOfPatient(address patientDID) public view returns (uint256[] memory) {
+    function getListDDRTokenIdOfPatient(address patientDID)
+        public
+        view
+        returns (uint256[] memory)
+    {
         return _listDDRTokenIdOfPatient[patientDID];
     }
 
-    function getListDDRTokenIdOfProvider(address pateintDID, address providerDID) public view returns (uint256[] memory) {
+    function getListDDRTokenIdOfProvider(
+        address pateintDID,
+        address providerDID
+    ) public view returns (uint256[] memory) {
         return _listDDRTokenIdPatientOfProvider[providerDID][pateintDID];
     }
 
-    function patientOf(uint256 tokenId)
-        public
-        view
-        returns (address)
-    {
+    function patientOf(uint256 tokenId) public view returns (address) {
         address _owner = _patient[tokenId];
         require(_owner != address(0), "ERC721: invalid token ID");
         return _owner;
@@ -181,29 +204,62 @@ contract DDR is ERC721Base, IDDR {
         return _isDDRLocked[tokenId];
     }
 
-    function isSharedDDR(address identity, uint256 ddrTokenId) public view returns (bool) {
+    function isSharedDDR(address identity, uint256 ddrTokenId)
+        public
+        view
+        returns (bool)
+    {
         return _isSharedDDR[ddrTokenId][identity];
     }
 
-    function isConsentedDDR(address identity, uint256 ddrTokenId) public view returns (bool)
+    function isConsentedDDR(address identity, uint256 ddrTokenId)
+        public
+        view
+        returns (bool)
     {
         return _isConsentedDDR[ddrTokenId][identity];
     }
 
-    function getDIDConsentedOf(uint256 tokenId) public view returns (address[] memory) {
+    function getDIDConsentedOf(uint256 tokenId)
+        public
+        view
+        returns (address[] memory)
+    {
         return _didConsentedOf[tokenId];
     }
 
     //// Approval part
     // "shareDDR" only use by ClaimHolder
-    function shareDDR(uint256[] memory ddrTokenIds, address patientDID) public onlyClaimHolder {
-        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
+    function shareDDR(uint256[] memory ddrTokenIds, address patientDID)
+        public
+        onlyClaimHolder
+    {
+        require(
+            _IAuth.checkAuth(
+                ClaimHolder(patientDID),
+                "ACCOUNT_TYPE",
+                "PATIENT"
+            ),
+            "Patient DID is not valid!"
+        );
         ClaimHolder tempPatient = ClaimHolder(patientDID);
 
         // check if token is shared
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
-            require(_ddrHash[ddrTokenIds[i]] != 0x00, "tokenId not exist, revert transaction");
-            require(_isSharedDDR[ddrTokenIds[i]][patientDID] != true, string(abi.encodePacked("DDR ", Strings.toString(ddrTokenIds[i]) , " is already shared, revert execution.")));
+            require(
+                _ddrHash[ddrTokenIds[i]] != 0x00,
+                "tokenId not exist, revert transaction"
+            );
+            require(
+                _isSharedDDR[ddrTokenIds[i]][patientDID] != true,
+                string(
+                    abi.encodePacked(
+                        "DDR ",
+                        Strings.toString(ddrTokenIds[i]),
+                        " is already shared, revert execution."
+                    )
+                )
+            );
         }
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             _isSharedDDR[ddrTokenIds[i]][patientDID] = true;
@@ -213,20 +269,43 @@ contract DDR is ERC721Base, IDDR {
         erc20Proxy.awardToken(tempPatient.owner(), ddrTokenIds.length);
     }
 
-    
     // "disclosureConsentDDR" only use by Patient
-    function consentDisclosureDDR(uint256[] memory ddrTokenIds, address providerDID) public onlyPatient {
-        require(_IAuth.checkAuth(ClaimHolder(providerDID), "ACCOUNT_TYPE", "PROVIDER"), "Patient DID is not valid!");
+    function consentDisclosureDDR(
+        uint256[] memory ddrTokenIds,
+        address providerDID
+    ) public onlyPatient {
+        require(
+            _IAuth.checkAuth(
+                ClaimHolder(providerDID),
+                "ACCOUNT_TYPE",
+                "PROVIDER"
+            ),
+            "Patient DID is not valid!"
+        );
         ClaimHolder tempPatient = ClaimHolder(address(msg.sender));
 
         // check if token is consented
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
-            require(_isSharedDDR[ddrTokenIds[i]][msg.sender], "DDR is not shared!");
-            require(_isConsentedDDR[ddrTokenIds[i]][providerDID] != true, string(abi.encodePacked("DDR ", Strings.toString(ddrTokenIds[i]) , " is already consent, revert execution.")));
+            require(
+                _isSharedDDR[ddrTokenIds[i]][msg.sender],
+                "DDR is not shared!"
+            );
+            require(
+                _isConsentedDDR[ddrTokenIds[i]][providerDID] != true,
+                string(
+                    abi.encodePacked(
+                        "DDR ",
+                        Strings.toString(ddrTokenIds[i]),
+                        " is already consent, revert execution."
+                    )
+                )
+            );
         }
-        for (uint i=0; i < ddrTokenIds.length; i++) {
+        for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
-            _listDDRTokenIdPatientOfProvider[providerDID][msg.sender].push(ddrTokenIds[i]);
+            _listDDRTokenIdPatientOfProvider[providerDID][msg.sender].push(
+                ddrTokenIds[i]
+            );
             _didConsentedOf[ddrTokenIds[i]].push(providerDID);
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, providerDID, ddrTokenIds);

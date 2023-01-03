@@ -31,46 +31,65 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
 
     // Implementation for MerkleTree part
     // ***
-    function copyArrayToArrayUINT256(uint256[] memory arrFrom, uint256[] memory arrTo) public override pure returns(uint256[] memory) {
-        require(arrTo.length >= arrFrom.length, "Destination array not match size.");
-        for (uint i = 0; i < arrFrom.length; i++) {
+    function copyArrayToArrayUINT256(
+        uint256[] memory arrFrom,
+        uint256[] memory arrTo
+    ) public pure override returns (uint256[] memory) {
+        require(
+            arrTo.length >= arrFrom.length,
+            "Destination array not match size."
+        );
+        for (uint256 i = 0; i < arrFrom.length; i++) {
             arrTo[i] = arrFrom[i];
         }
         return arrTo;
     }
 
-    function popQueue(uint index) private onlyOwner {
+    function popQueue(uint256 index) private onlyOwner {
         // uint256 valueAtIndex = nodeArr[index]
-        for (uint i = index; i < queueNode.length-1; i++) {
-            queueNode[i] = queueNode[i+1];
+        for (uint256 i = index; i < queueNode.length - 1; i++) {
+            queueNode[i] = queueNode[i + 1];
         }
         queueNode.pop();
     }
 
-    function lockStudyByMerkleTree() private onlyOwner returns 
-        (bytes32 rootNodeId, bytes32 rootHash) 
-        // (uint256[] memory)
+    function lockStudyByMerkleTree()
+        private
+        onlyOwner
+        returns (bytes32 rootNodeId, bytes32 rootHash)
+    // (uint256[] memory)
     {
         address[] memory listPatientAddress = _patient.getListAddressPatient();
-        
-        bytes32[] memory listRootHash = new bytes32[](listPatientAddress.length);
-        for (uint i=0; i<listPatientAddress.length; i++) {
-            listRootHash[i] = _patient.getPatientRootHashValue(listPatientAddress[i]);
+
+        bytes32[] memory listRootHash = new bytes32[](
+            listPatientAddress.length
+        );
+        for (uint256 i = 0; i < listPatientAddress.length; i++) {
+            listRootHash[i] = _patient.getPatientRootHashValue(
+                listPatientAddress[i]
+            );
         }
 
         uint256 listLevelRootHashLength = listRootHash.length;
 
-        require(listLevelRootHashLength > 0, "pcostudy level has no root hash value.");
-        
+        require(
+            listLevelRootHashLength > 0,
+            "pcostudy level has no root hash value."
+        );
+
         // Add 0x00 to bottom level if list has odd number of root hash value
         if (listLevelRootHashLength % 2 == 1) {
             listLevelRootHashLength = listLevelRootHashLength + 1;
-            bytes32[] memory _tempListLevelRootHash = new bytes32[](listLevelRootHashLength);
+            bytes32[] memory _tempListLevelRootHash = new bytes32[](
+                listLevelRootHashLength
+            );
 
             for (uint256 k = 0; k < listRootHash.length; k++) {
                 _tempListLevelRootHash[k] = listRootHash[k];
             }
-            _tempListLevelRootHash[listLevelRootHashLength-1] = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            _tempListLevelRootHash[
+                listLevelRootHashLength - 1
+            ] = 0x0000000000000000000000000000000000000000000000000000000000000000;
             listRootHash = _tempListLevelRootHash;
         }
 
@@ -82,20 +101,24 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
             tempNode.pop();
         }
 
-        // Initial bottom level data 
-        for (uint i = 0; i < listLevelRootHashLength; i++) {
+        // Initial bottom level data
+        for (uint256 i = 0; i < listLevelRootHashLength; i++) {
             bytes32 rootHashTemp = listRootHash[i];
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    rootHashTemp,
-                    0x0000000000000000000000000000000000000000000000000000000000000000,
-                    0x0000000000000000000000000000000000000000000000000000000000000000
-                );
+                rootHashTemp,
+                0x0000000000000000000000000000000000000000000000000000000000000000,
+                0x0000000000000000000000000000000000000000000000000000000000000000
+            );
 
             // Generate unique node id base on hashValue
-            bytes32 nodeId = keccak256(abi.encodePacked(
-                merkleNodeTemp.hashValue, merkleNodeTemp.nodeLeft, merkleNodeTemp.nodeRight
-            ));
+            bytes32 nodeId = keccak256(
+                abi.encodePacked(
+                    merkleNodeTemp.hashValue,
+                    merkleNodeTemp.nodeLeft,
+                    merkleNodeTemp.nodeRight
+                )
+            );
             queueNode.push(nodeId);
             _allNodes[nodeId] = merkleNodeTemp;
             merkleLength += 1;
@@ -110,21 +133,30 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
 
             // Handle even queueNode
             if ((queueNode.length % 2) == 1) {
-                queueNode.push(0x0000000000000000000000000000000000000000000000000000000000000000);
+                queueNode.push(
+                    0x0000000000000000000000000000000000000000000000000000000000000000
+                );
             }
 
             // Get queue length
-            uint nodeLen = queueNode.length;
-            for (uint j = 0; j < nodeLen; j+=2) {
+            uint256 nodeLen = queueNode.length;
+            for (uint256 j = 0; j < nodeLen; j += 2) {
                 bytes32 nodeLeft = queueNode[0];
                 bytes32 nodeRight = queueNode[1];
-                bytes32 nodeHashValue = keccak256(abi.encodePacked(_allNodes[queueNode[0]].hashValue, _allNodes[queueNode[1]].hashValue));
-                bytes32 nodeId = keccak256(abi.encodePacked(
+                bytes32 nodeHashValue = keccak256(
+                    abi.encodePacked(
+                        _allNodes[queueNode[0]].hashValue,
+                        _allNodes[queueNode[1]].hashValue
+                    )
+                );
+                bytes32 nodeId = keccak256(
+                    abi.encodePacked(nodeHashValue, nodeLeft, nodeRight)
+                );
+                MerkleNode memory nodeTemp = MerkleNode(
                     nodeHashValue,
                     nodeLeft,
                     nodeRight
-                ));
-                MerkleNode memory nodeTemp = MerkleNode(nodeHashValue, nodeLeft, nodeRight);
+                );
 
                 _allNodes[nodeId] = nodeTemp;
 
@@ -141,14 +173,19 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         bytes32 _rootLevelNodeId = queueNode[0];
         bytes32 _rootLevelHash = _allNodes[queueNode[0]].hashValue;
 
-        return(_rootLevelNodeId, _rootLevelHash);
-    }   
+        return (_rootLevelNodeId, _rootLevelHash);
+    }
 
-    function getNodeData(bytes32 nodeId) public override view returns (MerkleNode memory) {
+    function getNodeData(bytes32 nodeId)
+        public
+        view
+        override
+        returns (MerkleNode memory)
+    {
         return _allNodes[nodeId];
     }
 
-    function getCurrentQueue() public override view returns (bytes32[] memory) {
+    function getCurrentQueue() public view override returns (bytes32[] memory) {
         return queueNode;
     }
 
@@ -158,11 +195,17 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
         _patient = Patient(patientAddress);
     }
 
-    function mint(string memory uri, string memory message) public onlyOwner returns (uint256) {
+    function mint(string memory uri, string memory message)
+        public
+        onlyOwner
+        returns (uint256)
+    {
         uint256 tokenId = super.mint(uri);
 
         // Lock level
-        (_rootNodeIdOfPOC[tokenId], _rootHashPOC[tokenId]) = lockStudyByMerkleTree();
+        ( _rootNodeIdOfPOC[tokenId],
+            _rootHashPOC[tokenId]
+        ) = lockStudyByMerkleTree();
         _rootPOCStudy = tokenId;
         emit LockedPOC(tokenId, _rootHashPOC[tokenId], message);
 
@@ -172,6 +215,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
     function getRootHashPOC() public view returns (bytes32) {
         return _rootHashPOC[_rootPOCStudy];
     }
+
     function getRootNodeIdPOC() public view returns (bytes32) {
         return _rootNodeIdOfPOC[_rootPOCStudy];
     }

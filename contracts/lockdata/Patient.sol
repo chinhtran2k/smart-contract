@@ -33,35 +33,51 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     // Temporary memory for caculating
     bytes32[] private queueNode;
     bytes32[] private tempNode;
-    
+
     // Implementation for MerkleTree part
     // ***
-    function copyArrayToArrayUINT256(uint256[] memory arrFrom, uint256[] memory arrTo) public override pure returns(uint256[] memory) {
-        require(arrTo.length >= arrFrom.length, "Destination array not match size.");
-        for (uint i = 0; i < arrFrom.length; i++) {
+    function copyArrayToArrayUINT256(
+        uint256[] memory arrFrom,
+        uint256[] memory arrTo
+    ) public pure override returns (uint256[] memory) {
+        require(
+            arrTo.length >= arrFrom.length,
+            "Destination array not match size."
+        );
+        for (uint256 i = 0; i < arrFrom.length; i++) {
             arrTo[i] = arrFrom[i];
         }
         return arrTo;
     }
 
-    function popQueue(uint index) private onlyOwner {
+    function popQueue(uint256 index) private onlyOwner {
         // uint256 valueAtIndex = nodeArr[index]
-        for (uint i = index; i < queueNode.length-1; i++) {
-            queueNode[i] = queueNode[i+1];
+        for (uint256 i = index; i < queueNode.length - 1; i++) {
+            queueNode[i] = queueNode[i + 1];
         }
         queueNode.pop();
     }
 
-    function lockDIDByMerkleTree(address patientDID) private onlyOwner returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash){
+    function lockDIDByMerkleTree(address patientDID)
+        private
+        onlyOwner
+        returns (bytes32 rootPatientNodeId, bytes32 rootPatientHash)
+    {
         uint256[] memory listDDRBranch = _ddrBranch.getListTokenId(patientDID);
-        uint256[] memory listDisclosureBranch = _disclosureBranch.getListTokenId(patientDID);
+        uint256[] memory listDisclosureBranch = _disclosureBranch
+            .getListTokenId(patientDID);
 
-        bytes32[] memory listRootHash = new bytes32[](listDDRBranch.length + listDisclosureBranch.length);
-        for (uint i=0; i<listDDRBranch.length; i++) {
-            listRootHash[i] = _ddrBranch.getTokenIdRootHashDDR(listDDRBranch[i]);
+        bytes32[] memory listRootHash = new bytes32[](
+            listDDRBranch.length + listDisclosureBranch.length
+        );
+        for (uint256 i = 0; i < listDDRBranch.length; i++) {
+            listRootHash[i] = _ddrBranch.getTokenIdRootHashDDR(
+                listDDRBranch[i]
+            );
         }
-        for (uint i=0; i<listDisclosureBranch.length; i++) {
-            listRootHash[i+listDDRBranch.length] = _disclosureBranch.getTokenIdRootHashDisclosure(listDisclosureBranch[i]);
+        for (uint256 i = 0; i < listDisclosureBranch.length; i++) {
+            listRootHash[i + listDDRBranch.length] = _disclosureBranch
+                .getTokenIdRootHashDisclosure(listDisclosureBranch[i]);
         }
 
         uint256 listLevelRootHashLength = listRootHash.length;
@@ -71,12 +87,16 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         // Add 0x00 to bottom level if patient has odd number of DDR
         if (listLevelRootHashLength % 2 == 1) {
             listLevelRootHashLength = listLevelRootHashLength + 1;
-            bytes32[] memory _tempListLevelRootHash = new bytes32[](listLevelRootHashLength);
+            bytes32[] memory _tempListLevelRootHash = new bytes32[](
+                listLevelRootHashLength
+            );
 
             for (uint256 k = 0; k < listRootHash.length; k++) {
                 _tempListLevelRootHash[k] = listRootHash[k];
             }
-            _tempListLevelRootHash[listLevelRootHashLength-1] = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            _tempListLevelRootHash[
+                listLevelRootHashLength - 1
+            ] = 0x0000000000000000000000000000000000000000000000000000000000000000;
             listRootHash = _tempListLevelRootHash;
         }
 
@@ -88,20 +108,24 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             tempNode.pop();
         }
 
-        // Initial bottom level data 
-        for (uint i = 0; i < listLevelRootHashLength; i++) {
+        // Initial bottom level data
+        for (uint256 i = 0; i < listLevelRootHashLength; i++) {
             bytes32 rootHashTemp = listRootHash[i];
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                    rootHashTemp,
-                    0x0000000000000000000000000000000000000000000000000000000000000000,
-                    0x0000000000000000000000000000000000000000000000000000000000000000
-                );
+                rootHashTemp,
+                0x0000000000000000000000000000000000000000000000000000000000000000,
+                0x0000000000000000000000000000000000000000000000000000000000000000
+            );
 
             // Generate unique node id base on hashValue
-            bytes32 nodeId = keccak256(abi.encodePacked(
-                merkleNodeTemp.hashValue, merkleNodeTemp.nodeLeft, merkleNodeTemp.nodeRight
-            ));
+            bytes32 nodeId = keccak256(
+                abi.encodePacked(
+                    merkleNodeTemp.hashValue,
+                    merkleNodeTemp.nodeLeft,
+                    merkleNodeTemp.nodeRight
+                )
+            );
             queueNode.push(nodeId);
             _allNodes[nodeId] = merkleNodeTemp;
             merkleLength += 1;
@@ -116,21 +140,30 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
             // Handle even queueNode
             if ((queueNode.length % 2) == 1) {
-                queueNode.push(0x0000000000000000000000000000000000000000000000000000000000000000);
+                queueNode.push(
+                    0x0000000000000000000000000000000000000000000000000000000000000000
+                );
             }
 
             // Get queue length
-            uint nodeLen = queueNode.length;
-            for (uint j = 0; j < nodeLen; j+=2) {
+            uint256 nodeLen = queueNode.length;
+            for (uint256 j = 0; j < nodeLen; j += 2) {
                 bytes32 nodeLeft = queueNode[0];
                 bytes32 nodeRight = queueNode[1];
-                bytes32 nodeHashValue = keccak256(abi.encodePacked(_allNodes[queueNode[0]].hashValue, _allNodes[queueNode[1]].hashValue));
-                bytes32 nodeId = keccak256(abi.encodePacked(
+                bytes32 nodeHashValue = keccak256(
+                    abi.encodePacked(
+                        _allNodes[queueNode[0]].hashValue,
+                        _allNodes[queueNode[1]].hashValue
+                    )
+                );
+                bytes32 nodeId = keccak256(
+                    abi.encodePacked(nodeHashValue, nodeLeft, nodeRight)
+                );
+                MerkleNode memory nodeTemp = MerkleNode(
                     nodeHashValue,
                     nodeLeft,
                     nodeRight
-                ));
-                MerkleNode memory nodeTemp = MerkleNode(nodeHashValue, nodeLeft, nodeRight);
+                );
 
                 _allNodes[nodeId] = nodeTemp;
 
@@ -147,70 +180,127 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         bytes32 _rootLevelNodeId = queueNode[0];
         bytes32 _rootLevelHash = _allNodes[queueNode[0]].hashValue;
 
-        return(_rootLevelNodeId, _rootLevelHash);
+        return (_rootLevelNodeId, _rootLevelHash);
     }
-    
-    function getNodeData(bytes32 nodeId) public override view returns (MerkleNode memory) {
+
+    function getNodeData(bytes32 nodeId)
+        public
+        view
+        override
+        returns (MerkleNode memory)
+    {
         return _allNodes[nodeId];
     }
 
-    function getCurrentQueue() public override view returns (bytes32[] memory) {
+    function getCurrentQueue() public view override returns (bytes32[] memory) {
         return queueNode;
     }
+
     // ***
 
     // PatientLock part
-    constructor(address _claimAddress,address _ddrBranchAddress, address _disclosureBranchAddress, address _authAddress)
-        ERC721Base("Patient Lock", "PT", _authAddress)
-    {
+    constructor(
+        address _claimAddress,
+        address _ddrBranchAddress,
+        address _disclosureBranchAddress,
+        address _authAddress
+    ) ERC721Base("Patient Lock", "PT", _authAddress) {
         _ddrBranch = DDRBranch(_ddrBranchAddress);
         _disclosureBranch = DisclosureBranch(_disclosureBranchAddress);
         _claim = Claim(_claimAddress);
     }
 
-    function setLockInfo(uint256 tokenId, address patientDID, bytes32 rootPatientHash, bytes32 hashClaimPatient) internal {
-        bytes32 newHashValue = keccak256(abi.encodePacked(patientDID, rootPatientHash, hashClaimPatient, tokenId));
+    function setLockInfo(
+        uint256 tokenId,
+        address patientDID,
+        bytes32 rootPatientHash,
+        bytes32 hashClaimPatient
+    ) internal {
+        bytes32 newHashValue = keccak256(
+            abi.encodePacked(
+                patientDID,
+                rootPatientHash,
+                hashClaimPatient,
+                tokenId
+            )
+        );
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
-        _rootHashValuesOfPatient[patientDID] = newHashValue; 
-        _rootHashValuesOfTokenId[tokenId] = newHashValue; 
-        if(_isPatientMinted[patientDID] == false){
+        _rootHashValuesOfPatient[patientDID] = newHashValue;
+        _rootHashValuesOfTokenId[tokenId] = newHashValue;
+        if (_isPatientMinted[patientDID] == false) {
             _listAddressPatient.push(patientDID);
-            _isPatientMinted[patientDID]==true;
+            _isPatientMinted[patientDID] == true;
         }
         _listRootHashValue.push(newHashValue);
-        emit PatientLockTokenMinted(tokenId, patientDID, rootPatientHash, newHashValue);
+        emit PatientLockTokenMinted(
+            tokenId,
+            patientDID,
+            rootPatientHash,
+            newHashValue
+        );
     }
 
     //// This function only call when "Project manager" want to end the project and lock "ALL" data
     //// Because of that, mint = lock now, this function limited to onlyOwner (Project manager)
-    function mint(address patientDID, string memory uri) public onlyOwner returns(uint256){
+    function mint(address patientDID, string memory uri)
+        public
+        onlyOwner
+        returns (uint256)
+    {
         uint256 tokenId = super.mint(uri);
-        require(_IAuth.checkAuth(ClaimHolder(patientDID), "ACCOUNT_TYPE", "PATIENT"), "Patient DID is not valid!");
-        (bytes32 _rootPatientNodeId, bytes32 _rootPatientHash) = lockDIDByMerkleTree(patientDID);
+        require(
+            _IAuth.checkAuth(
+                ClaimHolder(patientDID),
+                "ACCOUNT_TYPE",
+                "PATIENT"
+            ),
+            "Patient DID is not valid!"
+        );
+        ( bytes32 _rootPatientNodeId, bytes32 _rootPatientHash ) = lockDIDByMerkleTree(patientDID);
         bytes32 hashClaimPatient = _claim.getHashValueClaim(patientDID);
         _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
         setLockInfo(tokenId, patientDID, _rootPatientHash, hashClaimPatient);
         return tokenId;
     }
 
-    function getPatientAddressOf(uint256 tokenId) public view returns (address) {
+    function getPatientAddressOf(uint256 tokenId)
+        public
+        view
+        returns (address)
+    {
         return _patientOfTokenIds[tokenId];
     }
 
-    function getTokenIdOfPatient(address patientDID) public view returns (uint256) {
+    function getTokenIdOfPatient(address patientDID)
+        public
+        view
+        returns (uint256)
+    {
         return _tokenIdOfPatients[patientDID];
     }
 
-    function getPatientRootHashValue(address patientDID) public view returns (bytes32) {
+    function getPatientRootHashValue(address patientDID)
+        public
+        view
+        returns (bytes32)
+    {
         return _rootHashValuesOfPatient[patientDID];
     }
 
-    function getTokenIdRootHashValue(uint256 tokenId) public view returns (bytes32) {
+    function getTokenIdRootHashValue(uint256 tokenId)
+        public
+        view
+        returns (bytes32)
+    {
         return _rootHashValuesOfTokenId[tokenId];
     }
 
-    function getPatientRootNodeId(address patientDID) public view returns (bytes32){
+    function getPatientRootNodeId(address patientDID)
+        public
+        view
+        returns (bytes32)
+    {
         return _rootNodeIdsOfPatient[patientDID];
     }
 
@@ -218,8 +308,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         return _listRootHashValue;
     }
 
-    function getListAddressPatient() public view returns(address[] memory){
+    function getListAddressPatient() public view returns (address[] memory) {
         return _listAddressPatient;
     }
 }
-
