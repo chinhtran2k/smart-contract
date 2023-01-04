@@ -35,8 +35,8 @@ contract Claim is ERC721Base, IClaim {
         _claimHash[accountDID] = newHashValue;
         _listHashValue.push(newHashValue);
         _isClaimLocked[tokenId] = true;
-        emit claimLockTokenMinted(tokenId, accountDID, newHashValue);
-        emit claimTokenLocked(tokenId);
+        emit ClaimLockTokenMinted(tokenId, accountDID, newHashValue);
+        emit ClaimTokenLocked(tokenId);
     }
 
     function getHashClaim(address accountDID) public view returns (bytes32) {

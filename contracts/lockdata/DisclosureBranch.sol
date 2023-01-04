@@ -191,7 +191,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
         rootHashDisclosureOfTokenId[tokenId] = newHashValue;
         _listTokenId[patientDID].push(tokenId);
         _listRootHashClosure.push(newHashValue);
-        emit disclosureLockTokenMinted(
+        emit DisclosureLockTokenMinted(
             tokenId,
             providerDID,
             rootDisclosuretHash,
