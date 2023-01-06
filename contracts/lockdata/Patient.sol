@@ -82,7 +82,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
         uint256 listLevelRootHashLength = listRootHash.length;
 
-        require(listLevelRootHashLength > 0, "Patient do not have DDR.");
+        // require(listLevelRootHashLength > 0, "Patient do not have DDR.");
 
         // Add 0x00 to bottom level if patient has odd number of DDR
         if (listLevelRootHashLength % 2 == 1) {
@@ -213,10 +213,19 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     function setLockInfo(
         uint256 tokenId,
         address patientDID,
-        bytes32 rootPatientHash,
         bytes32 hashClaimPatient
     ) internal {
-        bytes32 newHashValue = keccak256(
+        bytes32 newHashValue;
+        bytes32 rootPatientHash;
+        bytes32 rootPatientNodeId;
+        if(_ddrBranch.getListTokenId(patientDID).length == 0){
+            newHashValue = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            rootPatientNodeId = 0x0000000000000000000000000000000000000000000000000000000000000000;
+            rootPatientHash = 0x0000000000000000000000000000000000000000000000000000000000000000;
+        }
+        else{
+            ( rootPatientNodeId, rootPatientHash ) = lockDIDByMerkleTree(patientDID);
+            newHashValue = keccak256(
             abi.encodePacked(
                 patientDID,
                 rootPatientHash,
@@ -224,13 +233,15 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
                 tokenId
             )
         );
+        }
+        _rootNodeIdsOfPatient[patientDID] = rootPatientNodeId;
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue;
         _rootHashValuesOfTokenId[tokenId] = newHashValue;
         if (_isPatientMinted[patientDID] == false) {
             _listAddressPatient.push(patientDID);
-            _isPatientMinted[patientDID] == true;
+            _isPatientMinted[patientDID] = true;
         }
         _listRootHashValue.push(newHashValue);
         emit PatientLockTokenMinted(
@@ -257,10 +268,8 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             ),
             "Patient DID is not valid!"
         );
-        ( bytes32 _rootPatientNodeId, bytes32 _rootPatientHash ) = lockDIDByMerkleTree(patientDID);
         bytes32 hashClaimPatient = _claim.getHashValueClaim(patientDID);
-        _rootNodeIdsOfPatient[patientDID] = _rootPatientNodeId;
-        setLockInfo(tokenId, patientDID, _rootPatientHash, hashClaimPatient);
+        setLockInfo(tokenId, patientDID, hashClaimPatient);
         return tokenId;
     }
 

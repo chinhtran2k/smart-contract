@@ -89,7 +89,7 @@ contract Claim is ERC721Base, IClaim {
         );
         if (_isClaimMint[accountDID] == false) {
             _listAddressOfClaim.push(accountDID);
-            _isClaimMint[accountDID] == true;
+            _isClaimMint[accountDID] = true;
         }
         _listTokenClaim.push(tokenId);
         setTokenInfo(tokenId, newHashValue, accountDID);
