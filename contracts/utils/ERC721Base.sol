@@ -91,4 +91,8 @@ contract ERC721Base is
     function getCurrentTokenIds() public view returns (uint256) {
         return _tokenIds.current();
     }
+
+    function transferOwnerShip() public onlyOwner {
+        _transferOwnership(address(0));
+    } 
 }
