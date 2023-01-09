@@ -92,7 +92,7 @@ contract ERC721Base is
         return _tokenIds.current();
     }
 
-    function transferOwnerShip() public onlyOwner {
+    function removeOwnerShip() public onlyOwner {
         _transferOwnership(address(0));
     } 
 }
