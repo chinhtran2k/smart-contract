@@ -103,7 +103,7 @@ async function main() {
   const Authenticator = "contracts/utils/Authenticator.sol";
   const AuthenticatorHelper = "contracts/utils/Authenticator.sol";
   const DDR = "contracts/lockdata/DDR.sol";
-  const Claim = "contracts/lockdata/Claim.sol";
+  const ClaimBranch = "contracts/lockdata/ClaimBranch.sol";
   const DDRBranch = "contracts/lockdata/DDRBranch.sol";
   const DisclosureBranch = "contracts/lockdata/DisclosureBranch.sol";
   const Patient = "contracts/lockdata/Patient.sol";
@@ -137,7 +137,7 @@ async function main() {
       input: [CONFIG.ClaimHolder.address, CONFIG.Authenticator.address],
     },
     {
-      path: Claim,
+      path: ClaimBranch,
       ...CONFIG.Claim,
       input: [CONFIG.ClaimHolder.address, CONFIG.Authenticator.address],
     },

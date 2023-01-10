@@ -6,7 +6,7 @@ import "../utils/ERC721Base.sol";
 import "./DDRBranch.sol";
 import "./DisclosureBranch.sol";
 import "../interface/IPatient.sol";
-import "./Claim.sol";
+import "./ClaimBranch.sol";
 import "../interface/IMerkleTreeBase.sol";
 
 contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
@@ -14,7 +14,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(uint256 => address) private _patientOfTokenIds;
     mapping(address => uint256) private _tokenIdOfPatients;
     mapping(address => bytes32) private _rootHashValuesOfPatient;
-    mapping(uint256 => bytes32) private _rootHashValuesOfTokenId;
+    mapping(uint256 => mapping(address => bytes32)) private _rootHashValuesOfTokenId;
     mapping(address => bool) private _isPatientMinted;
     bytes32[] private _listRootHashValue;
     address[] private _listAddressPatient;
@@ -23,7 +23,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
     mapping(address => bytes32) private _rootNodeIdsOfPatient;
     address public claimAddress;
     DDRBranch public _ddrBranch;
-    Claim public _claim;
+    ClaimBranch public _claimBranch;
     DisclosureBranch public _disclosureBranch;
 
     // Merkle Tree structure
@@ -71,13 +71,14 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             listDDRBranch.length + listDisclosureBranch.length
         );
         for (uint256 i = 0; i < listDDRBranch.length; i++) {
-            listRootHash[i] = _ddrBranch.getTokenIdRootHashDDR(
-                listDDRBranch[i]
+            listRootHash[i] = _ddrBranch.getHashDDRBranchOfTokenId(
+                listDDRBranch[i],
+                patientDID
             );
         }
         for (uint256 i = 0; i < listDisclosureBranch.length; i++) {
             listRootHash[i + listDDRBranch.length] = _disclosureBranch
-                .getTokenIdRootHashDisclosure(listDisclosureBranch[i]);
+                .getRootHashDisclosureOfTokenId(listDisclosureBranch[i], patientDID);
         }
 
         uint256 listLevelRootHashLength = listRootHash.length;
@@ -200,14 +201,14 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
 
     // PatientLock part
     constructor(
-        address _claimAddress,
+        address _claimBranchAddress,
         address _ddrBranchAddress,
         address _disclosureBranchAddress,
         address _authAddress
     ) ERC721Base("Patient Lock", "PT", _authAddress) {
         _ddrBranch = DDRBranch(_ddrBranchAddress);
         _disclosureBranch = DisclosureBranch(_disclosureBranchAddress);
-        _claim = Claim(_claimAddress);
+        _claimBranch = ClaimBranch(_claimBranchAddress);
     }
 
     function setLockInfo(
@@ -238,7 +239,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         _patientOfTokenIds[tokenId] = patientDID;
         _tokenIdOfPatients[patientDID] = tokenId;
         _rootHashValuesOfPatient[patientDID] = newHashValue;
-        _rootHashValuesOfTokenId[tokenId] = newHashValue;
+        _rootHashValuesOfTokenId[tokenId][patientDID] = newHashValue;
         if (_isPatientMinted[patientDID] == false) {
             _listAddressPatient.push(patientDID);
             _isPatientMinted[patientDID] = true;
@@ -268,7 +269,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
             ),
             "Patient DID is not valid!"
         );
-        bytes32 hashClaimPatient = _claim.getHashValueClaim(patientDID);
+        bytes32 hashClaimPatient = _claimBranch.getHashValueClaim(patientDID);
         setLockInfo(tokenId, patientDID, hashClaimPatient);
         return tokenId;
     }
@@ -297,12 +298,12 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         return _rootHashValuesOfPatient[patientDID];
     }
 
-    function getTokenIdRootHashValue(uint256 tokenId)
+    function getRootHashValueOfTokenId(uint256 tokenId, address patientDID)
         public
         view
         returns (bytes32)
     {
-        return _rootHashValuesOfTokenId[tokenId];
+        return _rootHashValuesOfTokenId[tokenId][patientDID];
     }
 
     function getPatientRootNodeId(address patientDID)

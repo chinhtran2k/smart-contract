@@ -7,12 +7,13 @@ import "../DID/ClaimHolder.sol";
 import "../interface/IClaim.sol";
 import "../interface/IMerkleTreeBase.sol";
 
-contract Claim is ERC721Base, IClaim {
+contract ClaimBranch is ERC721Base, IClaim {
     // Assign mapping
     mapping(uint256 => address) private _claimOfTokenIds;
     mapping(address => bytes32) private _claimHash;
     mapping(address => bool) private _isClaimMint;
     mapping(bytes32 => uint256) private _claimHashedId;
+    mapping(uint256 => mapping( address => bytes32)) _hashClaimOfToken;
     uint256[] private _listTokenClaim;
     bytes32[] private _listHashValue;
     address[] private _listAddressOfClaim;
@@ -32,6 +33,7 @@ contract Claim is ERC721Base, IClaim {
         address accountDID
     ) internal {
         _claimOfTokenIds[tokenId] = accountDID;
+        _hashClaimOfToken[tokenId][accountDID] = newHashValue;
         _claimHash[accountDID] = newHashValue;
         _listHashValue.push(newHashValue);
         _isClaimLocked[tokenId] = true;
@@ -41,11 +43,6 @@ contract Claim is ERC721Base, IClaim {
 
     function getHashClaim(address accountDID) public view returns (bytes32) {
         ClaimHolder claimHolder = ClaimHolder(accountDID);
-        uint256 scheme;
-        address issuer;
-        bytes memory signature;
-        bytes memory data;
-        string memory uri;
         string[] memory claimKey = claimHolder.getClaimsKeyOwnedByIssuer(
             claimIssuer
         );
@@ -54,17 +51,7 @@ contract Claim is ERC721Base, IClaim {
             bytes32 _claimId = keccak256(
                 abi.encodePacked(claimIssuer, claimKey[i])
             );
-            (claimKey[i], scheme, issuer, signature, data, uri) = claimHolder.getClaim(_claimId);
-            listHashDataClaim[i] = keccak256(
-                abi.encodePacked(
-                    claimKey[i],
-                    scheme,
-                    issuer,
-                    signature,
-                    data,
-                    uri
-                )
-            );
+            listHashDataClaim[i] = claimHolder.getHashClaim(_claimId);
         }
         bytes32 hashDataclaim = keccak256(abi.encodePacked(listHashDataClaim));
         return hashDataclaim;
@@ -85,7 +72,7 @@ contract Claim is ERC721Base, IClaim {
         bytes32 hashDataclaim = getHashClaim(accountDID);
         uint256 tokenId = super.mint(uri);
         bytes32 newHashValue = keccak256(
-            abi.encodePacked(accountDID, accountId, hashDataclaim)
+            abi.encodePacked(accountDID, accountId, tokenId, hashDataclaim)
         );
         if (_isClaimMint[accountDID] == false) {
             _listAddressOfClaim.push(accountDID);
@@ -103,6 +90,10 @@ contract Claim is ERC721Base, IClaim {
 
     function getListHashValue() public view returns (bytes32[] memory) {
         return _listHashValue;
+    }
+
+    function getHashClaimOfToken(uint256 tokenId, address accountDID) public view returns (bytes32) {
+        return _hashClaimOfToken[tokenId][accountDID];
     }
 
     function getClaimAddressOf(uint256 tokenId) public view returns (address) {

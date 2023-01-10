@@ -11,7 +11,7 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
     // Assign mapping
     mapping(uint256 => address) private _patientOfTokenIds;
     mapping(address => bytes32) private _hashDDROfPatients;
-    mapping(uint256 => bytes32) private _rootHashDDROfTokenId;
+    mapping(uint256 => mapping(address => bytes32)) private _rootHashDDROfTokenId;
     bytes32[] private _listRootHashDDR;
     mapping(address => uint256[]) private _listTokenId;
 
@@ -189,7 +189,7 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
         );
         _patientOfTokenIds[tokenId] = patientDID;
         _hashDDROfPatients[patientDID] = newHashValue;
-        _rootHashDDROfTokenId[tokenId] = newHashValue;
+        _rootHashDDROfTokenId[tokenId][patientDID] = newHashValue;
         _listTokenId[patientDID].push(tokenId);
         _listRootHashDDR.push(newHashValue);
         emit DDRBranchLockTokenMinted(
@@ -231,12 +231,12 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
         return _hashDDROfPatients[patientDID];
     }
 
-    function getTokenIdRootHashDDR(uint256 tokenId)
+    function getHashDDRBranchOfTokenId(uint256 tokenId, address patientDID)
         public
         view
         returns (bytes32)
     {
-        return _rootHashDDROfTokenId[tokenId];
+        return _rootHashDDROfTokenId[tokenId][patientDID];
     }
 
     function getPatientRootNodeId(address patientDID)

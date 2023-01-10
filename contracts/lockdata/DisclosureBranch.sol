@@ -10,7 +10,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
     // Assign mapping
     mapping(uint256 => address) private _providerOfTokenIds;
     mapping(address => bytes32[]) private _listHashDisclosureOfProvider;
-    mapping(uint256 => bytes32) private rootHashDisclosureOfTokenId;
+    mapping(uint256 => mapping( address => bytes32)) private rootHashDisclosureOfTokenId;
     bytes32[] private _listRootHashClosure;
 
     // Mapping provider to root MerkleNode
@@ -188,7 +188,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
         );
         _providerOfTokenIds[tokenId] = providerDID;
         _listHashDisclosureOfProvider[providerDID].push(newHashValue);
-        rootHashDisclosureOfTokenId[tokenId] = newHashValue;
+        rootHashDisclosureOfTokenId[tokenId][patientDID] = newHashValue;
         _listTokenId[patientDID].push(tokenId);
         _listRootHashClosure.push(newHashValue);
         emit DisclosureLockTokenMinted(
@@ -228,12 +228,12 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
         return _listHashDisclosureOfProvider[providerDID];
     }
 
-    function getTokenIdRootHashDisclosure(uint256 tokenId)
+    function getRootHashDisclosureOfTokenId(uint256 tokenId, address patientDID)
         public
         view
         returns (bytes32)
     {
-        return rootHashDisclosureOfTokenId[tokenId];
+        return rootHashDisclosureOfTokenId[tokenId][patientDID];
     }
 
     function getProviderRootNodeId(address providerDID)

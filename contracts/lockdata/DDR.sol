@@ -79,7 +79,7 @@ contract DDR is ERC721Base, IDDR {
             uint256 tokenId,
             address patientDID,
             string memory ddrId,
-            bytes32 hashedValue,
+            bytes32 hashValue,
             address[] memory didConsentedOf
         )
     {
@@ -94,7 +94,7 @@ contract DDR is ERC721Base, IDDR {
 
     function setTokenInfo(
         uint256 tokenId,
-        bytes32 hashedValue,
+        bytes32 hashValue,
         string memory ddrId,
         address patientDID
     ) internal {
@@ -102,13 +102,13 @@ contract DDR is ERC721Base, IDDR {
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
         // Create DDR hash value base on DID and hashed value
         require(
-            _ddrHashedId[hashedValue] == 0x00,
+            _ddrHashedId[hashValue] == 0x00,
             "DDR mint error: DDRID exist!"
         );
 
         // Assign data to map
         _ddrHashedId[hashedRawId] = tokenId;
-        _ddrHash[tokenId] = hashedValue;
+        _ddrHash[tokenId] = hashValue;
         _patient[tokenId] = patientDID;
         _listDDRTokenIdOfPatient[patientDID].push(tokenId);
         _ddrId[tokenId] = ddrId;
@@ -117,7 +117,7 @@ contract DDR is ERC721Base, IDDR {
     }
 
     function mint(
-        bytes32 hashedValue,
+        bytes32 hashValue,
         string memory ddrId,
         string memory uri,
         address patientDID
@@ -134,27 +134,27 @@ contract DDR is ERC721Base, IDDR {
         ClaimHolder patient = ClaimHolder(patientDID);
 
         uint256 tokenId = super.mintTo(patient.owner(), uri);
-        setTokenInfo(tokenId, hashedValue, ddrId, patientDID);
+        setTokenInfo(tokenId, hashValue, ddrId, patientDID);
 
-        emit MintedDDR(tokenId, ddrId, hashedValue, patientDID);
+        emit MintedDDR(tokenId, ddrId, hashValue, patientDID);
         emit DDRTokenLocked(tokenId - 1);
 
         return tokenId;
     }
 
     function mintBatch(
-        bytes32[] memory hashedValues,
+        bytes32[] memory hashValues,
         string[] memory ddrIds,
         string[] memory uris,
         address patientDID
     ) public onlyClaimHolder returns (uint256[] memory) {
         require(
-            hashedValues.length == ddrIds.length,
-            "DDR mint error: length of hashedValue and ddrId is not equal!"
+            hashValues.length == ddrIds.length,
+            "DDR mint error: length of hashValue and ddrId is not equal!"
         );
         require(
-            hashedValues.length == uris.length,
-            "DDR mint error: length of hashedValue and uri is not equal!"
+            hashValues.length == uris.length,
+            "DDR mint error: length of hashValue and uri is not equal!"
         );
 
         // check ddrId
@@ -162,14 +162,14 @@ contract DDR is ERC721Base, IDDR {
             require(bytes(ddrIds[i]).length > 0, "DDR ID is empty!");
         }
 
-        // uint256[] memory tokenIds = new uint256[](hashedValues.length);
+        // uint256[] memory tokenIds = new uint256[](hashValues.length);
         uint256[] memory tokenIds = mintBatchTo(patientDID, uris);
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
-            setTokenInfo(tokenIds[i], hashedValues[i], ddrIds[i], patientDID);
+            setTokenInfo(tokenIds[i], hashValues[i], ddrIds[i], patientDID);
         }
 
-        emit MintedBatchDDR(tokenIds, ddrIds, hashedValues, patientDID);
+        emit MintedBatchDDR(tokenIds, ddrIds, hashValues, patientDID);
 
         return tokenIds;
     }

@@ -132,6 +132,23 @@ contract ClaimHolder is KeyHolder, ERC735 {
         );
     }
 
+    function getHashClaim(bytes32 _claimId)
+        public   
+        view
+        returns(bytes32 hashClaim)
+    {
+        hashClaim = keccak256( abi.encodePacked(
+                    claims[_claimId].claimKey,
+                    claims[_claimId].scheme,
+                    claims[_claimId].issuer,
+                    claims[_claimId].signature,
+                    claims[_claimId].data,
+                    claims[_claimId].uri
+                )
+            );
+        return hashClaim;
+    }
+
     function getClaimIdsByKey(string memory _claimKey)
         public
         override

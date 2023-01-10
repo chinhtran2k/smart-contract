@@ -207,6 +207,7 @@ contract POCStudy is ERC721Base, IMerkleTreeBase {
             _rootHashPOC[tokenId]
         ) = lockStudyByMerkleTree();
         _rootPOCStudy = tokenId;
+        
         emit LockedPOC(tokenId, _rootHashPOC[tokenId], message);
 
         return tokenId;

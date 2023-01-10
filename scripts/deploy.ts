@@ -31,7 +31,7 @@ async function main() {
     "AuthenticatorHelper"
   );
   const DDRContract = await ethers.getContractFactory("DDR");
-  const ClaimContract = await ethers.getContractFactory("Claim");
+  const ClaimBranchContract = await ethers.getContractFactory("ClaimBranch");
   const DDRBranchContract = await ethers.getContractFactory("DDRBranch");
   const DisclosureBranchContract = await ethers.getContractFactory("DisclosureBranch");
   const PatientContract = await ethers.getContractFactory("Patient");
@@ -52,7 +52,7 @@ async function main() {
     ClaimHolder.address,
     Authenticator.address
   );
-  const Claim = await ClaimContract.deploy(
+  const ClaimBranch = await ClaimBranchContract.deploy(
     ClaimHolder.address,
     Authenticator.address
   );
@@ -65,7 +65,7 @@ async function main() {
     Authenticator.address
   );
   const Patient = await PatientContract.deploy(
-    Claim.address,
+    ClaimBranch.address,
     DDRBranch.address,
     DisclosureBranch.address,
     Authenticator.address
@@ -86,7 +86,7 @@ async function main() {
   console.log("Authenticator deployed to:", Authenticator.address);
   console.log("AuthenticatorHelper deployed to:", AuthenticatorHelper.address);
   console.log("DDR deployed to:", DDR.address);
-  console.log("Claim deployed to:", Claim.address);
+  console.log("ClaimBranch deployed to:", ClaimBranch.address);
   console.log("DDRBranch deployed to:", DDRBranch.address);
   console.log("DisclosureBranch deployed to:", DisclosureBranch.address);
   console.log("Patient deployed to:", Patient.address);
@@ -181,12 +181,12 @@ async function main() {
             .contractName,
       },
       Claim: {
-        address: Claim.address,
-        abi: require("../artifacts/contracts/lockdata/Claim.sol/Claim.json").abi,
-        bytecode: require("../artifacts/contracts/lockdata/Claim.sol/Claim.json")
+        address: ClaimBranch.address,
+        abi: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json").abi,
+        bytecode: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
           .bytecode,
         contractName:
-          require("../artifacts/contracts/lockdata/Claim.sol/Claim.json")
+          require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
             .contractName,
       },
       DDRBranch: {
