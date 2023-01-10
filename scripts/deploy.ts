@@ -180,7 +180,7 @@ async function main() {
           require("../artifacts/contracts/lockdata/DDR.sol/DDR.json")
             .contractName,
       },
-      Claim: {
+      ClaimBranch: {
         address: ClaimBranch.address,
         abi: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json").abi,
         bytecode: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")

@@ -38,12 +38,13 @@ contract ClaimVerifier {
     address issuer;
     bytes memory sig;
     bytes memory data;
-
+    bytes32 hashClaim;
+    string memory uri;
     // Construct claimId (identifier + claim type)
     bytes32 claimId = keccak256(abi.encodePacked(trustedClaimHolder, claimKey));
 
     // Fetch claim from user
-    ( foundclaimKey, scheme, issuer, sig, data, ) = _identity.getClaim(claimId);
+    ( foundclaimKey, scheme, issuer, sig, data, uri, hashClaim) = _identity.getClaim(claimId);
 
     if (keccak256(data) != keccak256(bytes(claimValue))) {
       return false;

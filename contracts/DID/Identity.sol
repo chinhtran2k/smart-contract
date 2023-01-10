@@ -34,8 +34,10 @@ contract Identity is ClaimHolder {
                 _issuer[i],
                 getBytes(_signature, offset, _sigSizes[i]),
                 getBytes(_data, doffset, dataSizes[i]),
-                getString(_uri, uoffset, uriSizes[i])
+                getString(_uri, uoffset, uriSizes[i]),
+                encodeClaim(claimId)
             );
+
             claimsByKey[_claimKey[i]].push(claimId);
             if (!hasClaim[_claimKey[i]]) {
                 hasClaim[_claimKey[i]] = true;
@@ -44,7 +46,6 @@ contract Identity is ClaimHolder {
             offset += _sigSizes[i];
             uoffset += uriSizes[i];
             doffset += dataSizes[i];
-
             emit ClaimAdded(
                 claimId,
                 claims[claimId].claimKey,
@@ -52,7 +53,8 @@ contract Identity is ClaimHolder {
                 claims[claimId].issuer,
                 claims[claimId].signature,
                 claims[claimId].data,
-                claims[claimId].uri
+                claims[claimId].uri,
+                encodeClaim(claimId)
             );
         }
     }
@@ -76,5 +78,17 @@ contract Identity is ClaimHolder {
           j++;
         }
         return string(sig);
+    }
+    
+    function encodeClaim(bytes32 claimId) public view returns(bytes32 hashClaim){
+        return hashClaim = keccak256( abi.encodePacked(
+                    claims[claimId].claimKey,
+                    claims[claimId].scheme,
+                    claims[claimId].issuer,
+                    claims[claimId].signature,
+                    claims[claimId].data,
+                    claims[claimId].uri
+                )
+            );
     }
 }

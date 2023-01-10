@@ -31,6 +31,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         returns (bytes32 claimRequestId)
     {
         bytes32 claimId = keccak256(abi.encodePacked(_issuer, _claimKey));
+        bytes32 _hashClaim = getHashClaim(claimId);
 
         if (msg.sender != address(this)) {
           require(keyHasPurpose(keccak256(abi.encodePacked(msg.sender)), 3), "Sender does not have claim signer key");
@@ -51,6 +52,7 @@ contract ClaimHolder is KeyHolder, ERC735 {
         claims[claimId].signature = _signature;
         claims[claimId].data = _data;
         claims[claimId].uri = _uri;
+        claims[claimId].hashClaim = _hashClaim;
 
         emit ClaimAdded(
             claimId,
@@ -59,7 +61,8 @@ contract ClaimHolder is KeyHolder, ERC735 {
             _issuer,
             _signature,
             _data,
-            _uri
+            _uri,
+            _hashClaim
         );
 
         return claimId;
@@ -119,7 +122,8 @@ contract ClaimHolder is KeyHolder, ERC735 {
             address issuer,
             bytes memory signature,
             bytes memory data,
-            string memory uri
+            string memory uri,
+            bytes32 hashClaim
         )
     {
         return (
@@ -128,7 +132,8 @@ contract ClaimHolder is KeyHolder, ERC735 {
             claims[_claimId].issuer,
             claims[_claimId].signature,
             claims[_claimId].data,
-            claims[_claimId].uri
+            claims[_claimId].uri,
+            claims[_claimId].hashClaim
         );
     }
 
