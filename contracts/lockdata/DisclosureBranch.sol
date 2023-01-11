@@ -86,7 +86,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
             // Bottom level doesn't have child
 
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                _DDR.getDDRHash(listTokenIdDisclosure[i]),
+                _DDR.getDDRHash(listTokenIdDisclosure[i], patientDID),
                 0x0000000000000000000000000000000000000000000000000000000000000000,
                 0x0000000000000000000000000000000000000000000000000000000000000000
             );

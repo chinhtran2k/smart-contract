@@ -87,7 +87,7 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
         for (uint256 i = 0; i < listDDRLength; i++) {
             // Bottom level doesn't have child
             MerkleNode memory merkleNodeTemp = MerkleNode(
-                _DDR.getDDRHash(listTokenDDROfPatient[i]),
+                _DDR.getDDRHash(listTokenDDROfPatient[i], patientDID),
                 0x0000000000000000000000000000000000000000000000000000000000000000,
                 0x0000000000000000000000000000000000000000000000000000000000000000
             );

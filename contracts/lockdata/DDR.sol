@@ -18,7 +18,7 @@ contract DDR is ERC721Base, IDDR {
 
     // this allow to query DDR by ddrID
     mapping(bytes32 => uint256) private _ddrHashedId;
-    mapping(uint256 => bytes32) private _ddrHash;
+    mapping(uint256 => mapping( address => bytes32)) private _ddrHash;
 
     mapping(uint256 => bool) private _isDDRLocked;
     mapping(uint256 => mapping(address => bool)) private _isSharedDDR;
@@ -52,8 +52,8 @@ contract DDR is ERC721Base, IDDR {
         claimHolder = ClaimHolder(_claimHolderAddress);
     }
 
-    function getDDRHash(uint256 tokenId) public view returns (bytes32) {
-        return _ddrHash[tokenId];
+    function getDDRHash(uint256 tokenId, address patientDID) public view returns (bytes32) {
+        return _ddrHash[tokenId][patientDID];
     }
 
     function getTokenIdOfPatientDIDByRawId(
@@ -69,7 +69,7 @@ contract DDR is ERC721Base, IDDR {
     ) public view returns (bytes32) {
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
         uint256 tokenId = _ddrHashedId[hashedRawId];
-        return _ddrHash[tokenId];
+        return _ddrHash[tokenId][patientDID];
     }
 
     function getToken(uint256 tokenID)
@@ -79,16 +79,14 @@ contract DDR is ERC721Base, IDDR {
             uint256 tokenId,
             address patientDID,
             string memory ddrId,
-            bytes32 hashValue,
-            address[] memory didConsentedOf
+            bytes32 hashValue
         )
     {
         return (
             tokenID,
             _patient[tokenID],
             _ddrId[tokenID],
-            _ddrHash[tokenID],
-            _didConsentedOf[tokenID]
+            _ddrHash[tokenID][_patient[tokenID]]
         );
     }
 
@@ -108,7 +106,7 @@ contract DDR is ERC721Base, IDDR {
 
         // Assign data to map
         _ddrHashedId[hashedRawId] = tokenId;
-        _ddrHash[tokenId] = hashValue;
+        _ddrHash[tokenId][patientDID] = hashValue;
         _patient[tokenId] = patientDID;
         _listDDRTokenIdOfPatient[patientDID].push(tokenId);
         _ddrId[tokenId] = ddrId;
@@ -247,7 +245,7 @@ contract DDR is ERC721Base, IDDR {
         // check if token is shared
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             require(
-                _ddrHash[ddrTokenIds[i]] != 0x00,
+                _ddrHash[ddrTokenIds[i]][patientDID] != 0x00,
                 "tokenId not exist, revert transaction"
             );
             require(

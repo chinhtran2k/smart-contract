@@ -138,7 +138,7 @@ async function main() {
     },
     {
       path: ClaimBranch,
-      ...CONFIG.Claim,
+      ...CONFIG.ClaimBranch,
       input: [CONFIG.ClaimHolder.address, CONFIG.Authenticator.address],
     },
     {
@@ -155,7 +155,7 @@ async function main() {
       path: Patient,
       ...CONFIG.Patient,
       input: [
-        CONFIG.ClaimHolder.address,
+        CONFIG.ClaimBranch.address,
         CONFIG.DDRBranch.address,
         CONFIG.DisclosureBranch.address,
         CONFIG.Authenticator.address,
