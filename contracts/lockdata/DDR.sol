@@ -242,29 +242,24 @@ contract DDR is ERC721Base, IDDR {
         );
         ClaimHolder tempPatient = ClaimHolder(patientDID);
 
+        uint256 ddrShareLength = ddrTokenIds.length;
+
         // check if token is shared
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             require(
                 _ddrHash[ddrTokenIds[i]][patientDID] != 0x00,
                 "tokenId not exist, revert transaction"
             );
-            require(
-                _isSharedDDR[ddrTokenIds[i]][patientDID] != true,
-                string(
-                    abi.encodePacked(
-                        "DDR ",
-                        Strings.toString(ddrTokenIds[i]),
-                        " is already shared, revert execution."
-                    )
-                )
-            );
+            if (_isSharedDDR[ddrTokenIds[i]][patientDID] == true) {
+                ddrShareLength--;
+            }
         }
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             _isSharedDDR[ddrTokenIds[i]][patientDID] = true;
         }
 
         emit ApprovalShareDDR(tempPatient.owner(), ddrTokenIds);
-        erc20Proxy.awardToken(tempPatient.owner(), ddrTokenIds.length);
+        erc20Proxy.awardToken(tempPatient.owner(), ddrShareLength);
     }
 
     // "disclosureConsentDDR" only use by Patient
