@@ -60,7 +60,13 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
             .getListDDRTokenIdOfPatient(patientDID);
         uint256 listDDRLength = listTokenDDROfPatient.length;
 
-        require(listDDRLength > 0, "Patient do not have DDR.");
+        // require(listDDRLength > 0, "Patient do not have DDR.");
+        if (listDDRLength == 0) {
+            return (
+                0x0000000000000000000000000000000000000000000000000000000000000000, 
+                0x0000000000000000000000000000000000000000000000000000000000000000
+            );
+        }
 
         // Add 0x00 to bottom level if patient has odd number of DDR
         if ((listDDRLength % 2) == 1) {

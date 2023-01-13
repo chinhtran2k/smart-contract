@@ -285,7 +285,7 @@ contract DDR is ERC721Base, IDDR {
                 _isSharedDDR[ddrTokenIds[i]][msg.sender],
                 "DDR is not shared!"
             );
-            if (_isConsentedDDR[ddrTokenIds[i]][providerDID] != true) {
+            if (_isConsentedDDR[ddrTokenIds[i]][providerDID] == true) {
                 ddrConsentLength--;
             }
         }

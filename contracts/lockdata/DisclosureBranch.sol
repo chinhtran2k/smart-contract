@@ -60,7 +60,13 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
             .getListDDRTokenIdOfProvider(providerDID, patientDID);
         uint256 listDDRLength = listTokenIdDisclosure.length;
 
-        require(listDDRLength > 0, "provider do not have DDR.");
+        // require(listDDRLength > 0, "provider do not have DDR.");
+        if (listDDRLength == 0) {
+            return (
+                0x0000000000000000000000000000000000000000000000000000000000000000, 
+                0x0000000000000000000000000000000000000000000000000000000000000000
+            );
+        }
 
         // Add 0x00 to bottom level if patient has odd number of DDR
         if ((listDDRLength % 2) == 1) {

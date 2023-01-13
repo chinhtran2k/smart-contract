@@ -33,7 +33,9 @@ async function main() {
   const DDRContract = await ethers.getContractFactory("DDR");
   const ClaimBranchContract = await ethers.getContractFactory("ClaimBranch");
   const DDRBranchContract = await ethers.getContractFactory("DDRBranch");
-  const DisclosureBranchContract = await ethers.getContractFactory("DisclosureBranch");
+  const DisclosureBranchContract = await ethers.getContractFactory(
+    "DisclosureBranch"
+  );
   const PatientContract = await ethers.getContractFactory("Patient");
   const POCStudyContract = await ethers.getContractFactory("POCStudy");
   const ERC20ProxyContract = await ethers.getContractFactory("ERC20Proxy");
@@ -182,27 +184,33 @@ async function main() {
       },
       ClaimBranch: {
         address: ClaimBranch.address,
-        abi: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json").abi,
-        bytecode: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
-          .bytecode,
+        abi: require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
+          .abi,
+        bytecode:
+          require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
+            .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/ClaimBranch.sol/ClaimBranch.json")
             .contractName,
       },
       DDRBranch: {
         address: DDRBranch.address,
-        abi: require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json").abi,
-        bytecode: require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
-          .bytecode,
+        abi: require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
+          .abi,
+        bytecode:
+          require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
+            .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/DDRBranch.sol/DDRBranch.json")
             .contractName,
       },
       DisclosureBranch: {
         address: DisclosureBranch.address,
-        abi: require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json").abi,
-        bytecode: require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
-          .bytecode,
+        abi: require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
+          .abi,
+        bytecode:
+          require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
+            .bytecode,
         contractName:
           require("../artifacts/contracts/lockdata/DisclosureBranch.sol/DisclosureBranch.json")
             .contractName,
