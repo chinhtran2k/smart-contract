@@ -277,22 +277,17 @@ contract DDR is ERC721Base, IDDR {
         );
         ClaimHolder tempPatient = ClaimHolder(address(msg.sender));
 
+        uint256 ddrConsentLength = ddrTokenIds.length;
+
         // check if token is consented
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             require(
                 _isSharedDDR[ddrTokenIds[i]][msg.sender],
                 "DDR is not shared!"
             );
-            require(
-                _isConsentedDDR[ddrTokenIds[i]][providerDID] != true,
-                string(
-                    abi.encodePacked(
-                        "DDR ",
-                        Strings.toString(ddrTokenIds[i]),
-                        " is already consent, revert execution."
-                    )
-                )
-            );
+            if (_isConsentedDDR[ddrTokenIds[i]][providerDID] != true) {
+                ddrConsentLength--;
+            }
         }
         for (uint256 i = 0; i < ddrTokenIds.length; i++) {
             _isConsentedDDR[ddrTokenIds[i]][providerDID] = true;
@@ -302,6 +297,6 @@ contract DDR is ERC721Base, IDDR {
             _didConsentedOf[ddrTokenIds[i]].push(providerDID);
         }
         emit ApprovalDisclosureConsentDDR(msg.sender, providerDID, ddrTokenIds);
-        erc20Proxy.awardToken(tempPatient.owner(), ddrTokenIds.length);
+        erc20Proxy.awardToken(tempPatient.owner(), ddrConsentLength);
     }
 }
