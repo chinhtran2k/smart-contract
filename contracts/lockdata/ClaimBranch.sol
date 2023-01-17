@@ -22,7 +22,7 @@ contract ClaimBranch is ERC721Base, IClaim {
 
     // claimLock part
     constructor(address _claimHolder, address _authAddress)
-        ERC721Base("Claim", "CL", _authAddress)
+        ERC721Base("Claim Branch Lock", "Claim LV2", _authAddress)
     {
         claimIssuer = _claimHolder;
     }

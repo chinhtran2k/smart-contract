@@ -180,7 +180,7 @@ contract DDRBranch is ERC721Base, IDDRBranch, IMerkleTreeBase {
 
     // PatientLock part
     constructor(address _ddrAddress, address _authAddress)
-        ERC721Base("DDRBranch Lock", "DB", _authAddress)
+        ERC721Base("DDRBranch Lock", "DDR LV2", _authAddress)
     {
         _DDR = DDR(_ddrAddress);
     }

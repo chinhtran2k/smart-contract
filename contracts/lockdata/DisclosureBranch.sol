@@ -178,7 +178,7 @@ contract DisclosureBranch is ERC721Base, IDisclosureBranch, IMerkleTreeBase {
     // ***
 
     constructor(address _ddrAddress, address _authAddress)
-        ERC721Base("provider", "PM", _authAddress)
+        ERC721Base("DisclosureBranch Lock", "Disclosure lv2", _authAddress)
     {
         _DDR = DDR(_ddrAddress);
     }

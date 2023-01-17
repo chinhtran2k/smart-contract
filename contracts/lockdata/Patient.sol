@@ -205,7 +205,7 @@ contract Patient is ERC721Base, IPatient, IMerkleTreeBase {
         address _ddrBranchAddress,
         address _disclosureBranchAddress,
         address _authAddress
-    ) ERC721Base("Patient Lock", "PT", _authAddress) {
+    ) ERC721Base("Patient Lock", "Patient LV3", _authAddress) {
         _ddrBranch = DDRBranch(_ddrBranchAddress);
         _disclosureBranch = DisclosureBranch(_disclosureBranchAddress);
         _claimBranch = ClaimBranch(_claimBranchAddress);

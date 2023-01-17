@@ -47,7 +47,7 @@ contract DDR is ERC721Base, IDDR {
     }
 
     constructor(address _claimHolderAddress, address _authAddress)
-        ERC721Base("DDR Lock", "DDR", _authAddress)
+        ERC721Base("DDR Lock", "DDR LV1", _authAddress)
     {
         claimHolder = ClaimHolder(_claimHolderAddress);
     }
