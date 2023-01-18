@@ -100,7 +100,7 @@ contract DDR is ERC721Base, IDDR {
         bytes32 hashedRawId = keccak256(abi.encodePacked(patientDID, ddrId));
         // Create DDR hash value base on DID and hashed value
         require(
-            _ddrHashedId[hashValue] == 0x00,
+            _ddrHashedId[hashedRawId] == 0x00,
             "DDR mint error: DDRID exist!"
         );
 
